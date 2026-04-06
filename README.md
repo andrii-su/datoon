@@ -26,6 +26,8 @@ For LLM workloads, raw JSON is often verbose. TOON can reduce prompt size, but c
 python -m pip install -e .
 ```
 
+Runtime requirement: Python `3.12+`.
+
 ### 2) Convert JSON from stdin
 
 ```bash

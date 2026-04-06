@@ -1,24 +1,24 @@
 [build-system]
-requires = ["setuptools>=69.0", "wheel"]
+requires = ["setuptools>=69.0", "setuptools-scm[toml]>=8.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "datoon"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Smart JSON-to-TOON conversion with pragmatic auto-gating for LLM prompts."
 readme = "README.md"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = { file = "LICENSE" }
 authors = [
-  { name = "Andrii Suruhov" }
+    { name = "Andrii Suruhov", email = "andrii.suruhov@gmail.com" }
 ]
 keywords = ["llm", "prompt-engineering", "json", "toon", "data"]
 classifiers = [
-  "Programming Language :: Python :: 3",
-  "Programming Language :: Python :: 3.11",
-  "Programming Language :: Python :: 3.12",
-  "License :: OSI Approved :: MIT License",
-  "Operating System :: OS Independent"
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent"
 ]
 dependencies = []
 
@@ -26,9 +26,9 @@ dependencies = []
 tokens = ["tiktoken>=0.8.0"]
 
 [project.urls]
-Homepage = "https://github.com/andriisuruhov/datoon"
-Repository = "https://github.com/andriisuruhov/datoon"
-Issues = "https://github.com/andriisuruhov/datoon/issues"
+Homepage = "https://github.com/andrii-su/datoon"
+Repository = "https://github.com/andrii-su/datoon"
+Issues = "https://github.com/andrii-su/datoon/issues"
 
 [project.scripts]
 datoon = "datoon.cli:main"
@@ -38,3 +38,8 @@ package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools_scm]
+version_file = "src/datoon/_version.py"
+fallback_version = "0.0.0"
+local_scheme = "no-local-version"

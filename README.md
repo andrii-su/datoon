@@ -16,7 +16,7 @@ For LLM workloads, raw JSON is often verbose. TOON can reduce prompt size, but c
 - CLI command: `datoon`.
 - Auto-gating heuristic for TOON suitability.
 - Conversion report with token estimates and savings ratio.
-- `SKILL.md` draft for agent workflows.
+- Claude Code plugin metadata and a packaged `datoon.skill`.
 
 ## Quick Start
 
@@ -37,6 +37,21 @@ echo '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Lin"}]}' | datoon --report
 ```bash
 datoon ./examples/input.json -o ./examples/output.toon --report ./examples/report.json
 ```
+
+## Claude Code Setup
+
+Install directly from GitHub:
+
+```bash
+claude plugin marketplace add andrii-su/datoon
+claude plugin install datoon@datoon
+```
+
+Then trigger in session with prompts like:
+
+- `/datoon`
+- `convert this JSON to TOON if it saves tokens`
+- `use datoon mode for structured data`
 
 ## Dependencies
 

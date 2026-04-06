@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "datoon",
+  "description": "Token-efficient structured-data processing for Claude Code using TOON with auto-gating.",
+  "owner": {
+    "name": "Andrii Suruhov",
+    "url": "https://github.com/andrii-su"
+  },
+  "plugins": [
+    {
+      "name": "datoon",
+      "description": "Auto-convert structured JSON to TOON only when savings are meaningful.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}

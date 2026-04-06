@@ -23,7 +23,7 @@ For LLM workloads, raw JSON is often verbose. TOON can reduce prompt size, but c
 ### 1) Install locally
 
 ```bash
-python -m pip install -e .
+uv sync
 ```
 
 Runtime requirement: Python `3.12+`.
@@ -45,9 +45,7 @@ datoon ./examples/input.json -o ./examples/output.toon --report ./examples/repor
 Install and run pre-commit hooks:
 
 ```bash
-python -m pip install pre-commit
-pre-commit install
-pre-commit run --all-files
+uvx pre-commit run --all-files
 ```
 
 Configured hooks validate Python and Markdown:
@@ -66,7 +64,7 @@ uvx pre-commit run --all-files
 Install test dependencies:
 
 ```bash
-python -m pip install -e ".[dev]"
+uv sync --extra dev
 ```
 
 Run unit tests:

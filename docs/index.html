@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="datoon converts structured JSON to TOON only when conversion improves LLM token efficiency."
+        />
+        <title>datoon | Smart TOON gateway for LLM data</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="./styles.css" />
+    </head>
+    <body>
+        <header class="topbar">
+            <div class="topbar-inner">
+                <a class="brand" href="#top">datoon</a>
+                <nav class="nav-links">
+                    <a href="#features">Features</a>
+                    <a href="#benchmarks">Benchmarks</a>
+                    <a href="#install">Install</a>
+                    <a href="https://github.com/andrii-su/datoon">GitHub</a>
+                </nav>
+            </div>
+        </header>
+
+        <main id="top">
+            <section class="hero">
+                <article class="card hero-copy">
+                    <span class="chip">LLM Data Optimization</span>
+                    <h1>
+                        Convert JSON to TOON only when it really saves tokens
+                    </h1>
+                    <p>
+                        datoon evaluates payload shape, depth, and expected
+                        savings before converting. It keeps raw JSON when TOON
+                        is not a net win, and returns a transparent conversion
+                        report for every run.
+                    </p>
+                    <div class="cta">
+                        <a
+                            class="button primary"
+                            href="https://github.com/andrii-su/datoon"
+                            >Open repository</a
+                        >
+                        <a
+                            class="button secondary"
+                            href="https://github.com/andrii-su/datoon#quick-start"
+                            >Quick start</a
+                        >
+                    </div>
+                </article>
+
+                <aside class="card hero-panel">
+                    <div class="metric">
+                        <strong data-target="28.1" data-suffix="%">0%</strong>
+                        <span>Average auto-mode token savings</span>
+                    </div>
+                    <div class="metric">
+                        <strong data-target="26.8" data-suffix="%">0%</strong>
+                        <span>Forced TOON baseline savings</span>
+                    </div>
+                    <div class="metric">
+                        <strong data-target="5">0</strong>
+                        <span>Reference payloads in benchmark suite</span>
+                    </div>
+                </aside>
+            </section>
+
+            <section id="features" class="section card">
+                <h2 class="section-title">Why teams use datoon</h2>
+                <p class="section-lead">
+                    Built for practical AI/data pipelines where prompt size,
+                    readability, and deterministic behavior all matter.
+                </p>
+                <div class="grid features">
+                    <article class="feature">
+                        <h3>Decision-first conversion</h3>
+                        <p>
+                            Auto mode checks uniform tabular structure, payload
+                            depth, and minimum savings before converting to
+                            TOON.
+                        </p>
+                    </article>
+                    <article class="feature">
+                        <h3>Transparent reporting</h3>
+                        <p>
+                            Every run can emit a report with token estimates,
+                            conversion decision, reason, and savings ratio.
+                        </p>
+                    </article>
+                    <article class="feature">
+                        <h3>CLI and plugin ready</h3>
+                        <p>
+                            Use as a Python CLI in CI/pipelines or install as
+                            Claude Code plugin via marketplace.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <section id="benchmarks" class="section card">
+                <h2 class="section-title">Benchmark snapshot</h2>
+                <p class="section-lead">
+                    Local suite compares JSON baseline, forced TOON conversion,
+                    and datoon auto mode.
+                </p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Forced TOON avg reduction</td>
+                                <td>26.8%</td>
+                            </tr>
+                            <tr>
+                                <td>Auto mode avg reduction</td>
+                                <td>28.1%</td>
+                            </tr>
+                            <tr>
+                                <td>Auto decisions</td>
+                                <td>3 / 5 payloads converted</td>
+                            </tr>
+                            <tr>
+                                <td>Failed forced conversions</td>
+                                <td>0 / 5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="note">
+                    Reproduce locally with
+                    <code>PYTHONPATH=src python benchmarks/run.py</code>.
+                </p>
+            </section>
+
+            <section id="install" class="section card">
+                <h2 class="section-title">Install and run</h2>
+                <div class="code">
+                    <pre>
+uv sync
+
+# stdin usage
+echo '{"users":[{"id":1,"name":"Ada"}]}' | datoon --report-stdout
+
+# file usage
+datoon ./input.json -o ./output.toon --report ./report.json</pre
+                    >
+                </div>
+                <p class="note">
+                    Requires Python 3.12+ and Node.js for TOON CLI execution
+                    through
+                    <code>npx --yes @toon-format/cli@2</code>.
+                </p>
+            </section>
+
+            <footer class="footer">
+                <p>
+                    <span data-year></span> datoon. Source on
+                    <a href="https://github.com/andrii-su/datoon">GitHub</a>.
+                </p>
+            </footer>
+        </main>
+
+        <script src="./app.js" defer></script>
+    </body>
+</html>

@@ -1,5 +1,6 @@
 {
   "name": "datoon",
+  "version": "1.1.1",
   "description": "Smart data-to-TOON mode for Claude Code. Convert structured JSON only when token savings are meaningful.",
   "author": {
     "name": "Andrii Suruhov",

@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/andrii-su/datoon/compare/v1.0.0...v1.1.0) (2026-04-06)
+
+
+### Features
+
+* **plugin:** add docs site and marketplace-ready metadata ([0ee458f](https://github.com/andrii-su/datoon/commit/0ee458f946136c183097cb7b15315b074d10fb56))
+
 # 1.0.0 (2026-04-06)
 
 ### Features

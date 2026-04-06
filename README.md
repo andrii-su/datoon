@@ -55,6 +55,32 @@ Configured hooks validate Python and Markdown:
 - `ruff` + `ruff-format` for Python files.
 - `mdformat` for Markdown formatting.
 
+Run in one shot without local install:
+
+```bash
+uvx pre-commit run --all-files
+```
+
+## Tests
+
+Install test dependencies:
+
+```bash
+python -m pip install -e ".[dev]"
+```
+
+Run unit tests:
+
+```bash
+pytest -m "not integration"
+```
+
+Run integration tests (requires Node.js + `npx`):
+
+```bash
+pytest -m integration
+```
+
 ## Claude Code Setup
 
 Install directly from GitHub:
@@ -128,6 +154,26 @@ PYTHONPATH=src python benchmarks/run.py --update-readme
 *Forced conversion succeeded for 5/5 payloads.*
 
 <!-- BENCHMARK-TABLE-END -->
+
+## Release Safety Checks
+
+Before release, CI validates that all skill mirrors are synchronized:
+
+- `skills/datoon/SKILL.md` (source of truth)
+- `SKILL.md`
+- `datoon/SKILL.md`
+- `plugins/datoon/skills/datoon/SKILL.md`
+- `datoon.skill` archive content
+
+Local check:
+
+```bash
+python scripts/validate_skill_sync.py
+```
+
+## Security
+
+See [SECURITY.md](SECURITY.md) for vulnerability reporting and response policy.
 
 ## Next Steps
 

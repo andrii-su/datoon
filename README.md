@@ -40,6 +40,21 @@ echo '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Lin"}]}' | datoon --report
 datoon ./examples/input.json -o ./examples/output.toon --report ./examples/report.json
 ```
 
+## Development Checks
+
+Install and run pre-commit hooks:
+
+```bash
+python -m pip install pre-commit
+pre-commit install
+pre-commit run --all-files
+```
+
+Configured hooks validate Python and Markdown:
+
+- `ruff` + `ruff-format` for Python files.
+- `mdformat` for Markdown formatting.
+
 ## Claude Code Setup
 
 Install directly from GitHub:
@@ -65,7 +80,7 @@ Then trigger in session with prompts like:
 By default it invokes:
 
 ```bash
-npx --yes @toon-format/cli@3
+npx --yes @toon-format/cli@2
 ```
 
 ## Decision Model (Auto Mode)
@@ -86,6 +101,33 @@ Otherwise it returns normalized JSON unchanged and explains the skip reason.
 - `--min-uniform-rows`: minimum rows in uniform object arrays (default: `3`).
 - `--report`: write JSON report to a file.
 - `--report-stdout`: print JSON report to stderr.
+
+## Benchmarks
+
+`datoon` includes a local benchmark runner inspired by `caveman/benchmarks/run.py`.
+
+Run:
+
+```bash
+PYTHONPATH=src python benchmarks/run.py --dry-run
+PYTHONPATH=src python benchmarks/run.py
+PYTHONPATH=src python benchmarks/run.py --update-readme
+```
+
+<!-- BENCHMARK-TABLE-START -->
+
+| Dataset | JSON | TOON (forced) | Raw Saved | Auto | Auto Tokens | Auto Saved |
+|---|---:|---:|---:|---|---:|---:|
+| users-small | 42 | 23 | 45.2% | convert | 23 | 45.2% |
+| events-medium | 148 | 84 | 43.2% | convert | 84 | 43.2% |
+| orders-nested | 70 | 69 | 1.4% | skip | 70 | 0.0% |
+| mixed-non-uniform | 26 | 28 | -7.7% | skip | 26 | 0.0% |
+| metrics-wide | 100 | 48 | 52.0% | convert | 48 | 52.0% |
+| **Average** | **77** | **50** | **26.8%** | **3/5 convert** | **50** | **28.1%** |
+
+*Forced conversion succeeded for 5/5 payloads.*
+
+<!-- BENCHMARK-TABLE-END -->
 
 ## Next Steps
 

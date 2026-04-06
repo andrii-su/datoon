@@ -1,11 +1,6 @@
----
-name: datoon
-description: >
-  Smart TOON conversion workflow for structured data in Claude Code.
-  Converts JSON-like payloads to TOON only when structure is suitable and token savings are meaningful.
-  Use when the user asks to analyze, transform, or reason over structured datasets with an LLM,
-  especially when context size or token cost matters.
----
+______________________________________________________________________
+
+## name: datoon description: > Smart TOON conversion workflow for structured data in Claude Code. Converts JSON-like payloads to TOON only when structure is suitable and token savings are meaningful. Use when the user asks to analyze, transform, or reason over structured datasets with an LLM, especially when context size or token cost matters.
 
 # datoon mode
 
@@ -14,8 +9,8 @@ description: >
 Before sending structured payloads to the model:
 
 1. Detect whether payload is a good TOON candidate.
-2. Convert only when expected savings are meaningful.
-3. Keep JSON when conversion likely hurts clarity or efficiency.
+1. Convert only when expected savings are meaningful.
+1. Keep JSON when conversion likely hurts clarity or efficiency.
 
 ## Trigger Phrases
 
@@ -42,13 +37,13 @@ Skip conversion when any condition fails:
 ## Execution Workflow
 
 1. Normalize input to valid JSON.
-2. Run:
-    - `echo '<json>' | datoon --report-stdout`
-    - or `datoon input.json -o output.toon --report report.json`
-3. Read report:
-    - if `decision == "convert"`, pass TOON to model;
-    - if `decision == "skip"`, pass normalized JSON.
-4. Keep report metadata for observability.
+1. Run:
+   - `echo '<json>' | datoon --report-stdout`
+   - or `datoon input.json -o output.toon --report report.json`
+1. Read report:
+   - if `decision == "convert"`, pass TOON to model;
+   - if `decision == "skip"`, pass normalized JSON.
+1. Keep report metadata for observability.
 
 ## Reliability Rules
 

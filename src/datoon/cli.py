@@ -80,7 +80,9 @@ def _write_text(path: str | None, text: str) -> None:
     Path(path).write_text(text, encoding="utf-8")
 
 
-def _emit_report(*, report_path: str | None, report_stdout: bool, payload: dict[str, object]) -> None:
+def _emit_report(
+    *, report_path: str | None, report_stdout: bool, payload: dict[str, object]
+) -> None:
     """Emit conversion report to selected destinations."""
     report_json = json.dumps(payload, ensure_ascii=False, indent=2)
 

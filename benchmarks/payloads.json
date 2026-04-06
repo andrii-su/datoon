@@ -1,0 +1,188 @@
+{
+  "payloads": [
+    {
+      "id": "users-small",
+      "category": "uniform-array",
+      "description": "Small uniform records",
+      "data": {
+        "users": [
+          {
+            "id": 1,
+            "name": "Ada",
+            "role": "admin",
+            "active": true
+          },
+          {
+            "id": 2,
+            "name": "Lin",
+            "role": "analyst",
+            "active": true
+          },
+          {
+            "id": 3,
+            "name": "Sam",
+            "role": "viewer",
+            "active": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "events-medium",
+      "category": "uniform-array",
+      "description": "Event table with timestamps and dimensions",
+      "data": {
+        "events": [
+          {
+            "ts": "2026-01-01T00:00:00Z",
+            "event": "page_view",
+            "user_id": 1001,
+            "country": "US",
+            "is_mobile": true
+          },
+          {
+            "ts": "2026-01-01T00:01:00Z",
+            "event": "signup",
+            "user_id": 1002,
+            "country": "DE",
+            "is_mobile": false
+          },
+          {
+            "ts": "2026-01-01T00:02:00Z",
+            "event": "page_view",
+            "user_id": 1003,
+            "country": "US",
+            "is_mobile": true
+          },
+          {
+            "ts": "2026-01-01T00:03:00Z",
+            "event": "purchase",
+            "user_id": 1001,
+            "country": "US",
+            "is_mobile": true
+          },
+          {
+            "ts": "2026-01-01T00:04:00Z",
+            "event": "page_view",
+            "user_id": 1004,
+            "country": "CA",
+            "is_mobile": false
+          },
+          {
+            "ts": "2026-01-01T00:05:00Z",
+            "event": "page_view",
+            "user_id": 1005,
+            "country": "FR",
+            "is_mobile": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "orders-nested",
+      "category": "nested-objects",
+      "description": "Nested order structure with line items",
+      "data": {
+        "batch_id": "b_001",
+        "orders": [
+          {
+            "order_id": "o_1001",
+            "customer": {
+              "id": 10,
+              "segment": "pro"
+            },
+            "items": [
+              {
+                "sku": "A-1",
+                "qty": 2,
+                "price": 19.99
+              },
+              {
+                "sku": "B-2",
+                "qty": 1,
+                "price": 49.5
+              }
+            ]
+          },
+          {
+            "order_id": "o_1002",
+            "customer": {
+              "id": 11,
+              "segment": "free"
+            },
+            "items": [
+              {
+                "sku": "A-1",
+                "qty": 1,
+                "price": 19.99
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "mixed-non-uniform",
+      "category": "non-uniform-array",
+      "description": "Array with non-uniform object keys",
+      "data": {
+        "rows": [
+          {
+            "id": 1,
+            "name": "Ada"
+          },
+          {
+            "id": 2,
+            "email": "lin@example.com"
+          },
+          {
+            "id": 3,
+            "name": "Sam",
+            "status": "new"
+          }
+        ]
+      }
+    },
+    {
+      "id": "metrics-wide",
+      "category": "wide-table",
+      "description": "Wide metrics table with repeated schema",
+      "data": {
+        "metrics": [
+          {
+            "date": "2026-01-01",
+            "country": "US",
+            "sessions": 1024,
+            "revenue": 345.12,
+            "refunds": 2,
+            "new_users": 88
+          },
+          {
+            "date": "2026-01-02",
+            "country": "US",
+            "sessions": 998,
+            "revenue": 301.9,
+            "refunds": 1,
+            "new_users": 79
+          },
+          {
+            "date": "2026-01-01",
+            "country": "DE",
+            "sessions": 440,
+            "revenue": 133.44,
+            "refunds": 0,
+            "new_users": 31
+          },
+          {
+            "date": "2026-01-02",
+            "country": "DE",
+            "sessions": 455,
+            "revenue": 149.87,
+            "refunds": 1,
+            "new_users": 36
+          }
+        ]
+      }
+    }
+  ]
+}

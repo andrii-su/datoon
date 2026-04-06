@@ -11,7 +11,7 @@ from typing import Any
 from datoon.analyzer import analyze_payload
 from datoon.models import ConversionConfig, ConversionOutcome, ConversionReport
 
-TOON_CLI_PACKAGE = "@toon-format/cli@3"
+TOON_CLI_PACKAGE = "@toon-format/cli@2"
 
 
 class DatoonError(RuntimeError):
@@ -128,7 +128,9 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
         )
 
     output_tokens = estimate_tokens(toon_text)
-    savings_ratio = (input_tokens - output_tokens) / input_tokens if input_tokens else 0.0
+    savings_ratio = (
+        (input_tokens - output_tokens) / input_tokens if input_tokens else 0.0
+    )
 
     if savings_ratio < config.min_savings_ratio and not config.force:
         return _build_skip_outcome(

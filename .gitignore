@@ -31,3 +31,7 @@ node_modules/
 
 # Logs
 *.log
+
+# Benchmark artifacts
+benchmarks/results/*.json
+!benchmarks/results/.gitkeep

@@ -1,3 +1,11 @@
+## [1.1.1](https://github.com/andrii-su/datoon/compare/v1.1.0...v1.1.1) (2026-04-06)
+
+
+### Bug Fixes
+
+* **ci:** exclude generated changelog from mdformat ([c374e40](https://github.com/andrii-su/datoon/commit/c374e4029e991c62f8a736bf14351a6f2fa2c834))
+* **workflow:** handle GitHub Pages deployment errors and improve URL handling ([a7ec590](https://github.com/andrii-su/datoon/commit/a7ec5909f1865b6328ee4d9c5fad2db14b5da6de))
+
 # [1.1.0](https://github.com/andrii-su/datoon/compare/v1.0.0...v1.1.0) (2026-04-06)
 
 

@@ -1,46 +1,48 @@
 name: Sync SKILL.md
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - skills/datoon/SKILL.md
+    push:
+        branches: [main]
+        paths:
+            - skills/datoon/SKILL.md
 
 concurrency:
-  group: sync-skill
-  cancel-in-progress: false
+    group: sync-skill
+    cancel-in-progress: false
 
 jobs:
-  sync:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: main
+    sync:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: main
 
-      - name: Pull latest before making changes
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin main
+            - name: Pull latest before making changes
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git pull --rebase origin main
 
-      - name: Copy to duplicate locations
-        run: |
-          cp skills/datoon/SKILL.md SKILL.md
-          mkdir -p datoon
-          cp skills/datoon/SKILL.md datoon/SKILL.md
+            - name: Copy to duplicate locations
+              run: |
+                  cp skills/datoon/SKILL.md SKILL.md
+                  mkdir -p datoon
+                  cp skills/datoon/SKILL.md datoon/SKILL.md
+                  mkdir -p plugins/datoon/skills/datoon
+                  cp skills/datoon/SKILL.md plugins/datoon/skills/datoon/SKILL.md
 
-      - name: Rebuild datoon.skill ZIP
-        run: |
-          cd skills
-          rm -f ../datoon.skill
-          zip -r ../datoon.skill datoon/
+            - name: Rebuild datoon.skill ZIP
+              run: |
+                  cd skills
+                  rm -f ../datoon.skill
+                  zip -r ../datoon.skill datoon/
 
-      - name: Commit and push if changed
-        run: |
-          git diff --quiet && exit 0
-          git add SKILL.md datoon/SKILL.md datoon.skill
-          git commit -m "chore: sync SKILL.md copies and datoon.skill [skip ci]"
-          git push
+            - name: Commit and push if changed
+              run: |
+                  git diff --quiet && exit 0
+                  git add SKILL.md datoon/SKILL.md plugins/datoon/skills/datoon/SKILL.md datoon.skill
+                  git commit -m "chore: sync SKILL.md copies and datoon.skill [skip ci]"
+                  git push

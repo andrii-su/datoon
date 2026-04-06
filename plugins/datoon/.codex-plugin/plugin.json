@@ -1,0 +1,34 @@
+{
+  "name": "datoon",
+  "version": "0.1.0",
+  "description": "Smart data-to-TOON conversion mode. Convert structured JSON only when token savings are meaningful.",
+  "author": {
+    "name": "Andrii Suruhov",
+    "url": "https://github.com/andrii-su"
+  },
+  "homepage": "https://github.com/andrii-su/datoon",
+  "repository": "https://github.com/andrii-su/datoon",
+  "license": "MIT",
+  "keywords": [
+    "llm",
+    "productivity",
+    "prompt-optimization",
+    "data"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Datoon",
+    "shortDescription": "Auto-convert JSON to TOON when it saves tokens.",
+    "longDescription": "Token-efficient structured-data mode for Codex with automatic TOON suitability and savings checks.",
+    "developerName": "Andrii Suruhov",
+    "category": "Productivity",
+    "capabilities": [
+      "Write"
+    ],
+    "websiteURL": "https://github.com/andrii-su/datoon",
+    "defaultPrompt": [
+      "Use datoon mode for structured data. Convert JSON to TOON only when conversion is beneficial."
+    ],
+    "brandColor": "#0EA5E9"
+  }
+}

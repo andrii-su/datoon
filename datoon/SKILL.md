@@ -43,11 +43,11 @@ Skip conversion when any condition fails:
 
 1. Normalize input to valid JSON.
 2. Run:
-   - `echo '<json>' | datoon --report-stdout`
-   - or `datoon input.json -o output.toon --report report.json`
+    - `echo '<json>' | datoon --report-stdout`
+    - or `datoon input.json -o output.toon --report report.json`
 3. Read report:
-   - if `decision == "convert"`, pass TOON to model;
-   - if `decision == "skip"`, pass normalized JSON.
+    - if `decision == "convert"`, pass TOON to model;
+    - if `decision == "skip"`, pass normalized JSON.
 4. Keep report metadata for observability.
 
 ## Reliability Rules

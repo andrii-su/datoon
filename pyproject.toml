@@ -23,6 +23,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
+dev = ["pytest>=8.3.0"]
 tokens = ["tiktoken>=0.8.0"]
 
 [project.urls]
@@ -43,3 +44,11 @@ where = ["src"]
 version_file = "src/datoon/_version.py"
 fallback_version = "0.0.0"
 local_scheme = "no-local-version"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra"
+markers = [
+    "integration: tests that require Node.js and @toon-format/cli access",
+]

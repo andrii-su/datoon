@@ -13,21 +13,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from datoon.converter import DatoonError, convert_json_for_llm, estimate_tokens
+from datoon.models import ConversionConfig
+
 SCRIPT_VERSION = "0.1.0"
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_DIR = SCRIPT_DIR.parent
-SRC_DIR = REPO_DIR / "src"
 PAYLOADS_PATH = SCRIPT_DIR / "payloads.json"
 README_PATH = REPO_DIR / "README.md"
 RESULTS_DIR = SCRIPT_DIR / "results"
 BENCHMARK_START = "<!-- BENCHMARK-TABLE-START -->"
 BENCHMARK_END = "<!-- BENCHMARK-TABLE-END -->"
-
-if str(SRC_DIR) not in sys.path:
-    sys.path.insert(0, str(SRC_DIR))
-
-from datoon.converter import DatoonError, convert_json_for_llm, estimate_tokens
-from datoon.models import ConversionConfig
 
 
 @dataclass(slots=True, frozen=True)
@@ -135,14 +131,29 @@ def benchmark_payload(
 
 def compute_summary(rows: list[BenchmarkRow]) -> BenchmarkSummary:
     """Compute aggregate metrics across benchmark rows."""
-    raw_rows = [row for row in rows if row.toon_tokens is not None and row.raw_savings_pct is not None]
+    raw_rows = [
+        row
+        for row in rows
+        if row.toon_tokens is not None and row.raw_savings_pct is not None
+    ]
     avg_toon = (
-        round(statistics.mean(row.toon_tokens for row in raw_rows if row.toon_tokens is not None))
+        round(
+            statistics.mean(
+                row.toon_tokens for row in raw_rows if row.toon_tokens is not None
+            )
+        )
         if raw_rows
         else None
     )
     avg_raw_savings = (
-        round(statistics.mean(row.raw_savings_pct for row in raw_rows if row.raw_savings_pct is not None), 1)
+        round(
+            statistics.mean(
+                row.raw_savings_pct
+                for row in raw_rows
+                if row.raw_savings_pct is not None
+            ),
+            1,
+        )
         if raw_rows
         else None
     )
@@ -155,7 +166,9 @@ def compute_summary(rows: list[BenchmarkRow]) -> BenchmarkSummary:
         avg_toon_tokens=avg_toon,
         avg_raw_savings_pct=avg_raw_savings,
         avg_auto_tokens=round(statistics.mean(row.auto_tokens for row in rows)),
-        avg_auto_savings_pct=round(statistics.mean(row.auto_savings_pct for row in rows), 1),
+        avg_auto_savings_pct=round(
+            statistics.mean(row.auto_savings_pct for row in rows), 1
+        ),
     )
 
 
@@ -167,14 +180,18 @@ def format_table(rows: list[BenchmarkRow], summary: BenchmarkSummary) -> str:
     ]
     for row in rows:
         toon_value = str(row.toon_tokens) if row.toon_tokens is not None else "n/a"
-        raw_saved = f"{row.raw_savings_pct:.1f}%" if row.raw_savings_pct is not None else "n/a"
+        raw_saved = (
+            f"{row.raw_savings_pct:.1f}%" if row.raw_savings_pct is not None else "n/a"
+        )
         lines.append(
             f"| {row.payload_id} | {row.json_tokens} | {toon_value} | "
             f"{raw_saved} | {row.auto_decision} | {row.auto_tokens} | "
             f"{row.auto_savings_pct:.1f}% |"
         )
 
-    avg_toon = str(summary.avg_toon_tokens) if summary.avg_toon_tokens is not None else "n/a"
+    avg_toon = (
+        str(summary.avg_toon_tokens) if summary.avg_toon_tokens is not None else "n/a"
+    )
     avg_raw_saved = (
         f"{summary.avg_raw_savings_pct:.1f}%"
         if summary.avg_raw_savings_pct is not None
@@ -245,7 +262,9 @@ def dry_run(payloads: list[dict[str, Any]], config: ConversionConfig) -> None:
     print(f"- min_uniform_rows: {config.min_uniform_rows}")
     print("- ids:")
     for payload in payloads:
-        print(f"  - {payload.get('id', 'unknown')} ({payload.get('category', 'unknown')})")
+        print(
+            f"  - {payload.get('id', 'unknown')} ({payload.get('category', 'unknown')})"
+        )
 
 
 def parse_args() -> argparse.Namespace:
@@ -256,15 +275,26 @@ def parse_args() -> argparse.Namespace:
         default=str(PAYLOADS_PATH),
         help="Path to benchmark payload config (default: benchmarks/payloads.json).",
     )
-    parser.add_argument("--min-savings", type=float, default=0.15, help="Auto mode min savings threshold.")
-    parser.add_argument("--max-depth", type=int, default=6, help="Auto mode max payload depth.")
+    parser.add_argument(
+        "--min-savings",
+        type=float,
+        default=0.15,
+        help="Auto mode min savings threshold.",
+    )
+    parser.add_argument(
+        "--max-depth", type=int, default=6, help="Auto mode max payload depth."
+    )
     parser.add_argument(
         "--min-uniform-rows",
         type=int,
         default=3,
         help="Auto mode minimum rows for uniform object arrays.",
     )
-    parser.add_argument("--dry-run", action="store_true", help="Print benchmark plan without conversion.")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print benchmark plan without conversion.",
+    )
     parser.add_argument(
         "--update-readme",
         action="store_true",

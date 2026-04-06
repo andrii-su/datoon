@@ -34,7 +34,9 @@ def test_policy_skips_non_uniform_arrays(monkeypatch: pytest.MonkeyPatch) -> Non
 
     def _unexpected(_: str) -> str:
         called["value"] = True
-        raise AssertionError("TOON CLI should not be called for non-candidate payloads.")
+        raise AssertionError(
+            "TOON CLI should not be called for non-candidate payloads."
+        )
 
     monkeypatch.setattr("datoon.converter._run_toon_cli", _unexpected)
     payload = json.dumps(
@@ -86,26 +88,40 @@ def test_policy_skips_deep_nested_payload(monkeypatch: pytest.MonkeyPatch) -> No
     assert called["value"] is False
 
 
-def test_policy_converts_when_savings_above_threshold(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_policy_converts_when_savings_above_threshold(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """Payload should convert when estimated savings clear the threshold."""
     payload = _sample_uniform_payload()
-    monkeypatch.setattr("datoon.converter._run_toon_cli", lambda _: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n")
+    monkeypatch.setattr(
+        "datoon.converter._run_toon_cli",
+        lambda _: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
+    )
 
     token_sequence = iter([100, 60])  # input, output
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_sequence))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda _: next(token_sequence)
+    )
 
     outcome = convert_json_for_llm(payload, ConversionConfig(min_savings_ratio=0.15))
     assert outcome.report.decision == "convert"
     assert outcome.report.output_token_estimate == 60
 
 
-def test_policy_skips_when_savings_below_threshold(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_policy_skips_when_savings_below_threshold(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """Payload should skip when estimated savings are below configured threshold."""
     payload = _sample_uniform_payload()
-    monkeypatch.setattr("datoon.converter._run_toon_cli", lambda _: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n")
+    monkeypatch.setattr(
+        "datoon.converter._run_toon_cli",
+        lambda _: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
+    )
 
     token_sequence = iter([100, 95])  # input, output
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_sequence))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda _: next(token_sequence)
+    )
 
     outcome = convert_json_for_llm(payload, ConversionConfig(min_savings_ratio=0.10))
     assert outcome.report.decision == "skip"

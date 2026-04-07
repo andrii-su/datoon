@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/andrii-su/datoon/compare/v1.1.1...v1.1.2) (2026-04-07)
+
+
+### Bug Fixes
+
+* **plugin:** make skill discoverable via npx installer ([2cef170](https://github.com/andrii-su/datoon/commit/2cef1703babbae4c7d728a30a9b7a45ee99966e8))
+
 ## [1.1.1](https://github.com/andrii-su/datoon/compare/v1.1.0...v1.1.1) (2026-04-06)
 
 

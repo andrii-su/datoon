@@ -122,7 +122,9 @@ def configure_logging(log_path: Path, *, verbose: bool) -> logging.Logger:
     return logger
 
 
-def run_subprocess(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
+def run_subprocess(
+    command: list[str], *, cwd: Path
+) -> subprocess.CompletedProcess[str]:
     """Run subprocess with captured output."""
     return subprocess.run(
         command,
@@ -143,8 +145,7 @@ def get_plugin_enabled_state(
     process = run_subprocess(["claude", "plugins", "list", "--json"], cwd=cwd)
     if process.returncode != 0:
         raise RuntimeError(
-            "Failed to list plugins. "
-            f"stderr={process.stderr.strip() or '<empty>'}"
+            f"Failed to list plugins. stderr={process.stderr.strip() or '<empty>'}"
         )
 
     try:
@@ -184,8 +185,7 @@ def set_plugin_enabled_state(
             )
             return
         raise RuntimeError(
-            f"Failed to {action} plugin {plugin_id}. "
-            f"stderr={stderr or '<empty>'}"
+            f"Failed to {action} plugin {plugin_id}. stderr={stderr or '<empty>'}"
         )
     logger.debug("Plugin action completed: %s %s", action, plugin_id)
 
@@ -275,7 +275,9 @@ def summarize_mode(results: list[RunResult]) -> ModeSummary:
     format_counts: dict[str, int] = {}
     for result in ok_results:
         if result.format_used:
-            format_counts[result.format_used] = format_counts.get(result.format_used, 0) + 1
+            format_counts[result.format_used] = (
+                format_counts.get(result.format_used, 0) + 1
+            )
 
     if not ok_results:
         return ModeSummary(
@@ -307,7 +309,8 @@ def summarize_mode(results: list[RunResult]) -> ModeSummary:
         ok_count=len(ok_results),
         success_rate=round(len(ok_results) / len(results), 4) if results else None,
         valid_json_rate=round(
-            sum(1 for result in ok_results if result.valid_result_json) / len(ok_results),
+            sum(1 for result in ok_results if result.valid_result_json)
+            / len(ok_results),
             4,
         ),
         avg_input_tokens=round(
@@ -322,7 +325,9 @@ def summarize_mode(results: list[RunResult]) -> ModeSummary:
         avg_result_token_estimate=round(
             statistics.mean(result.result_token_estimate for result in ok_results), 2
         ),
-        avg_cost_usd=round(statistics.mean(result.cost_usd for result in ok_results), 6),
+        avg_cost_usd=round(
+            statistics.mean(result.cost_usd for result in ok_results), 6
+        ),
         avg_duration_ms=round(
             statistics.mean(result.duration_ms for result in ok_results), 2
         ),
@@ -331,7 +336,9 @@ def summarize_mode(results: list[RunResult]) -> ModeSummary:
         avg_output_tokens_per_second=(
             round(statistics.mean(tps_values), 2) if tps_values else None
         ),
-        avg_num_turns=round(statistics.mean(result.num_turns for result in ok_results), 2),
+        avg_num_turns=round(
+            statistics.mean(result.num_turns for result in ok_results), 2
+        ),
         format_counts=format_counts,
     )
 
@@ -546,7 +553,9 @@ def main() -> int:
         )
         logger.info("Plugin state restored to: %s", initial_plugin_state)
 
-    without_summary = summarize_mode([r for r in all_results if r.mode == "without_skill"])
+    without_summary = summarize_mode(
+        [r for r in all_results if r.mode == "without_skill"]
+    )
     with_summary = summarize_mode([r for r in all_results if r.mode == "with_skill"])
 
     delta: dict[str, float] = {}

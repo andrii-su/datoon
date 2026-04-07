@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/andrii-su/datoon/compare/v1.1.2...v1.2.0) (2026-04-07)
+
+
+### Bug Fixes
+
+* improve code formatting and readability in A/B benchmark script ([9ebcbf6](https://github.com/andrii-su/datoon/commit/9ebcbf68d69f6f9f6a6b112d995e7f08587a4052))
+* update .gitignore to include local artifacts and benchmark results ([ff6740c](https://github.com/andrii-su/datoon/commit/ff6740c8ec92f3c064c6c219b52a315c3b8fbf31))
+
+
+### Features
+
+* add A/B benchmark script for datoon skill usage in Claude CLI ([770b888](https://github.com/andrii-su/datoon/commit/770b888b1d8c6f0144eb980ec7e94c28f5bbce7b))
+
 ## [1.1.2](https://github.com/andrii-su/datoon/compare/v1.1.1...v1.1.2) (2026-04-07)
 
 

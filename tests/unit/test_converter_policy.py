@@ -32,7 +32,7 @@ def test_policy_skips_non_uniform_arrays(monkeypatch: pytest.MonkeyPatch) -> Non
     """Non-uniform arrays should skip conversion before CLI invocation."""
     called = {"value": False}
 
-    def _unexpected(_: str) -> str:
+    def _unexpected(_: str, **kwargs: object) -> str:
         called["value"] = True
         raise AssertionError(
             "TOON CLI should not be called for non-candidate payloads."
@@ -59,7 +59,7 @@ def test_policy_skips_deep_nested_payload(monkeypatch: pytest.MonkeyPatch) -> No
     """Depth gate should skip conversion for nested payloads."""
     called = {"value": False}
 
-    def _unexpected(_: str) -> str:
+    def _unexpected(_: str, **kwargs: object) -> str:
         called["value"] = True
         raise AssertionError("TOON CLI should not be called when depth gate fails.")
 
@@ -95,7 +95,7 @@ def test_policy_converts_when_savings_above_threshold(
     payload = _sample_uniform_payload()
     monkeypatch.setattr(
         "datoon.converter._run_toon_cli",
-        lambda _: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
+        lambda _, **kw: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
     )
 
     token_sequence = iter([100, 60])  # input, output
@@ -115,7 +115,7 @@ def test_policy_skips_when_savings_below_threshold(
     payload = _sample_uniform_payload()
     monkeypatch.setattr(
         "datoon.converter._run_toon_cli",
-        lambda _: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
+        lambda _, **kw: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
     )
 
     token_sequence = iter([100, 95])  # input, output
@@ -132,7 +132,7 @@ def test_force_mode_raises_cli_errors(monkeypatch: pytest.MonkeyPatch) -> None:
     """Force mode should propagate CLI failures rather than silently skipping."""
     payload = _sample_uniform_payload()
 
-    def _raise_error(_: str) -> str:
+    def _raise_error(_: str, **kwargs: object) -> str:
         raise DatoonError("synthetic cli failure")
 
     monkeypatch.setattr("datoon.converter._run_toon_cli", _raise_error)
@@ -147,10 +147,38 @@ def test_non_force_falls_back_to_json_on_cli_errors(
     """Non-force mode should skip and fallback when CLI fails."""
     payload = _sample_uniform_payload()
 
-    def _raise_error(_: str) -> str:
+    def _raise_error(_: str, **kwargs: object) -> str:
         raise DatoonError("synthetic cli failure")
 
     monkeypatch.setattr("datoon.converter._run_toon_cli", _raise_error)
+    outcome = convert_json_for_llm(payload, ConversionConfig(force=False))
+    assert outcome.report.decision == "skip"
+    assert "falling back to JSON" in outcome.report.reason
+
+
+def test_cli_timeout_raises_datoon_error(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Subprocess timeout must surface as DatoonError, not hang."""
+
+    payload = _sample_uniform_payload()
+
+    def _timeout(_: str, **kwargs: object) -> str:
+        raise DatoonError("TOON CLI timed out after 30s.")
+
+    monkeypatch.setattr("datoon.converter._run_toon_cli", _timeout)
+    with pytest.raises(DatoonError, match="timed out"):
+        convert_json_for_llm(payload, ConversionConfig(force=True))
+
+
+def test_cli_timeout_falls_back_in_non_force_mode(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Timeout in non-force mode falls back to JSON like other CLI errors."""
+    payload = _sample_uniform_payload()
+
+    def _timeout(_: str, **kwargs: object) -> str:
+        raise DatoonError("TOON CLI timed out after 30s.")
+
+    monkeypatch.setattr("datoon.converter._run_toon_cli", _timeout)
     outcome = convert_json_for_llm(payload, ConversionConfig(force=False))
     assert outcome.report.decision == "skip"
     assert "falling back to JSON" in outcome.report.reason

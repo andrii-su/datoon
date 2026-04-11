@@ -20,13 +20,12 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
 ]
-dependencies = [
-    "pre-commit>=4.5.1",
-]
+dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8.3.0"]
+dev = ["pytest>=8.3.0", "pre-commit>=4.5.1"]
 tokens = ["tiktoken>=0.8.0"]
+mcp = ["mcp>=1.6.0"]
 
 [project.urls]
 Homepage = "https://github.com/andrii-su/datoon"
@@ -35,9 +34,14 @@ Issues = "https://github.com/andrii-su/datoon/issues"
 
 [project.scripts]
 datoon = "datoon.cli:main"
+datoon-mcp = "datoon.mcp_server:main"
 
 [tool.setuptools]
 package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.package-data]
+datoon = ["py.typed"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

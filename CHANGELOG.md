@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/andrii-su/datoon/compare/v1.4.0...v1.4.1) (2026-04-11)
+
+
+### Bug Fixes
+
+* update image source path for datoon banner in index.html ([fb320aa](https://github.com/andrii-su/datoon/commit/fb320aa1a4dae24814929a915f02899996de3663))
+
 # [1.4.0](https://github.com/andrii-su/datoon/compare/v1.3.0...v1.4.0) (2026-04-11)
 
 

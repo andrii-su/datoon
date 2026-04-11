@@ -76,7 +76,9 @@ def analyze_json(
         return {"error": f"Invalid JSON: {exc.msg} (pos={exc.pos})"}
 
     try:
-        config = ConversionConfig(max_depth=max_depth, min_uniform_rows=min_uniform_rows)
+        config = ConversionConfig(
+            max_depth=max_depth, min_uniform_rows=min_uniform_rows
+        )
     except ValueError as exc:
         return {"error": f"Invalid config: {exc}"}
 

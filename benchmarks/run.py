@@ -13,10 +13,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import datoon
 from datoon.converter import DatoonError, convert_json_for_llm, estimate_tokens
 from datoon.models import ConversionConfig
 
-SCRIPT_VERSION = "0.1.0"
+SCRIPT_VERSION = datoon.__version__
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_DIR = SCRIPT_DIR.parent
 PAYLOADS_PATH = SCRIPT_DIR / "payloads.json"

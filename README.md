@@ -13,7 +13,7 @@
 
 Raw JSON is often verbose in prompts. TOON can save tokens, but blind conversion can also make payloads worse. `datoon` adds a decision layer so pipelines can convert when savings are meaningful, skip when structure is a poor TOON fit, and always report exactly why the decision was made.
 
----
+______________________________________________________________________
 
 ## Contents
 
@@ -27,7 +27,7 @@ Raw JSON is often verbose in prompts. TOON can save tokens, but blind conversion
 - [Benchmarks](#-benchmarks)
 - [Development](#-development)
 
----
+______________________________________________________________________
 
 ## ⚡ Setup
 
@@ -40,11 +40,11 @@ One-command setup — installs all dependencies and registers `datoon` globally 
 What it does:
 
 1. Checks Python 3.12+ (fails fast if missing)
-2. Installs `uv` if not present
-3. Warns if Node.js is missing (required for TOON conversion)
-4. Runs `uv sync --extra dev`
-5. Registers the `datoon` CLI globally via `uv tool install --editable .`
-6. Adds `~/.local/bin` to your shell profile if needed
+1. Installs `uv` if not present
+1. Warns if Node.js is missing (required for TOON conversion)
+1. Runs `uv sync --extra dev`
+1. Registers the `datoon` CLI globally via `uv tool install --editable .`
+1. Adds `~/.local/bin` to your shell profile if needed
 
 After setup:
 
@@ -53,7 +53,7 @@ datoon --help
 echo '{"users":[{"id":1,"name":"Ada"}]}' | datoon --report-stdout
 ```
 
----
+______________________________________________________________________
 
 ## 📦 Install
 
@@ -73,7 +73,7 @@ pip install "datoon[mcp]"
 
 Requires Python `3.12+`. TOON conversion requires Node.js with `npx` in `PATH`.
 
----
+______________________________________________________________________
 
 ## 🚀 Quick Start
 
@@ -95,7 +95,7 @@ datoon ./input.json -o ./output.toon --report ./report.json
 datoon ./input.json --force --report-stdout
 ```
 
----
+______________________________________________________________________
 
 ## 🐍 Python API
 
@@ -133,7 +133,7 @@ analysis = analyze_payload(parsed_data, ConversionConfig())
 print(analysis.is_candidate, analysis.reason)
 ```
 
----
+______________________________________________________________________
 
 ## 🔌 MCP Server
 
@@ -163,7 +163,7 @@ datoon-mcp
 }
 ```
 
----
+______________________________________________________________________
 
 ## 🧩 Claude Code Plugin
 
@@ -182,7 +182,7 @@ convert this JSON to TOON if it saves tokens
 use datoon mode for structured data
 ```
 
----
+______________________________________________________________________
 
 ## ⚙️ CLI Reference
 
@@ -197,7 +197,7 @@ use datoon mode for structured data
 | `--report-stdout` | — | Print JSON conversion report to stderr |
 | `-o <path>` | stdout | Output file path |
 
----
+______________________________________________________________________
 
 ## 📈 Benchmarks
 
@@ -232,7 +232,7 @@ Auto mode avoids low-benefit and high-risk payloads (`orders-nested`, `mixed-non
 
 <!-- BENCHMARK-TABLE-END -->
 
----
+______________________________________________________________________
 
 ## 🛠 Development
 
@@ -265,14 +265,14 @@ uvx pre-commit run --all-files
 python scripts/validate_skill_sync.py
 ```
 
----
+______________________________________________________________________
 
 ## 🌐 Docs
 
 - Live site: [andrii-su.github.io/datoon](https://andrii-su.github.io/datoon/)
 - Source: [`docs/`](docs/)
 
----
+______________________________________________________________________
 
 ## 🔒 Security
 

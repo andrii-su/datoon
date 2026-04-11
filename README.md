@@ -11,44 +11,161 @@
 
 `datoon` is a pragmatic smart TOON gateway for LLM data workloads: it converts JSON payloads to [TOON](https://github.com/toon-format/toon) only when conversion is likely to improve token efficiency.
 
-## ✨ Why `datoon`
+Raw JSON is often verbose in prompts. TOON can save tokens, but blind conversion can also make payloads worse. `datoon` adds a decision layer so pipelines can convert when savings are meaningful, skip when structure is a poor TOON fit, and always report exactly why the decision was made.
 
-Raw JSON is often verbose in prompts. TOON can save tokens, but blind conversion can also make payloads worse.
+______________________________________________________________________
 
-`datoon` adds a decision layer so pipelines can:
+## Contents
 
-- ✅ convert when savings are meaningful;
-- ✅ skip when structure is a poor TOON fit;
-- ✅ report exactly why the decision was made.
+- [Setup](#-setup)
+- [Install](#-install)
+- [Quick Start](#-quick-start)
+- [Python API](#-python-api)
+- [MCP Server](#-mcp-server)
+- [Claude Code Plugin](#-claude-code-plugin)
+- [CLI Reference](#-cli-reference)
+- [Benchmarks](#-benchmarks)
+- [Development](#-development)
 
-## 🌐 Docs Site
+______________________________________________________________________
 
-- Live docs: [andrii-su.github.io/datoon](https://andrii-su.github.io/datoon/)
-- Source: [`docs/`](docs/)
+## ⚡ Setup
+
+One-command setup — installs all dependencies and registers `datoon` globally so it's available in any terminal:
+
+```bash
+./setup.sh
+```
+
+What it does:
+
+1. Checks Python 3.12+ (fails fast if missing)
+1. Installs `uv` if not present
+1. Warns if Node.js is missing (required for TOON conversion)
+1. Runs `uv sync --extra dev`
+1. Registers the `datoon` CLI globally via `uv tool install --editable .`
+1. Adds `~/.local/bin` to your shell profile if needed
+
+After setup:
+
+```bash
+datoon --help
+echo '{"users":[{"id":1,"name":"Ada"}]}' | datoon --report-stdout
+```
+
+______________________________________________________________________
+
+## 📦 Install
+
+```bash
+# via uv (recommended)
+uv add datoon
+
+# via pip
+pip install datoon
+
+# with optional tiktoken-based token counting
+pip install "datoon[tokens]"
+
+# with MCP server support
+pip install "datoon[mcp]"
+```
+
+Requires Python `3.12+`. TOON conversion requires Node.js with `npx` in `PATH`.
+
+______________________________________________________________________
 
 ## 🚀 Quick Start
 
-### 1. Install locally
-
-```bash
-uv sync
-```
-
-Runtime requirement: Python `3.12+`.
-
-### 2. Convert JSON from stdin
+**stdin:**
 
 ```bash
 echo '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Lin"}]}' | datoon --report-stdout
 ```
 
-### 3. Convert file input
+**file:**
 
 ```bash
-datoon ./examples/input.json -o ./examples/output.toon --report ./examples/report.json
+datoon ./input.json -o ./output.toon --report ./report.json
 ```
 
-## 🔌 Claude Code Plugin
+**force conversion:**
+
+```bash
+datoon ./input.json --force --report-stdout
+```
+
+______________________________________________________________________
+
+## 🐍 Python API
+
+```python
+from datoon import convert_json_for_llm, ConversionConfig, DatoonError
+
+config = ConversionConfig(
+    min_savings_ratio=0.15,   # skip if savings below 15%
+    max_depth=6,              # skip if nesting deeper than 6
+    min_uniform_rows=3,       # require at least 3 uniform rows
+    toon_cli_timeout=30,      # seconds before CLI call is aborted
+    force=False,
+)
+
+try:
+    outcome = convert_json_for_llm(raw_json, config)
+except DatoonError as exc:
+    print(f"conversion failed: {exc}")
+    raise
+
+# outcome.payload_text — TOON or original JSON depending on decision
+# outcome.report.decision — "convert" | "skip"
+# outcome.report.reason — human-readable explanation
+# outcome.report.savings_ratio — float, e.g. 0.281
+send_to_model(outcome.payload_text)
+```
+
+**Structure-only analysis (no Node.js required):**
+
+```python
+from datoon.analyzer import analyze_payload
+from datoon.models import ConversionConfig
+
+analysis = analyze_payload(parsed_data, ConversionConfig())
+print(analysis.is_candidate, analysis.reason)
+```
+
+______________________________________________________________________
+
+## 🔌 MCP Server
+
+`datoon` ships an [MCP](https://modelcontextprotocol.io) server with two tools:
+
+| Tool | Description |
+|---|---|
+| `convert_json` | Full conversion with policy gating |
+| `analyze_json` | Structure analysis only — no Node.js needed |
+
+**Run locally:**
+
+```bash
+datoon-mcp
+```
+
+**Claude Desktop / Cursor / Windsurf config:**
+
+```json
+{
+  "mcpServers": {
+    "datoon": {
+      "command": "uvx",
+      "args": ["datoon[mcp]", "datoon-mcp"]
+    }
+  }
+}
+```
+
+______________________________________________________________________
+
+## 🧩 Claude Code Plugin
 
 Install directly from GitHub:
 
@@ -57,17 +174,32 @@ claude plugin marketplace add andrii-su/datoon
 claude plugin install datoon@datoon
 ```
 
-Then trigger in-session with prompts like:
+Trigger in-session:
 
-- `/datoon`
-- `convert this JSON to TOON if it saves tokens`
-- `use datoon mode for structured data`
+```
+/datoon
+convert this JSON to TOON if it saves tokens
+use datoon mode for structured data
+```
+
+______________________________________________________________________
+
+## ⚙️ CLI Reference
+
+| Flag | Default | Description |
+|---|---|---|
+| `--force` | `false` | Bypass gating and minimum savings threshold |
+| `--min-savings` | `0.15` | Minimum relative token savings required |
+| `--max-depth` | `6` | Maximum nesting depth for auto-conversion |
+| `--min-uniform-rows` | `3` | Minimum rows in uniform object arrays |
+| `--timeout` | `30` | Seconds before TOON CLI call is aborted |
+| `--report <path>` | — | Write JSON conversion report to file |
+| `--report-stdout` | — | Print JSON conversion report to stderr |
+| `-o <path>` | stdout | Output file path |
+
+______________________________________________________________________
 
 ## 📈 Benchmarks
-
-`datoon` includes a local benchmark runner inspired by `caveman/benchmarks/run.py`.
-
-Run:
 
 ```bash
 PYTHONPATH=src python benchmarks/run.py --dry-run
@@ -75,19 +207,15 @@ PYTHONPATH=src python benchmarks/run.py
 PYTHONPATH=src python benchmarks/run.py --update-readme
 ```
 
-### ⚖️ Benchmark Comparison Snapshot
+### Why auto mode outperforms forced conversion
+
+Auto mode avoids low-benefit and high-risk payloads (`orders-nested`, `mixed-non-uniform`) while matching forced TOON's average token count on suitable ones. Every decision comes with a reasoned report.
 
 | Scenario | JSON Baseline | Forced TOON | `datoon` Auto |
 |---|---:|---:|---:|
 | Average tokens | 77 | 50 | 50 |
 | Avg token saved | 0.0% | 26.8% | **28.1%** |
 | Decision quality | n/a | Converts all | Converts `3/5`, skips harmful cases |
-
-Why auto wins:
-
-- 🧠 it avoids low-benefit/high-risk payloads (`orders-nested`, `mixed-non-uniform`);
-- 📉 it keeps the same average token count as forced mode while improving stability;
-- 🧾 it always returns a reasoned conversion report.
 
 <!-- BENCHMARK-TABLE-START -->
 
@@ -104,93 +232,48 @@ Why auto wins:
 
 <!-- BENCHMARK-TABLE-END -->
 
-## ⚙️ Decision Model (Auto Mode)
+______________________________________________________________________
 
-`datoon` currently converts only when:
+## 🛠 Development
 
-- payload contains uniform arrays of objects (table-like structures);
-- nesting depth is below configured threshold;
-- estimated token savings are above configured minimum.
+**Setup:**
 
-Otherwise it returns normalized JSON unchanged and explains the skip reason.
+```bash
+uv sync --extra dev
+uvx pre-commit install
+```
 
-## 🧰 CLI Flags
+**Tests:**
 
-- `--force`: bypass gating and minimum savings threshold.
-- `--min-savings`: minimum relative savings required (default: `0.15`).
-- `--max-depth`: maximum payload depth considered safe for TOON auto-convert (default: `6`).
-- `--min-uniform-rows`: minimum rows in uniform object arrays (default: `3`).
-- `--report`: write JSON report to a file.
-- `--report-stdout`: print JSON report to stderr.
+```bash
+# unit only
+pytest -m "not integration"
 
-## ✅ Development Checks
+# with integration (requires Node.js + npx)
+pytest
+```
 
-Install and run pre-commit hooks:
+**Pre-commit:**
 
 ```bash
 uvx pre-commit run --all-files
 ```
 
-Configured hooks validate Python and Markdown:
-
-- `ruff` + `ruff-format` for Python files;
-- `mdformat` for Markdown formatting.
-
-## 🧪 Tests
-
-Install test dependencies:
-
-```bash
-uv sync --extra dev
-```
-
-Run unit tests:
-
-```bash
-pytest -m "not integration"
-```
-
-Run integration tests (requires Node.js + `npx`):
-
-```bash
-pytest -m integration
-```
-
-## 📦 Dependencies
-
-`datoon` uses the official TOON CLI through `npx`:
-
-- Node.js with `npx` available in `PATH`;
-- network access for first-time package resolution (or a warmed npm cache).
-
-By default it invokes:
-
-```bash
-npx --yes @toon-format/cli@2
-```
-
-## 🔒 Security
-
-See [SECURITY.md](SECURITY.md) for vulnerability reporting and response policy.
-
-## 🛡️ Release Safety Checks
-
-Before release, CI validates that all skill mirrors are synchronized:
-
-- `skills/datoon/SKILL.md` (source of truth)
-- `SKILL.md`
-- `datoon/SKILL.md`
-- `plugins/datoon/skills/datoon/SKILL.md`
-- `datoon.skill` archive content
-
-Local check:
+**Skill sync check:**
 
 ```bash
 python scripts/validate_skill_sync.py
 ```
 
-## 🧭 Next Steps
+______________________________________________________________________
 
-- Add policy profiles (`strict`, `balanced`, `aggressive`).
-- Add optional CSV pre-normalization for tabular sources.
-- Add integration wrappers for FastAPI/Celery/Airflow entrypoints.
+## 🌐 Docs
+
+- Live site: [andrii-su.github.io/datoon](https://andrii-su.github.io/datoon/)
+- Source: [`docs/`](docs/)
+
+______________________________________________________________________
+
+## 🔒 Security
+
+See [SECURITY.md](SECURITY.md) for vulnerability reporting and response policy.

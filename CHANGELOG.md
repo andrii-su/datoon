@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/andrii-su/datoon/compare/v1.3.0...v1.4.0) (2026-04-11)
+
+
+### Features
+
+* add setup script for installing dependencies and registering datoon CLI globally ([3cf6027](https://github.com/andrii-su/datoon/commit/3cf6027b0404b21411aacd52d726f57201005972))
+
 # [1.3.0](https://github.com/andrii-su/datoon/compare/v1.2.0...v1.3.0) (2026-04-11)
 
 

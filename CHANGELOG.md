@@ -1,3 +1,18 @@
+# [1.3.0](https://github.com/andrii-su/datoon/compare/v1.2.0...v1.3.0) (2026-04-11)
+
+
+### Features
+
+* add banner section to index page with responsive styling ([292cb68](https://github.com/andrii-su/datoon/commit/292cb68d51a234f94a5185f5b0e82a515ec48391))
+* add py.typed file for type hinting support ([13e974f](https://github.com/andrii-su/datoon/commit/13e974f39b51df577b681391a23d59503c2874a2))
+* add timeout option for TOON CLI in command-line parser ([8aa76d6](https://github.com/andrii-su/datoon/commit/8aa76d63604116313a3566f18abfccc715f5cf0c))
+* add unit tests for MCP server tools and enhance conversion config validation ([2fd001b](https://github.com/andrii-su/datoon/commit/2fd001ba7ddb19491e24bfddc71c9a935f80a1b2))
+* expand __all__ to include additional conversion models and error handling ([e1c4c32](https://github.com/andrii-su/datoon/commit/e1c4c328cf7f98f8cadbcbc5aa4ed10d67ee3309))
+* format ConversionConfig initialization for better readability ([5ef52b4](https://github.com/andrii-su/datoon/commit/5ef52b4201956b9657936ae14e32b5119b70ccb1))
+* implement MCP server with JSON conversion and analysis tools ([03d78ce](https://github.com/andrii-su/datoon/commit/03d78ce15653b519d4190755ad81a117f0ee4a23))
+* update SCRIPT_VERSION to use datoon package version ([a83633b](https://github.com/andrii-su/datoon/commit/a83633b27f7180f6e307bce9cb1b3c0208979f03))
+* update TOON CLI timeout handling and improve token estimation logic ([309aec3](https://github.com/andrii-su/datoon/commit/309aec3e750be7dff72d96038a4b396dcd75a2e1))
+
 # [1.2.0](https://github.com/andrii-su/datoon/compare/v1.1.2...v1.2.0) (2026-04-07)
 
 

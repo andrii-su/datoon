@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Iterable
+from collections.abc import Iterator
 from typing import Any
 
 from datoon.models import ConversionConfig, PayloadAnalysis
@@ -23,7 +23,7 @@ def _max_depth(value: Any, depth: int = 1) -> int:
     return depth
 
 
-def _iter_arrays(value: Any) -> Iterable[list[Any]]:
+def _iter_arrays(value: Any) -> Iterator[list[Any]]:
     """Yield every list node found within a nested JSON-like structure."""
     if isinstance(value, list):
         yield value
@@ -43,11 +43,11 @@ def _is_uniform_object_array(items: list[Any], min_rows: int) -> bool:
     if not all(isinstance(item, dict) for item in items):
         return False
 
-    first_keys = set(items[0].keys())
+    first_keys = list(items[0].keys())
     if not first_keys:
         return False
 
-    return all(set(item.keys()) == first_keys for item in items)
+    return all(list(item.keys()) == first_keys for item in items)
 
 
 def analyze_payload(data: Any, config: ConversionConfig) -> PayloadAnalysis:

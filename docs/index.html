@@ -11,7 +11,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
         <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;600;700;800&display=swap"
             rel="stylesheet"
         />
         <link rel="stylesheet" href="./styles.css" />
@@ -30,6 +30,15 @@
         </header>
 
         <main id="top">
+            <div class="banner-wrap">
+                <img
+                    src="../assets/datoon-banner.svg"
+                    alt="datoon — smart TOON gateway for LLM data"
+                    width="1280"
+                    height="640"
+                />
+            </div>
+
             <section class="hero">
                 <article class="card hero-copy">
                     <span class="chip">LLM Data Optimization</span>
@@ -59,7 +68,7 @@
                 <aside class="card hero-panel">
                     <div class="metric">
                         <strong data-target="28.1" data-suffix="%">0%</strong>
-                        <span>Average auto-mode token savings</span>
+                        <span>Avg auto-mode token savings</span>
                     </div>
                     <div class="metric">
                         <strong data-target="26.8" data-suffix="%">0%</strong>
@@ -73,102 +82,118 @@
             </section>
 
             <section id="features" class="section card">
-                <h2 class="section-title">Why teams use datoon</h2>
-                <p class="section-lead">
-                    Built for practical AI/data pipelines where prompt size,
-                    readability, and deterministic behavior all matter.
-                </p>
-                <div class="grid features">
-                    <article class="feature">
-                        <h3>Decision-first conversion</h3>
-                        <p>
-                            Auto mode checks uniform tabular structure, payload
-                            depth, and minimum savings before converting to
-                            TOON.
-                        </p>
-                    </article>
-                    <article class="feature">
-                        <h3>Transparent reporting</h3>
-                        <p>
-                            Every run can emit a report with token estimates,
-                            conversion decision, reason, and savings ratio.
-                        </p>
-                    </article>
-                    <article class="feature">
-                        <h3>CLI and plugin ready</h3>
-                        <p>
-                            Use as a Python CLI in CI/pipelines or install as
-                            Claude Code plugin via marketplace.
-                        </p>
-                    </article>
+                <div class="section-header">
+                    <span class="section-index">01</span>
+                    <h2 class="section-title">Why teams use datoon</h2>
+                </div>
+                <div class="section-body">
+                    <p class="section-lead">
+                        Built for practical AI/data pipelines where prompt size,
+                        readability, and deterministic behavior all matter.
+                    </p>
+                    <div class="grid features">
+                        <article class="feature">
+                            <div class="feature-label">Decision</div>
+                            <h3>Decision-first conversion</h3>
+                            <p>
+                                Auto mode checks uniform tabular structure,
+                                payload depth, and minimum savings before
+                                converting to TOON.
+                            </p>
+                        </article>
+                        <article class="feature">
+                            <div class="feature-label">Reporting</div>
+                            <h3>Transparent reporting</h3>
+                            <p>
+                                Every run emits a report with token estimates,
+                                conversion decision, reason, and savings ratio.
+                            </p>
+                        </article>
+                        <article class="feature">
+                            <div class="feature-label">Integration</div>
+                            <h3>CLI and plugin ready</h3>
+                            <p>
+                                Use as a Python CLI in CI/pipelines or install
+                                as Claude Code plugin via marketplace.
+                            </p>
+                        </article>
+                    </div>
                 </div>
             </section>
 
             <section id="benchmarks" class="section card">
-                <h2 class="section-title">Benchmark snapshot</h2>
-                <p class="section-lead">
-                    Local suite compares JSON baseline, forced TOON conversion,
-                    and datoon auto mode.
-                </p>
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Metric</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Forced TOON avg reduction</td>
-                                <td>26.8%</td>
-                            </tr>
-                            <tr>
-                                <td>Auto mode avg reduction</td>
-                                <td>28.1%</td>
-                            </tr>
-                            <tr>
-                                <td>Auto decisions</td>
-                                <td>3 / 5 payloads converted</td>
-                            </tr>
-                            <tr>
-                                <td>Failed forced conversions</td>
-                                <td>0 / 5</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="section-header">
+                    <span class="section-index">02</span>
+                    <h2 class="section-title">Benchmark snapshot</h2>
                 </div>
-                <p class="note">
-                    Reproduce locally with
-                    <code>PYTHONPATH=src python benchmarks/run.py</code>.
-                </p>
+                <div class="section-body">
+                    <p class="section-lead">
+                        Local suite compares JSON baseline, forced TOON
+                        conversion, and datoon auto mode across five reference
+                        payloads.
+                    </p>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Metric</th>
+                                    <th>Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Forced TOON avg reduction</td>
+                                    <td>26.8%</td>
+                                </tr>
+                                <tr>
+                                    <td>Auto mode avg reduction</td>
+                                    <td>28.1%</td>
+                                </tr>
+                                <tr>
+                                    <td>Auto decisions</td>
+                                    <td>3 / 5 payloads converted</td>
+                                </tr>
+                                <tr>
+                                    <td>Failed forced conversions</td>
+                                    <td>0 / 5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p class="note">
+                        Reproduce locally with
+                        <code>PYTHONPATH=src python benchmarks/run.py</code>.
+                    </p>
+                </div>
             </section>
 
             <section id="install" class="section card">
-                <h2 class="section-title">Install and run</h2>
-                <div class="code">
-                    <pre>
-uv sync
+                <div class="section-header">
+                    <span class="section-index">03</span>
+                    <h2 class="section-title">Install and run</h2>
+                </div>
+                <div class="section-body">
+                    <div class="code">
+                        <pre>uv sync
 
 # stdin usage
 echo '{"users":[{"id":1,"name":"Ada"}]}' | datoon --report-stdout
 
 # file usage
-datoon ./input.json -o ./output.toon --report ./report.json</pre
-                    >
+datoon ./input.json -o ./output.toon --report ./report.json</pre>
+                    </div>
+                    <p class="note">
+                        Requires Python 3.12+ and Node.js for TOON CLI
+                        execution through
+                        <code>npx --yes @toon-format/cli@2</code>.
+                    </p>
                 </div>
-                <p class="note">
-                    Requires Python 3.12+ and Node.js for TOON CLI execution
-                    through
-                    <code>npx --yes @toon-format/cli@2</code>.
-                </p>
             </section>
 
             <footer class="footer">
-                <p>
-                    <span data-year></span> datoon. Source on
-                    <a href="https://github.com/andrii-su/datoon">GitHub</a>.
-                </p>
+                <span><span data-year></span> datoon</span>
+                <span class="footer-mark">©</span>
+                <a href="https://github.com/andrii-su/datoon">GitHub</a>
             </footer>
         </main>
 

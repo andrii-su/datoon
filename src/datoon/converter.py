@@ -46,10 +46,10 @@ def estimate_tokens(text: str) -> int:
     if encoder is not None:
         return len(encoder.encode(text))
 
-    return max(1, math.ceil(len(text) / 4))
+    return max(1, math.ceil(len(text) / 3))
 
 
-def _run_toon_cli(normalized_json: str) -> str:
+def _run_toon_cli(normalized_json: str, timeout: int = 30) -> str:
     """Convert normalized JSON to TOON via the official TOON CLI."""
     command = ["npx", "--yes", TOON_CLI_PACKAGE]
 
@@ -60,11 +60,14 @@ def _run_toon_cli(normalized_json: str) -> str:
             capture_output=True,
             text=True,
             check=False,
+            timeout=timeout,
         )
     except FileNotFoundError as exc:
         raise DatoonError(
             "`npx` is not available in PATH. Install Node.js before TOON conversion."
         ) from exc
+    except subprocess.TimeoutExpired as exc:
+        raise DatoonError(f"TOON CLI timed out after {timeout}s.") from exc
 
     if result.returncode != 0:
         stderr = result.stderr.strip() or "unknown TOON CLI error"
@@ -114,7 +117,7 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
         )
 
     try:
-        toon_text = _run_toon_cli(normalized_json)
+        toon_text = _run_toon_cli(normalized_json, timeout=config.toon_cli_timeout)
     except DatoonError:
         if config.force:
             raise

@@ -34,6 +34,20 @@ def test_analyze_payload_rejects_non_uniform_array() -> None:
     assert "No uniform object arrays" in analysis.reason
 
 
+def test_analyze_payload_rejects_mismatched_key_order() -> None:
+    """Rows with same keys in different order must not be treated as uniform."""
+    data = {
+        "rows": [
+            {"id": 1, "value": "a"},
+            {"value": "b", "id": 2},
+            {"id": 3, "value": "c"},
+        ]
+    }
+    analysis = analyze_payload(data, ConversionConfig())
+    assert analysis.is_candidate is False
+    assert "No uniform object arrays" in analysis.reason
+
+
 def test_analyze_payload_rejects_excessive_depth() -> None:
     """Deeply nested payloads should be rejected by depth gate."""
     data = {

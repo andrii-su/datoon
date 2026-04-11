@@ -14,6 +14,13 @@ def test_conversion_config_accepts_valid_defaults() -> None:
     assert config.max_depth == 6
     assert config.min_uniform_rows == 3
     assert config.force is False
+    assert config.toon_cli_timeout == 30
+
+
+def test_conversion_config_rejects_invalid_timeout() -> None:
+    """Timeout below 1 second must be rejected."""
+    with pytest.raises(ValueError, match="toon_cli_timeout"):
+        ConversionConfig(toon_cli_timeout=0)
 
 
 @pytest.mark.parametrize("value", [-0.1, 1.1])

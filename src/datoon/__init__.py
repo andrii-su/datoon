@@ -4,7 +4,23 @@ from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version
 
-__all__ = ["__version__"]
+from datoon.converter import DatoonError, convert_json_for_llm
+from datoon.models import (
+    ConversionConfig,
+    ConversionOutcome,
+    ConversionReport,
+    PayloadAnalysis,
+)
+
+__all__ = [
+    "__version__",
+    "convert_json_for_llm",
+    "ConversionConfig",
+    "ConversionOutcome",
+    "ConversionReport",
+    "PayloadAnalysis",
+    "DatoonError",
+]
 
 try:
     __version__ = version("datoon")

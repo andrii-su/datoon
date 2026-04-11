@@ -52,6 +52,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="Minimum row count for uniform object arrays (default: 3).",
     )
     parser.add_argument(
+        "--timeout",
+        type=int,
+        default=30,
+        help="Seconds to wait for the TOON CLI before aborting (default: 30).",
+    )
+    parser.add_argument(
         "--report",
         help="Optional path to write conversion report as JSON.",
     )
@@ -104,6 +110,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             max_depth=args.max_depth,
             min_uniform_rows=args.min_uniform_rows,
             force=args.force,
+            toon_cli_timeout=args.timeout,
         )
         raw_input = _read_input(args.input)
         outcome = convert_json_for_llm(raw_input, config)

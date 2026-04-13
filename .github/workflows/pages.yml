@@ -37,7 +37,7 @@ jobs:
 
       - name: Upload docs artifact
         if: steps.setup_pages.outcome == 'success'
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs
 

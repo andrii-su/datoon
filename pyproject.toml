@@ -23,7 +23,7 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=9.0.3", "pre-commit>=4.5.1"]
+dev = ["pytest>=9.0.3", "pre-commit>=4.6.0"]
 tokens = ["tiktoken>=0.8.0"]
 mcp = ["mcp>=1.6.0"]
 

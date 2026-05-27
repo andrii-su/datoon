@@ -1,9 +1,19 @@
 {
   "name": "datoon",
-  "version": "1.1.1",
-  "description": "Smart data-to-TOON mode for Claude Code. Convert structured JSON only when token savings are meaningful.",
+  "version": "1.4.1",
+  "description": "Smart JSON-to-TOON conversion with pragmatic auto-gating for LLM prompts.",
   "author": {
     "name": "Andrii Suruhov",
     "url": "https://github.com/andrii-su"
-  }
+  },
+  "homepage": "https://github.com/andrii-su/datoon",
+  "repository": "https://github.com/andrii-su/datoon",
+  "license": "MIT",
+  "keywords": [
+    "llm",
+    "prompt-engineering",
+    "json",
+    "toon",
+    "data"
+  ]
 }

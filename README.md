@@ -13,6 +13,36 @@
 
 Raw JSON is often verbose in prompts. TOON can save tokens, but blind conversion can also make payloads worse. `datoon` adds a decision layer so pipelines can convert when savings are meaningful, skip when structure is a poor TOON fit, and always report exactly why the decision was made.
 
+## Before / After
+
+**Before: JSON payload in the prompt**
+
+```json
+{"users":[{"id":1,"name":"Ada","role":"admin"},{"id":2,"name":"Lin","role":"analyst"},{"id":3,"name":"Grace","role":"viewer"}]}
+```
+
+**After: `datoon` converts only because policy says it should**
+
+```toon
+users[3]{id,name,role}:
+  1,Ada,admin
+  2,Lin,analyst
+  3,Grace,viewer
+```
+
+```json
+{
+  "decision": "convert",
+  "reason": "Estimated savings 44.19% (threshold 15.00%).",
+  "input_token_estimate": 43,
+  "output_token_estimate": 24
+}
+```
+
+Same records, same keys, smaller prompt payload. If the structure is non-uniform, tiny, deeply nested, or conversion saves too little, `datoon` keeps JSON instead.
+
+Auto mode returns compact JSON instead of TOON when the payload is not a good fit: no uniform object arrays, fewer than the configured minimum rows, nesting deeper than `--max-depth`, estimated savings below `--min-savings`, or a missing/unavailable TOON CLI dependency. Invalid JSON still fails loudly, and `--force` bypasses gating for experiments but does not hide conversion failures.
+
 ______________________________________________________________________
 
 ## Contents
@@ -26,6 +56,7 @@ ______________________________________________________________________
 - [CLI Reference](#-cli-reference)
 - [Benchmarks](#-benchmarks)
 - [Development](#-development)
+- [Docs](#-docs)
 
 ______________________________________________________________________
 
@@ -53,6 +84,10 @@ datoon --help
 echo '{"users":[{"id":1,"name":"Ada"}]}' | datoon --report-stdout
 ```
 
+Full install options for Python, CLI, MCP, Claude Code, and Codex live in [INSTALL.md](./INSTALL.md).
+For integration installs, preview first with `./install.sh --dry-run`, then use `./install.sh --install --target <claude|codex|mcp>`.
+The installer only changes selected local integration config: Claude Code plugin state through the `claude` CLI, Codex marketplace JSON, and/or an MCP JSON config. See [INSTALL.md](./INSTALL.md) for exact paths, backups, privacy notes, and troubleshooting.
+
 ______________________________________________________________________
 
 ## 📦 Install
@@ -72,6 +107,8 @@ pip install "datoon[mcp]"
 ```
 
 Requires Python `3.12+`. TOON conversion requires Node.js with `npx` in `PATH`.
+
+`datoon` itself processes payloads locally. The Python package has no required runtime dependencies; optional extras add token estimation (`tiktoken`) or MCP server support (`mcp`). The converter invokes `npx --yes @toon-format/cli@2` only when auto policy reaches the conversion step or when `--force` is used.
 
 ______________________________________________________________________
 
@@ -205,6 +242,7 @@ ______________________________________________________________________
 PYTHONPATH=src python benchmarks/run.py --dry-run
 PYTHONPATH=src python benchmarks/run.py
 PYTHONPATH=src python benchmarks/run.py --update-readme
+python scripts/summarize_agent_skill_eval.py
 ```
 
 ### Why auto mode outperforms forced conversion
@@ -232,9 +270,33 @@ Auto mode avoids low-benefit and high-risk payloads (`orders-nested`, `mixed-non
 
 <!-- BENCHMARK-TABLE-END -->
 
+### Agent skill evaluation
+
+We also ran an artifact-based subagent comparison with identical analysis tasks in two modes:
+
+- `with_skill`: agent received the `datoon` skill and followed the conversion workflow.
+- `without_skill`: agent used the JSON payload directly and was instructed not to use TOON or `datoon`.
+
+The test covered 3 payload sizes (`small`, `medium`, `large`) across 3 deterministic iterations, for 18 total agent runs. Both modes produced exact expected answers in every run.
+
+| Scenario | Avg JSON Tokens | Avg TOON Tokens | Avg Payload Saved |
+|---|---:|---:|---:|
+| small | 225.33 | 118.00 | 47.63% |
+| medium | 2,972.00 | 1,138.00 | 61.71% |
+| large | 17,757.00 | 6,673.00 | 62.42% |
+
+| Mode | Runs | Correct | Accuracy |
+|---|---:|---:|---:|
+| with skill | 9 | 9 | 100% |
+| without skill | 9 | 9 | 100% |
+
+Full report and raw outputs live in [`benchmarks/agent_skill_eval/`](benchmarks/agent_skill_eval/). The subagent tool did not expose full model token usage for each run, so this report claims payload-token savings only, not total end-to-end model-token savings.
+
 ______________________________________________________________________
 
 ## 🛠 Development
+
+Contributor workflow is documented in [CONTRIBUTING.md](./CONTRIBUTING.md). Maintainer/source-of-truth notes for agents live in [CLAUDE.md](./CLAUDE.md).
 
 **Setup:**
 
@@ -263,6 +325,7 @@ uvx pre-commit run --all-files
 
 ```bash
 python scripts/validate_skill_sync.py
+python scripts/validate_plugin_metadata.py
 ```
 
 ______________________________________________________________________

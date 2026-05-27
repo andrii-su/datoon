@@ -1,0 +1,14 @@
+{
+  "decision": "convert",
+  "reason": "Estimated savings 47.56% (threshold 15.00%).",
+  "was_forced": false,
+  "input_token_estimate": 225,
+  "output_token_estimate": 118,
+  "savings_ratio": 0.47555555555555556,
+  "analysis": {
+    "is_candidate": true,
+    "reason": "Detected 1 uniform object array(s) within depth 4.",
+    "max_depth": 4,
+    "uniform_array_count": 1
+  }
+}

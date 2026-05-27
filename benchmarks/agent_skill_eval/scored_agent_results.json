@@ -1,0 +1,488 @@
+[
+  {
+    "variant": "with_skill",
+    "agent_id": "019e6b45-6723-75c0-a2da-5a5af19635ac",
+    "agent_nickname": "Bacon",
+    "payload_name": "1_small.json",
+    "result": {
+      "mode": "convert",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/1_small.json",
+      "scenario": "small",
+      "iteration": 1,
+      "record_count": 5,
+      "active_count": 4,
+      "total_revenue_cents": 1385,
+      "top_region": "west",
+      "top_category": "hardware",
+      "anomaly_ids": [
+        "s-1-0001",
+        "s-1-0005"
+      ],
+      "elapsed_seconds": 1.247206375002861,
+      "notes": "datoon decision=convert; Estimated savings 47.79% (threshold 15.00%)."
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "without_skill",
+    "agent_id": "019e6b45-79f7-7033-a490-ec76d7a1817e",
+    "agent_nickname": "Euler",
+    "payload_name": "1_small.json",
+    "result": {
+      "mode": "json_direct",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/1_small.json",
+      "scenario": "small",
+      "iteration": 1,
+      "record_count": 5,
+      "active_count": 4,
+      "total_revenue_cents": 1385,
+      "top_region": "west",
+      "top_category": "hardware",
+      "anomaly_ids": [
+        "s-1-0001",
+        "s-1-0005"
+      ],
+      "elapsed_seconds": 0.001,
+      "notes": "Computed directly from JSON payload; no datoon, TOON, preconverted .toon, or report files used."
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "with_skill",
+    "agent_id": "019e6b45-91cb-75c2-8b5c-3cacc7e95c87",
+    "agent_nickname": "Hume",
+    "payload_name": "1_medium.json",
+    "result": {
+      "mode": "datoon",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/1_medium.json",
+      "scenario": "medium",
+      "iteration": 1,
+      "record_count": 75,
+      "active_count": 60,
+      "total_revenue_cents": 175310,
+      "top_region": "west",
+      "top_category": "services",
+      "anomaly_ids": [
+        "m-1-0001",
+        "m-1-0018",
+        "m-1-0035",
+        "m-1-0052",
+        "m-1-0069"
+      ],
+      "elapsed_seconds": 0.82903,
+      "notes": "datoon decision=convert; estimated_savings_ratio=0.617092866756393"
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "without_skill",
+    "agent_id": "019e6b45-a449-7600-b82c-2a4ba8fb80aa",
+    "agent_nickname": "Turing",
+    "payload_name": "1_medium.json",
+    "result": {
+      "mode": "json_direct",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/1_medium.json",
+      "scenario": "medium",
+      "iteration": 1,
+      "record_count": 75,
+      "active_count": 60,
+      "total_revenue_cents": 175310,
+      "top_region": "west",
+      "top_category": "services",
+      "anomaly_ids": [
+        "m-1-0001",
+        "m-1-0018",
+        "m-1-0035",
+        "m-1-0052",
+        "m-1-0069"
+      ],
+      "elapsed_seconds": 0.000279583,
+      "notes": "Computed directly from JSON payload; no datoon, TOON, preconverted .toon, or report files used."
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "with_skill",
+    "agent_id": "019e6b45-c007-76a3-baea-e5a6f69ded3f",
+    "agent_nickname": "Fermat",
+    "payload_name": "1_large.json",
+    "result": {
+      "mode": "convert",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/1_large.json",
+      "scenario": "large",
+      "iteration": 1,
+      "record_count": 450,
+      "active_count": 360,
+      "total_revenue_cents": 4242985,
+      "top_region": "west",
+      "top_category": "services",
+      "anomaly_ids": [
+        "l-1-0001",
+        "l-1-0098",
+        "l-1-0195",
+        "l-1-0292",
+        "l-1-0389"
+      ],
+      "elapsed_seconds": 0.000509,
+      "notes": "datoon decision=convert; optimized_payload=/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/toon/1_large.toon; report=/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/reports/1_large.report.json; savings_ratio=0.624239693625"
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "without_skill",
+    "agent_id": "019e6b45-d276-7060-90dd-05d565b30e57",
+    "agent_nickname": "Dalton",
+    "payload_name": "1_large.json",
+    "result": {
+      "mode": "without_datoon_skill",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/1_large.json",
+      "scenario": "large",
+      "iteration": 1,
+      "record_count": 450,
+      "active_count": 360,
+      "total_revenue_cents": 4242985,
+      "top_region": "west",
+      "top_category": "services",
+      "anomaly_ids": [
+        "l-1-0001",
+        "l-1-0098",
+        "l-1-0195",
+        "l-1-0292",
+        "l-1-0389"
+      ],
+      "elapsed_seconds": 0.000738,
+      "notes": "Computed directly from JSON payload; no datoon, TOON, or preconverted files used."
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "with_skill",
+    "agent_id": "019e6b46-fc91-77c2-aefc-43d7bbf73d3a",
+    "agent_nickname": "Aristotle",
+    "payload_name": "2_small.json",
+    "result": {
+      "mode": "with_skill",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/2_small.json",
+      "scenario": "small",
+      "iteration": 2,
+      "record_count": 5,
+      "active_count": 4,
+      "total_revenue_cents": 1496,
+      "top_region": "north",
+      "top_category": "software",
+      "anomaly_ids": [
+        "s-2-0001",
+        "s-2-0005"
+      ],
+      "elapsed_seconds": 1.11,
+      "notes": "datoon decision=convert; optimized payload and report read from CLI output; no repository files modified"
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "without_skill",
+    "agent_id": "019e6b47-130a-79a1-a27a-6a25281ba0ee",
+    "agent_nickname": "Kierkegaard",
+    "payload_name": "2_small.json",
+    "result": {
+      "mode": "json_direct",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/2_small.json",
+      "scenario": "small",
+      "iteration": 2,
+      "record_count": 5,
+      "active_count": 4,
+      "total_revenue_cents": 1496,
+      "top_region": "north",
+      "top_category": "software",
+      "anomaly_ids": [
+        "s-2-0001",
+        "s-2-0005"
+      ],
+      "elapsed_seconds": 6.9e-05,
+      "notes": "Computed directly from JSON payload; no datoon, TOON, preconverted .toon, or report files used."
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "with_skill",
+    "agent_id": "019e6b47-2d69-7320-bf1b-47e2df7125dc",
+    "agent_nickname": "Dirac",
+    "payload_name": "2_medium.json",
+    "result": {
+      "mode": "with_skill",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/2_medium.json",
+      "scenario": "medium",
+      "iteration": 2,
+      "record_count": 75,
+      "active_count": 60,
+      "total_revenue_cents": 182525,
+      "top_region": "north",
+      "top_category": "training",
+      "anomaly_ids": [
+        "m-2-0001",
+        "m-2-0018",
+        "m-2-0035",
+        "m-2-0052",
+        "m-2-0069"
+      ],
+      "elapsed_seconds": 0.710107,
+      "notes": "datoon decision=convert; reason=Estimated savings 61.71% (threshold 15.00%).; optimized_payload_chars=3413; report_input_tokens=2972; report_output_tokens=1138"
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "without_skill",
+    "agent_id": "019e6b47-40a4-72c3-99d8-67c925ecd824",
+    "agent_nickname": "Pauli",
+    "payload_name": "2_medium.json",
+    "result": {
+      "mode": "json_direct",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/2_medium.json",
+      "scenario": "medium",
+      "iteration": 2,
+      "record_count": 75,
+      "active_count": 60,
+      "total_revenue_cents": 182525,
+      "top_region": "north",
+      "top_category": "training",
+      "anomaly_ids": [
+        "m-2-0001",
+        "m-2-0018",
+        "m-2-0035",
+        "m-2-0052",
+        "m-2-0069"
+      ],
+      "elapsed_seconds": 6.2,
+      "notes": "Computed directly from JSON payload; no datoon, TOON, preconverted .toon, or report files used."
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "with_skill",
+    "agent_id": "019e6b47-5662-7810-aaa9-930e5b93b752",
+    "agent_nickname": "Bohr",
+    "payload_name": "2_large.json",
+    "result": {
+      "mode": "with_skill",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/2_large.json",
+      "scenario": "large",
+      "iteration": 2,
+      "record_count": 450,
+      "active_count": 360,
+      "total_revenue_cents": 4291825,
+      "top_region": "north",
+      "top_category": "training",
+      "anomaly_ids": [
+        "l-2-0001",
+        "l-2-0098",
+        "l-2-0195",
+        "l-2-0292",
+        "l-2-0389"
+      ],
+      "elapsed_seconds": 0.783055,
+      "notes": "datoon decision=convert; savings_ratio=0.624205; optimized_payload_bytes=20019"
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "without_skill",
+    "agent_id": "019e6b47-6917-7082-bb89-f2a631b2a0c4",
+    "agent_nickname": "Noether",
+    "payload_name": "2_large.json",
+    "result": {
+      "mode": "direct_json",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/2_large.json",
+      "scenario": "large",
+      "iteration": 2,
+      "record_count": 450,
+      "active_count": 360,
+      "total_revenue_cents": 4291825,
+      "top_region": "north",
+      "top_category": "training",
+      "anomaly_ids": [
+        "l-2-0001",
+        "l-2-0098",
+        "l-2-0195",
+        "l-2-0292",
+        "l-2-0389"
+      ],
+      "elapsed_seconds": 0.0,
+      "notes": "computed directly from JSON payload; no datoon/TOON/preconverted files used"
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "with_skill",
+    "agent_id": "019e6b48-417d-7bd3-8c53-41b07cde9af3",
+    "agent_nickname": "Hubble",
+    "payload_name": "3_small.json",
+    "result": {
+      "mode": "datoon",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/3_small.json",
+      "scenario": "small",
+      "iteration": 3,
+      "record_count": 5,
+      "active_count": 4,
+      "total_revenue_cents": 1607,
+      "top_region": "south",
+      "top_category": "services",
+      "anomaly_ids": [
+        "s-3-0001",
+        "s-3-0005"
+      ],
+      "elapsed_seconds": 1.249752,
+      "notes": "datoon decision=convert; optimized payload read from CLI output; report savings_ratio=0.47555555555555556"
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "without_skill",
+    "agent_id": "019e6b48-545a-7042-86c3-04af1c44aab6",
+    "agent_nickname": "Singer",
+    "payload_name": "3_small.json",
+    "result": {
+      "mode": "json_direct",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/3_small.json",
+      "scenario": "small",
+      "iteration": 3,
+      "record_count": 5,
+      "active_count": 4,
+      "total_revenue_cents": 1607,
+      "top_region": "south",
+      "top_category": "services",
+      "anomaly_ids": [
+        "s-3-0001",
+        "s-3-0005"
+      ],
+      "elapsed_seconds": 0.00014925,
+      "notes": "Computed directly from JSON payload; no datoon, TOON, or preconverted files used."
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "with_skill",
+    "agent_id": "019e6b48-6a02-7f21-9505-27f214092839",
+    "agent_nickname": "Helmholtz",
+    "payload_name": "3_medium.json",
+    "result": {
+      "mode": "datoon",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/3_medium.json",
+      "scenario": "medium",
+      "iteration": 3,
+      "record_count": 75,
+      "active_count": 60,
+      "total_revenue_cents": 189740,
+      "top_region": "south",
+      "top_category": "hardware",
+      "anomaly_ids": [
+        "m-3-0001",
+        "m-3-0018",
+        "m-3-0035",
+        "m-3-0052",
+        "m-3-0069"
+      ],
+      "elapsed_seconds": 0.840874,
+      "notes": "datoon decision=convert; estimated savings=61.71%; report read from --report-stdout"
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "without_skill",
+    "agent_id": "019e6b48-8127-7620-ae36-31c56381023a",
+    "agent_nickname": "Meitner",
+    "payload_name": "3_medium.json",
+    "result": {
+      "mode": "without_datoon_skill",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/3_medium.json",
+      "scenario": "medium",
+      "iteration": 3,
+      "record_count": 75,
+      "active_count": 60,
+      "total_revenue_cents": 189740,
+      "top_region": "south",
+      "top_category": "hardware",
+      "anomaly_ids": [
+        "m-3-0001",
+        "m-3-0018",
+        "m-3-0035",
+        "m-3-0052",
+        "m-3-0069"
+      ],
+      "elapsed_seconds": 0.0,
+      "notes": "Computed directly from JSON payload; no datoon, TOON, or preconverted files used."
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "with_skill",
+    "agent_id": "019e6b48-989b-7612-82f3-4a21a00644e6",
+    "agent_nickname": "Locke",
+    "payload_name": "3_large.json",
+    "result": {
+      "mode": "convert",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/3_large.json",
+      "scenario": "large",
+      "iteration": 3,
+      "record_count": 450,
+      "active_count": 360,
+      "total_revenue_cents": 4340665,
+      "top_region": "south",
+      "top_category": "hardware",
+      "anomaly_ids": [
+        "l-3-0001",
+        "l-3-0098",
+        "l-3-0195",
+        "l-3-0292",
+        "l-3-0389"
+      ],
+      "elapsed_seconds": 0.7629881660104729,
+      "notes": "datoon decision=convert; savings_ratio=0.624169; read optimized TOON from stdout and report from stderr"
+    },
+    "correct": true,
+    "mismatches": {}
+  },
+  {
+    "variant": "without_skill",
+    "agent_id": "019e6b48-abb0-7483-93f1-57c137ae9a07",
+    "agent_nickname": "Aquinas",
+    "payload_name": "3_large.json",
+    "result": {
+      "mode": "json_direct",
+      "payload_file": "/Users/andriisuruhov/github/datoon/benchmarks/agent_skill_eval/payloads/3_large.json",
+      "scenario": "large",
+      "iteration": 3,
+      "record_count": 450,
+      "active_count": 360,
+      "total_revenue_cents": 4340665,
+      "top_region": "south",
+      "top_category": "hardware",
+      "anomaly_ids": [
+        "l-3-0001",
+        "l-3-0098",
+        "l-3-0195",
+        "l-3-0292",
+        "l-3-0389"
+      ],
+      "elapsed_seconds": 0.008185,
+      "notes": "Computed directly from JSON payload; no datoon, TOON, preconverted .toon, or report files used."
+    },
+    "correct": true,
+    "mismatches": {}
+  }
+]

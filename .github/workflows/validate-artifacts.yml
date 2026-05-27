@@ -1,0 +1,32 @@
+name: Validate Artifacts
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: validate-artifacts-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Validate skill sync
+        run: python scripts/validate_skill_sync.py
+
+      - name: Validate plugin metadata
+        run: python scripts/validate_plugin_metadata.py

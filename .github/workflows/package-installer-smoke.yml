@@ -1,0 +1,51 @@
+name: Package and Installer Smoke
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: package-installer-smoke-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  package-installer-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Build package
+        run: uv build
+
+      - name: Install wheel and smoke CLI
+        run: |
+          python -m venv .smoke-venv
+          . .smoke-venv/bin/activate
+          python -m pip install --upgrade pip
+          python -m pip install dist/*.whl
+          datoon --help
+
+      - name: Smoke installer list and dry-run
+        run: |
+          python scripts/install.py \
+            --list \
+            --mcp-config "$RUNNER_TEMP/datoon-mcp.json" \
+            --codex-marketplace "$RUNNER_TEMP/codex-marketplace.json"
+          python scripts/install.py \
+            --dry-run \
+            --mcp-config "$RUNNER_TEMP/datoon-mcp.json" \
+            --codex-marketplace "$RUNNER_TEMP/codex-marketplace.json"
+
+      - name: Run installer unit tests
+        run: uv run --with ".[dev]" pytest tests/unit/test_installer.py

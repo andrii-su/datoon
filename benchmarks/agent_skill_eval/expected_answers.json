@@ -1,0 +1,137 @@
+{
+  "1_small.json": {
+    "scenario": "small",
+    "iteration": 1,
+    "record_count": 5,
+    "active_count": 4,
+    "total_revenue_cents": 1385,
+    "top_region": "west",
+    "top_category": "hardware",
+    "anomaly_ids": [
+      "s-1-0001",
+      "s-1-0005"
+    ]
+  },
+  "1_medium.json": {
+    "scenario": "medium",
+    "iteration": 1,
+    "record_count": 75,
+    "active_count": 60,
+    "total_revenue_cents": 175310,
+    "top_region": "west",
+    "top_category": "services",
+    "anomaly_ids": [
+      "m-1-0001",
+      "m-1-0018",
+      "m-1-0035",
+      "m-1-0052",
+      "m-1-0069"
+    ]
+  },
+  "1_large.json": {
+    "scenario": "large",
+    "iteration": 1,
+    "record_count": 450,
+    "active_count": 360,
+    "total_revenue_cents": 4242985,
+    "top_region": "west",
+    "top_category": "services",
+    "anomaly_ids": [
+      "l-1-0001",
+      "l-1-0098",
+      "l-1-0195",
+      "l-1-0292",
+      "l-1-0389"
+    ]
+  },
+  "2_small.json": {
+    "scenario": "small",
+    "iteration": 2,
+    "record_count": 5,
+    "active_count": 4,
+    "total_revenue_cents": 1496,
+    "top_region": "north",
+    "top_category": "software",
+    "anomaly_ids": [
+      "s-2-0001",
+      "s-2-0005"
+    ]
+  },
+  "2_medium.json": {
+    "scenario": "medium",
+    "iteration": 2,
+    "record_count": 75,
+    "active_count": 60,
+    "total_revenue_cents": 182525,
+    "top_region": "north",
+    "top_category": "training",
+    "anomaly_ids": [
+      "m-2-0001",
+      "m-2-0018",
+      "m-2-0035",
+      "m-2-0052",
+      "m-2-0069"
+    ]
+  },
+  "2_large.json": {
+    "scenario": "large",
+    "iteration": 2,
+    "record_count": 450,
+    "active_count": 360,
+    "total_revenue_cents": 4291825,
+    "top_region": "north",
+    "top_category": "training",
+    "anomaly_ids": [
+      "l-2-0001",
+      "l-2-0098",
+      "l-2-0195",
+      "l-2-0292",
+      "l-2-0389"
+    ]
+  },
+  "3_small.json": {
+    "scenario": "small",
+    "iteration": 3,
+    "record_count": 5,
+    "active_count": 4,
+    "total_revenue_cents": 1607,
+    "top_region": "south",
+    "top_category": "services",
+    "anomaly_ids": [
+      "s-3-0001",
+      "s-3-0005"
+    ]
+  },
+  "3_medium.json": {
+    "scenario": "medium",
+    "iteration": 3,
+    "record_count": 75,
+    "active_count": 60,
+    "total_revenue_cents": 189740,
+    "top_region": "south",
+    "top_category": "hardware",
+    "anomaly_ids": [
+      "m-3-0001",
+      "m-3-0018",
+      "m-3-0035",
+      "m-3-0052",
+      "m-3-0069"
+    ]
+  },
+  "3_large.json": {
+    "scenario": "large",
+    "iteration": 3,
+    "record_count": 450,
+    "active_count": 360,
+    "total_revenue_cents": 4340665,
+    "top_region": "south",
+    "top_category": "hardware",
+    "anomaly_ids": [
+      "l-3-0001",
+      "l-3-0098",
+      "l-3-0195",
+      "l-3-0292",
+      "l-3-0389"
+    ]
+  }
+}

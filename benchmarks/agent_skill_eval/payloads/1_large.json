@@ -1,0 +1,4057 @@
+{
+  "scenario": "large",
+  "iteration": 1,
+  "source": "datoon agent skill evaluation",
+  "records": [
+    {
+      "id": "l-1-0001",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": -1311,
+      "anomaly": true
+    },
+    {
+      "id": "l-1-0002",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 1348,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0003",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 1385,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0004",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 1422,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0005",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 1459,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0006",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 1496,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0007",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 1533,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0008",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 1570,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0009",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 1607,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0010",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 1644,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0011",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 1681,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0012",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 1718,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0013",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 1755,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0014",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 1792,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0015",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 7,
+      "revenue_cents": 1829,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0016",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 1866,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0017",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 1903,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0018",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 1940,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0019",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 1977,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0020",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 2014,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0021",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 2051,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0022",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 2088,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0023",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 2125,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0024",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 2162,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0025",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 2199,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0026",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 2236,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0027",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 2273,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0028",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 2310,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0029",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 2347,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0030",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 2384,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0031",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 2421,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0032",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 2458,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0033",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 2495,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0034",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 2532,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0035",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 2569,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0036",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 2606,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0037",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 2643,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0038",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 2680,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0039",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 2717,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0040",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 2754,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0041",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 2791,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0042",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 2828,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0043",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 2865,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0044",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 2902,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0045",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 2939,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0046",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 2976,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0047",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 3013,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0048",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 3050,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0049",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 3087,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0050",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 3124,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0051",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 3161,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0052",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 3198,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0053",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 3235,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0054",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 3272,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0055",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 3309,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0056",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 3346,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0057",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 3383,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0058",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 3420,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0059",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 3457,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0060",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 7,
+      "revenue_cents": 3494,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0061",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 3531,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0062",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 3568,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0063",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 3605,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0064",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 3642,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0065",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 3679,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0066",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 3716,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0067",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 3753,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0068",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 3790,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0069",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 3827,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0070",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 3864,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0071",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 3901,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0072",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 3938,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0073",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 3975,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0074",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 4012,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0075",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 4049,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0076",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 4086,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0077",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 4123,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0078",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 4160,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0079",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 4197,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0080",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 4234,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0081",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 4271,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0082",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 4308,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0083",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 4345,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0084",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 4382,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0085",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 4419,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0086",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 4456,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0087",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 4493,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0088",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 4530,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0089",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 4567,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0090",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 4604,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0091",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 4641,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0092",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 4678,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0093",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 4715,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0094",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 4752,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0095",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 4789,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0096",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 4826,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0097",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 4863,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0098",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": -4900,
+      "anomaly": true
+    },
+    {
+      "id": "l-1-0099",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 4937,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0100",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 4974,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0101",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 5011,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0102",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 5048,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0103",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 5085,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0104",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 5122,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0105",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 7,
+      "revenue_cents": 5159,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0106",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 5196,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0107",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 5233,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0108",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 5270,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0109",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 5307,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0110",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 5344,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0111",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 5381,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0112",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 5418,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0113",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 5455,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0114",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 5492,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0115",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 5529,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0116",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 5566,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0117",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 5603,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0118",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 5640,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0119",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 5677,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0120",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 5714,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0121",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 5751,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0122",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 5788,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0123",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 5825,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0124",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 5862,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0125",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 5899,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0126",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 5936,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0127",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 5973,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0128",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 6010,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0129",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 6047,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0130",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 6084,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0131",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 6121,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0132",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 6158,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0133",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 6195,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0134",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 6232,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0135",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 6269,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0136",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 6306,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0137",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 6343,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0138",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 6380,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0139",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 6417,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0140",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 6454,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0141",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 6491,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0142",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 6528,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0143",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 6565,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0144",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 6602,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0145",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 6639,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0146",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 6676,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0147",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 6713,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0148",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 6750,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0149",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 6787,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0150",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 7,
+      "revenue_cents": 6824,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0151",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 6861,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0152",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 6898,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0153",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 6935,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0154",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 6972,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0155",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 7009,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0156",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 7046,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0157",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 7083,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0158",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 7120,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0159",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 7157,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0160",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 7194,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0161",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 7231,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0162",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 7268,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0163",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 7305,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0164",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 7342,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0165",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 7379,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0166",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 7416,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0167",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 7453,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0168",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 7490,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0169",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 7527,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0170",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 7564,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0171",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 7601,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0172",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 7638,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0173",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 7675,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0174",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 7712,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0175",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 7749,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0176",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 7786,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0177",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 7823,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0178",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 7860,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0179",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 7897,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0180",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 7934,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0181",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 7971,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0182",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 8008,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0183",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 8045,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0184",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 8082,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0185",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 8119,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0186",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 8156,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0187",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 8193,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0188",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 8230,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0189",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 8267,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0190",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 8304,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0191",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 8341,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0192",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 8378,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0193",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 8415,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0194",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 8452,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0195",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 7,
+      "revenue_cents": -8489,
+      "anomaly": true
+    },
+    {
+      "id": "l-1-0196",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 8526,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0197",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 8563,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0198",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 8600,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0199",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 8637,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0200",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 8674,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0201",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 8711,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0202",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 8748,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0203",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 8785,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0204",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 8822,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0205",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 8859,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0206",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 8896,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0207",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 8933,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0208",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 8970,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0209",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 9007,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0210",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 9044,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0211",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 9081,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0212",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 9118,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0213",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 9155,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0214",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 9192,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0215",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 9229,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0216",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 9266,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0217",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 9303,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0218",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 9340,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0219",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 9377,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0220",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 9414,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0221",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 9451,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0222",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 9488,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0223",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 9525,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0224",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 9562,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0225",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 9599,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0226",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 9636,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0227",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 9673,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0228",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 9710,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0229",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 9747,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0230",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 9784,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0231",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 9821,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0232",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 9858,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0233",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 9895,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0234",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 9932,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0235",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 9969,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0236",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 10006,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0237",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 10043,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0238",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 10080,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0239",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 10117,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0240",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 7,
+      "revenue_cents": 10154,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0241",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 10191,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0242",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 10228,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0243",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 10265,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0244",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 10302,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0245",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 10339,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0246",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 10376,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0247",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 10413,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0248",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 10450,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0249",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 10487,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0250",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 10524,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0251",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 10561,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0252",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 10598,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0253",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 10635,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0254",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 10672,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0255",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 10709,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0256",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 10746,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0257",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 10783,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0258",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 10820,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0259",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 10857,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0260",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 10894,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0261",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 10931,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0262",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 10968,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0263",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 11005,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0264",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 11042,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0265",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 11079,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0266",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 11116,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0267",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 11153,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0268",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 11190,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0269",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 11227,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0270",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 11264,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0271",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 11301,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0272",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 11338,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0273",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 11375,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0274",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 11412,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0275",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 11449,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0276",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 11486,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0277",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 11523,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0278",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 11560,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0279",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 11597,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0280",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 11634,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0281",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 11671,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0282",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 11708,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0283",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 11745,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0284",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 11782,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0285",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 7,
+      "revenue_cents": 11819,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0286",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 11856,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0287",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 11893,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0288",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 11930,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0289",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 11967,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0290",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 12004,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0291",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 12041,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0292",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": -12078,
+      "anomaly": true
+    },
+    {
+      "id": "l-1-0293",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 12115,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0294",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 12152,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0295",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 12189,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0296",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 12226,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0297",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 12263,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0298",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 12300,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0299",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 12337,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0300",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 12374,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0301",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 12411,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0302",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 12448,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0303",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 12485,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0304",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 12522,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0305",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 12559,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0306",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 12596,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0307",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 12633,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0308",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 12670,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0309",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 12707,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0310",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 12744,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0311",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 12781,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0312",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 12818,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0313",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 12855,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0314",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 12892,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0315",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 12929,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0316",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 12966,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0317",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 13003,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0318",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 13040,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0319",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 13077,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0320",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 13114,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0321",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 13151,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0322",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 13188,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0323",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 13225,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0324",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 13262,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0325",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 13299,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0326",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 13336,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0327",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 13373,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0328",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 13410,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0329",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 13447,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0330",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 7,
+      "revenue_cents": 13484,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0331",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 13521,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0332",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 13558,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0333",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 13595,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0334",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 13632,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0335",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 13669,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0336",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 13706,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0337",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 13743,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0338",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 13780,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0339",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 13817,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0340",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 13854,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0341",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 13891,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0342",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 13928,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0343",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 13965,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0344",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 14002,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0345",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 14039,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0346",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 14076,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0347",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 14113,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0348",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 14150,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0349",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 14187,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0350",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 14224,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0351",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 14261,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0352",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 14298,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0353",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 14335,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0354",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 14372,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0355",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 14409,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0356",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 14446,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0357",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 14483,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0358",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 14520,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0359",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 14557,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0360",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 14594,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0361",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 14631,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0362",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 14668,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0363",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 14705,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0364",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 14742,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0365",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 14779,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0366",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 14816,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0367",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 14853,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0368",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 14890,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0369",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 14927,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0370",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 14964,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0371",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 15001,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0372",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 15038,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0373",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 15075,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0374",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 15112,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0375",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 7,
+      "revenue_cents": 15149,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0376",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 15186,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0377",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 15223,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0378",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 15260,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0379",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 15297,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0380",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 15334,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0381",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 15371,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0382",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 15408,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0383",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 15445,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0384",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 15482,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0385",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 15519,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0386",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 15556,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0387",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 15593,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0388",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 15630,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0389",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 3,
+      "revenue_cents": -15667,
+      "anomaly": true
+    },
+    {
+      "id": "l-1-0390",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 15704,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0391",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 15741,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0392",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 15778,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0393",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 15815,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0394",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 15852,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0395",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 15889,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0396",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 15926,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0397",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 15963,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0398",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 16000,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0399",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 16037,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0400",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 16074,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0401",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 16111,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0402",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 16148,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0403",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 16185,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0404",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 16222,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0405",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 16259,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0406",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 16296,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0407",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 16333,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0408",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 16370,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0409",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 16407,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0410",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 6,
+      "revenue_cents": 16444,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0411",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 16481,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0412",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 16518,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0413",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 16555,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0414",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 16592,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0415",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 2,
+      "revenue_cents": 16629,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0416",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 16666,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0417",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 16703,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0418",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 16740,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0419",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 16777,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0420",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 7,
+      "revenue_cents": 16814,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0421",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 16851,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0422",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 16888,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0423",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 16925,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0424",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 16962,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0425",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 3,
+      "revenue_cents": 16999,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0426",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 17036,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0427",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 17073,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0428",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 17110,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0429",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 17147,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0430",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 8,
+      "revenue_cents": 17184,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0431",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 17221,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0432",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 17258,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0433",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 17295,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0434",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 17332,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0435",
+      "region": "south",
+      "category": "training",
+      "active": false,
+      "units": 4,
+      "revenue_cents": 17369,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0436",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 17406,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0437",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 17443,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0438",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 17480,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0439",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 17517,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0440",
+      "region": "west",
+      "category": "hardware",
+      "active": false,
+      "units": 9,
+      "revenue_cents": 17554,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0441",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 1,
+      "revenue_cents": 17591,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0442",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 2,
+      "revenue_cents": 17628,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0443",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 17665,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0444",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 17702,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0445",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 5,
+      "revenue_cents": 17739,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0446",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 6,
+      "revenue_cents": 17776,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0447",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 7,
+      "revenue_cents": 17813,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0448",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 8,
+      "revenue_cents": 17850,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0449",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 9,
+      "revenue_cents": 17887,
+      "anomaly": false
+    },
+    {
+      "id": "l-1-0450",
+      "region": "west",
+      "category": "services",
+      "active": false,
+      "units": 1,
+      "revenue_cents": 17924,
+      "anomaly": false
+    }
+  ]
+}

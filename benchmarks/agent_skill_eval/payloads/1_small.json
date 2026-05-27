@@ -1,0 +1,52 @@
+{
+  "scenario": "small",
+  "iteration": 1,
+  "source": "datoon agent skill evaluation",
+  "records": [
+    {
+      "id": "s-1-0001",
+      "region": "south",
+      "category": "software",
+      "active": true,
+      "units": 2,
+      "revenue_cents": -1311,
+      "anomaly": true
+    },
+    {
+      "id": "s-1-0002",
+      "region": "west",
+      "category": "services",
+      "active": true,
+      "units": 3,
+      "revenue_cents": 1348,
+      "anomaly": false
+    },
+    {
+      "id": "s-1-0003",
+      "region": "south",
+      "category": "training",
+      "active": true,
+      "units": 4,
+      "revenue_cents": 1385,
+      "anomaly": false
+    },
+    {
+      "id": "s-1-0004",
+      "region": "west",
+      "category": "hardware",
+      "active": true,
+      "units": 5,
+      "revenue_cents": 1422,
+      "anomaly": false
+    },
+    {
+      "id": "s-1-0005",
+      "region": "south",
+      "category": "software",
+      "active": false,
+      "units": 6,
+      "revenue_cents": -1459,
+      "anomaly": true
+    }
+  ]
+}

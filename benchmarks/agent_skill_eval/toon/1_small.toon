@@ -1,0 +1,9 @@
+scenario: small
+iteration: 1
+source: datoon agent skill evaluation
+records[5]{id,region,category,active,units,revenue_cents,anomaly}:
+  s-1-0001,south,software,true,2,-1311,true
+  s-1-0002,west,services,true,3,1348,false
+  s-1-0003,south,training,true,4,1385,false
+  s-1-0004,west,hardware,true,5,1422,false
+  s-1-0005,south,software,false,6,-1459,true

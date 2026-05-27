@@ -1,7 +1,7 @@
 {
   "name": "datoon",
-  "version": "0.1.0",
-  "description": "Smart data-to-TOON conversion mode. Convert structured JSON only when token savings are meaningful.",
+  "version": "1.4.1",
+  "description": "Smart JSON-to-TOON conversion with pragmatic auto-gating for LLM prompts.",
   "author": {
     "name": "Andrii Suruhov",
     "url": "https://github.com/andrii-su"
@@ -11,15 +11,16 @@
   "license": "MIT",
   "keywords": [
     "llm",
-    "productivity",
-    "prompt-optimization",
+    "prompt-engineering",
+    "json",
+    "toon",
     "data"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Datoon",
-    "shortDescription": "Auto-convert JSON to TOON when it saves tokens.",
-    "longDescription": "Token-efficient structured-data mode for Codex with automatic TOON suitability and savings checks.",
+    "shortDescription": "Auto-convert JSON to TOON when token savings are meaningful.",
+    "longDescription": "Smart structured-data mode for Codex that converts JSON to TOON only when payload shape and estimated savings justify it.",
     "developerName": "Andrii Suruhov",
     "category": "Productivity",
     "capabilities": [

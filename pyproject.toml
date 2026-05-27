@@ -25,7 +25,7 @@ dependencies = []
 [project.optional-dependencies]
 dev = ["pytest>=9.0.3", "pre-commit>=4.6.0"]
 tokens = ["tiktoken>=0.8.0"]
-mcp = ["mcp>=1.6.0"]
+mcp = ["mcp>=1.27.1"]
 
 [project.urls]
 Homepage = "https://github.com/andrii-su/datoon"

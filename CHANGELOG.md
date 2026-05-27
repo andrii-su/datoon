@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/andrii-su/datoon/compare/v1.4.1...v1.5.0) (2026-05-27)
+
+
+### Features
+
+* harden plugin distribution workflow ([176b900](https://github.com/andrii-su/datoon/commit/176b900973da9fe8248f5925b61aae8e786d680c))
+
 ## [1.4.1](https://github.com/andrii-su/datoon/compare/v1.4.0...v1.4.1) (2026-04-11)
 
 

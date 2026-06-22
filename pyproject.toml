@@ -5,14 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "datoon"
 dynamic = ["version"]
-description = "Smart JSON-to-TOON conversion with pragmatic auto-gating for LLM prompts."
+description = "Smart structured-data-to-TOON gateway with pragmatic auto-gating for LLM prompts."
 readme = "README.md"
 requires-python = ">=3.12"
 license = { file = "LICENSE" }
 authors = [
     { name = "Andrii Suruhov", email = "andrii.suruhov@gmail.com" }
 ]
-keywords = ["llm", "prompt-engineering", "json", "toon", "data"]
+keywords = ["llm", "prompt-engineering", "json", "toon", "csv", "yaml", "parquet", "data"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
@@ -23,9 +23,14 @@ classifiers = [
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=9.0.3", "pre-commit>=4.6.0"]
+dev = ["pytest>=9.0.3", "pre-commit>=4.6.0", "pyyaml>=6.0"]
 tokens = ["tiktoken>=0.13.0"]
-mcp = ["mcp>=1.27.2"]
+mcp = ["mcp>=1.28.0"]
+yaml = ["pyyaml>=6.0"]
+excel = ["openpyxl>=3.1"]
+columnar = ["pyarrow>=15.0", "fastavro>=1.9"]
+numbers = ["numbers-parser>=4.4"]
+all = ["datoon[tokens,mcp,yaml,excel,columnar,numbers]"]
 
 [project.urls]
 Homepage = "https://github.com/andrii-su/datoon"

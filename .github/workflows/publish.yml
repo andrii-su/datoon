@@ -43,6 +43,10 @@ jobs:
             echo "Publishing datoon ${version}."
           fi
 
+      - name: Check out the exact release tag
+        if: steps.ver.outputs.version != ''
+        run: git checkout "v${{ steps.ver.outputs.version }}"
+
       - name: Install uv
         if: steps.ver.outputs.version != ''
         uses: astral-sh/setup-uv@v7

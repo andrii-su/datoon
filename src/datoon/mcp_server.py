@@ -12,6 +12,7 @@ except ImportError as exc:
         "MCP support requires the 'mcp' extra: pip install datoon[mcp]"
     ) from exc
 
+from datoon import __version__
 from datoon.analyzer import analyze_payload
 from datoon.converter import DatoonError, convert_json_for_llm
 from datoon.models import ConversionConfig
@@ -25,6 +26,10 @@ mcp = FastMCP(
         "Use analyze_json to check if a payload is a good TOON candidate without converting."
     ),
 )
+# FastMCP has no `version` parameter; set it on the underlying server so the
+# MCP `initialize` handshake reports datoon's version instead of the mcp
+# library's default.
+mcp._mcp_server.version = __version__
 
 
 @mcp.tool()

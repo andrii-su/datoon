@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/andrii-su/datoon/compare/v1.5.0...v1.6.0) (2026-06-22)
+
+
+### Features
+
+* add multi-format readers (CSV, JSONL, YAML, XML, Excel, Parquet, Avro, ORC, Numbers) ([ca8de4e](https://github.com/andrii-su/datoon/commit/ca8de4ee00010ae4bb90f584c5eccdb81f32867a))
+
 # [1.5.0](https://github.com/andrii-su/datoon/compare/v1.4.1...v1.5.0) (2026-05-27)
 
 

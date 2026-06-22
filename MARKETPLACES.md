@@ -22,17 +22,25 @@ ______________________________________________________________________
   [`README.md`](./README.md) (PyPI renders the README as the package description,
   which the registry validates).
 - **Publishing:** [`.github/workflows/publish-mcp.yml`](./.github/workflows/publish-mcp.yml)
-  runs on every GitHub Release. It syncs `server.json`'s version to the release
-  tag, validates, authenticates via **GitHub OIDC** (no stored secret), and runs
-  `mcp-publisher publish`.
+  runs when the **Release** workflow completes (via `workflow_run`), and only
+  when main HEAD carries a new version tag. It syncs `server.json`'s version to
+  that tag, validates, waits for the version to appear on PyPI, authenticates via
+  **GitHub OIDC** (no stored secret), and runs `mcp-publisher publish`.
 
 > [!NOTE]
-> The ownership token first reaches PyPI with the release that includes this
-> change. The publish workflow validates against the released version on PyPI,
-> so the first successful registry publish happens on the **next** release after
-> this is merged.
+> **Trigger note.** Releases are cut by semantic-release using `GITHUB_TOKEN`,
+> and GitHub does not fire `release: published` for `GITHUB_TOKEN`-created
+> events. Both [`publish.yml`](./.github/workflows/publish.yml) (PyPI) and
+> publish-mcp.yml therefore key off the **Release** workflow's completion
+> instead, gated on a new tag at HEAD.
 
-Manual publish (if needed):
+> [!NOTE]
+> The ownership token first reaches PyPI with the release that includes the
+> marketplace change. The first successful publish happens on the next release
+> after that merge.
+
+Manual publish — **Publish to MCP Registry** workflow → **Run workflow**
+(`workflow_dispatch`); it publishes the latest tag. Or locally:
 
 ```bash
 # Install mcp-publisher (see modelcontextprotocol/registry releases)
@@ -40,8 +48,6 @@ mcp-publisher validate
 mcp-publisher login github        # interactive OAuth, namespace io.github.andrii-su/*
 mcp-publisher publish
 ```
-
-Re-run via the **Publish to MCP Registry** workflow's `workflow_dispatch`.
 
 ______________________________________________________________________
 

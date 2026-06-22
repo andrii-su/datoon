@@ -16,6 +16,7 @@ from typing import Any
 import datoon
 from datoon.converter import DatoonError, convert_json_for_llm, estimate_tokens
 from datoon.models import ConversionConfig
+from datoon.readers import read_tabular
 
 SCRIPT_VERSION = datoon.__version__
 SCRIPT_DIR = Path(__file__).resolve().parent
@@ -25,6 +26,8 @@ README_PATH = REPO_DIR / "README.md"
 RESULTS_DIR = SCRIPT_DIR / "results"
 BENCHMARK_START = "<!-- BENCHMARK-TABLE-START -->"
 BENCHMARK_END = "<!-- BENCHMARK-TABLE-END -->"
+FORMAT_BENCHMARK_START = "<!-- FORMAT-BENCHMARK-TABLE-START -->"
+FORMAT_BENCHMARK_END = "<!-- FORMAT-BENCHMARK-TABLE-END -->"
 
 
 @dataclass(slots=True, frozen=True)
@@ -58,15 +61,20 @@ class BenchmarkSummary:
     avg_auto_savings_pct: float
 
 
-def load_payloads(path: Path) -> list[dict[str, Any]]:
-    """Load benchmark payloads from JSON config file."""
+def load_payloads(path: Path) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Load benchmark payloads from JSON config file.
+
+    Returns (json_payloads, format_payloads).
+    """
     with path.open(encoding="utf-8") as file:
         parsed = json.load(file)
 
     payloads = parsed.get("payloads")
     if not isinstance(payloads, list) or not payloads:
         raise ValueError("payloads.json must contain a non-empty `payloads` list.")
-    return payloads
+
+    format_payloads = parsed.get("format_payloads", [])
+    return payloads, format_payloads
 
 
 def to_compact_json(data: Any) -> str:
@@ -95,8 +103,29 @@ def benchmark_payload(
     category = str(payload.get("category", "unknown"))
     description = str(payload.get("description", ""))
     data = payload.get("data")
+    fmt = str(payload.get("format", "json"))
 
-    raw_json = to_compact_json(data)
+    if fmt == "json":
+        raw_json = to_compact_json(data)
+    else:
+        try:
+            rows = read_tabular(fmt, text=str(data))
+            raw_json = to_compact_json(rows)
+        except ImportError as exc:
+            return BenchmarkRow(
+                payload_id=payload_id,
+                category=category,
+                description=description,
+                json_tokens=0,
+                toon_tokens=None,
+                raw_savings_pct=None,
+                auto_decision="skip",
+                auto_tokens=0,
+                auto_savings_pct=0.0,
+                auto_reason=f"Missing dependency: {exc}",
+                raw_error=str(exc),
+            )
+
     json_tokens = estimate_tokens(raw_json)
 
     toon_tokens: int | None = None
@@ -241,30 +270,93 @@ def save_results(
     return output_path
 
 
+def format_table_formats(rows: list[BenchmarkRow], summary: BenchmarkSummary) -> str:
+    """Render markdown table for format benchmark results."""
+    lines = [
+        "| Dataset | Format | JSON Tokens | TOON (forced) | Auto | Auto Tokens | Auto Saved |",
+        "|---|---|---:|---:|---|---:|---:|",
+    ]
+    for row in rows:
+        toon_value = str(row.toon_tokens) if row.toon_tokens is not None else "n/a"
+        fmt = row.category
+        skipped = row.json_tokens == 0
+        json_col = str(row.json_tokens) if not skipped else "n/a"
+        lines.append(
+            f"| {row.payload_id} | {fmt} | {json_col} | {toon_value} | "
+            f"{row.auto_decision} | {row.auto_tokens if not skipped else 'n/a'} | "
+            f"{row.auto_savings_pct:.1f}% |"
+        )
+
+    avg_toon = (
+        str(summary.avg_toon_tokens) if summary.avg_toon_tokens is not None else "n/a"
+    )
+    valid = [r for r in rows if r.json_tokens > 0]
+    if valid:
+        lines.append(
+            f"| **Average** | — | **{summary.avg_json_tokens}** | **{avg_toon}** | "
+            f"**{summary.auto_convert_count}/{summary.payload_count} convert** | "
+            f"**{summary.avg_auto_tokens}** | **{summary.avg_auto_savings_pct:.1f}%** |"
+        )
+    lines.append("")
+    lines.append(
+        f"*Forced conversion succeeded for {summary.raw_success_count}/{summary.payload_count} payloads.*"
+    )
+    return "\n".join(lines)
+
+
+def _replace_between_markers(
+    content: str, start_marker: str, end_marker: str, replacement: str
+) -> str:
+    """Replace content between two markers."""
+    start = content.find(start_marker)
+    end = content.find(end_marker)
+    if start == -1 or end == -1:
+        raise RuntimeError(
+            f"README markers '{start_marker}' / '{end_marker}' are missing."
+        )
+    before = content[: start + len(start_marker)]
+    after = content[end:]
+    return f"{before}\n{replacement}\n{after}"
+
+
 def update_readme(table_md: str) -> None:
     """Replace benchmark table block in README by marker comments."""
     content = README_PATH.read_text(encoding="utf-8")
-    start = content.find(BENCHMARK_START)
-    end = content.find(BENCHMARK_END)
-    if start == -1 or end == -1:
-        raise RuntimeError("README benchmark markers are missing.")
-
-    before = content[: start + len(BENCHMARK_START)]
-    after = content[end:]
-    README_PATH.write_text(f"{before}\n{table_md}\n{after}", encoding="utf-8")
+    updated = _replace_between_markers(
+        content, BENCHMARK_START, BENCHMARK_END, table_md
+    )
+    README_PATH.write_text(updated, encoding="utf-8")
 
 
-def dry_run(payloads: list[dict[str, Any]], config: ConversionConfig) -> None:
+def update_format_readme(table_md: str) -> None:
+    """Replace format benchmark table block in README by marker comments."""
+    content = README_PATH.read_text(encoding="utf-8")
+    updated = _replace_between_markers(
+        content, FORMAT_BENCHMARK_START, FORMAT_BENCHMARK_END, table_md
+    )
+    README_PATH.write_text(updated, encoding="utf-8")
+
+
+def dry_run(
+    payloads: list[dict[str, Any]],
+    format_payloads: list[dict[str, Any]],
+    config: ConversionConfig,
+) -> None:
     """Print benchmark configuration without running conversions."""
     print("Dry run configuration:")
-    print(f"- payloads: {len(payloads)}")
     print(f"- min_savings_ratio: {config.min_savings_ratio}")
     print(f"- max_depth: {config.max_depth}")
     print(f"- min_uniform_rows: {config.min_uniform_rows}")
-    print("- ids:")
+    print(f"- json payloads: {len(payloads)}")
     for payload in payloads:
         print(
             f"  - {payload.get('id', 'unknown')} ({payload.get('category', 'unknown')})"
+        )
+    print(f"- format payloads: {len(format_payloads)}")
+    for payload in format_payloads:
+        print(
+            f"  - {payload.get('id', 'unknown')} "
+            f"({payload.get('format', 'json')}: {payload.get('category', 'unknown')})"
         )
 
 
@@ -301,6 +393,11 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Update README benchmark block between markers.",
     )
+    parser.add_argument(
+        "--formats",
+        action="store_true",
+        help="Run format conversion benchmarks (CSV, JSONL, XML, YAML).",
+    )
     return parser.parse_args()
 
 
@@ -308,7 +405,7 @@ def main() -> int:
     """Execute benchmark and return process exit code."""
     args = parse_args()
     payload_path = Path(args.payloads)
-    payloads = load_payloads(payload_path)
+    payloads, format_payloads = load_payloads(payload_path)
 
     config = ConversionConfig(
         min_savings_ratio=args.min_savings,
@@ -324,9 +421,10 @@ def main() -> int:
     )
 
     if args.dry_run:
-        dry_run(payloads, config)
+        dry_run(payloads, format_payloads, config)
         return 0
 
+    # --- JSON benchmark ---
     rows: list[BenchmarkRow] = []
     for index, payload in enumerate(payloads, start=1):
         payload_id = payload.get("id", "unknown")
@@ -345,6 +443,28 @@ def main() -> int:
         print("README benchmark table updated.", file=sys.stderr)
 
     print(table)
+
+    # --- Format benchmark ---
+    if args.formats and format_payloads:
+        print("\n--- Format conversion benchmarks ---\n", file=sys.stderr)
+        fmt_rows: list[BenchmarkRow] = []
+        for index, payload in enumerate(format_payloads, start=1):
+            payload_id = payload.get("id", "unknown")
+            print(f"[{index}/{len(format_payloads)}] {payload_id}", file=sys.stderr)
+            row = benchmark_payload(
+                payload, auto_config=config, force_config=force_config
+            )
+            fmt_rows.append(row)
+
+        fmt_summary = compute_summary(fmt_rows)
+        fmt_table = format_table_formats(fmt_rows, fmt_summary)
+
+        if args.update_readme:
+            update_format_readme(fmt_table)
+            print("README format benchmark table updated.", file=sys.stderr)
+
+        print(fmt_table)
+
     return 0
 
 

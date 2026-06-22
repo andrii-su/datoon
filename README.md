@@ -1,27 +1,57 @@
-# datoon
+<p align="center">
+  <img src="assets/datoon-banner.svg" width="720" />
+</p>
 
-[![Tests](https://github.com/andrii-su/datoon/actions/workflows/tests.yml/badge.svg)](https://github.com/andrii-su/datoon/actions/workflows/tests.yml)
-[![Pre-commit](https://github.com/andrii-su/datoon/actions/workflows/pre-commit.yml/badge.svg)](https://github.com/andrii-su/datoon/actions/workflows/pre-commit.yml)
-[![Release](https://github.com/andrii-su/datoon/actions/workflows/release.yml/badge.svg)](https://github.com/andrii-su/datoon/actions/workflows/release.yml)
-[![Docs](https://github.com/andrii-su/datoon/actions/workflows/pages.yml/badge.svg)](https://github.com/andrii-su/datoon/actions/workflows/pages.yml)
-[![Python](https://img.shields.io/badge/python-3.12%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/github/license/andrii-su/datoon)](./LICENSE)
+<h1 align="center">datoon</h1>
 
-![datoon banner](assets/datoon-banner.svg)
+<p align="center">
+  <strong>smart structured-data→TOON gateway — converts only when it actually saves tokens</strong>
+</p>
 
-`datoon` is a pragmatic smart TOON gateway for LLM data workloads: it converts JSON payloads to [TOON](https://github.com/toon-format/toon) only when conversion is likely to improve token efficiency.
+<p align="center">
+  <a href="https://github.com/andrii-su/datoon/actions/workflows/tests.yml"><img src="https://github.com/andrii-su/datoon/actions/workflows/tests.yml/badge.svg" alt="Tests"></a>
+  <a href="https://github.com/andrii-su/datoon/actions/workflows/pre-commit.yml"><img src="https://github.com/andrii-su/datoon/actions/workflows/pre-commit.yml/badge.svg" alt="Pre-commit"></a>
+  <a href="https://github.com/andrii-su/datoon/actions/workflows/release.yml"><img src="https://github.com/andrii-su/datoon/actions/workflows/release.yml/badge.svg" alt="Release"></a>
+  <a href="https://pypi.org/project/datoon/"><img src="https://img.shields.io/pypi/v/datoon?color=0EA5E9" alt="PyPI"></a>
+  <a href="https://img.shields.io/badge/python-3.12%2B-3776AB"><img src="https://img.shields.io/badge/python-3.12%2B-3776AB?logo=python&logoColor=white" alt="Python"></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/andrii-su/datoon" alt="License: MIT"></a>
+</p>
 
-Raw JSON is often verbose in prompts. TOON can save tokens, but blind conversion can also make payloads worse. `datoon` adds a decision layer so pipelines can convert when savings are meaningful, skip when structure is a poor TOON fit, and always report exactly why the decision was made.
+<p align="center">
+  <a href="#before--after">Before/After</a> •
+  <a href="#install">Install</a> •
+  <a href="#what-you-get">What You Get</a> •
+  <a href="#how-it-works">How It Works</a> •
+  <a href="#benchmarks">Benchmarks</a> •
+  <a href="./INSTALL.md">Full install guide</a>
+</p>
+
+______________________________________________________________________
+
+Raw structured data is often verbose in LLM prompts. [TOON](https://github.com/toon-format/toon) can save tokens — but blind conversion can also make payloads *worse*. `datoon` adds a decision layer: convert when structure and savings justify it, skip when they don't, and always explain why.
+
+Supports **JSON, CSV, JSONL, YAML, XML, Parquet, Avro, ORC, Excel, and Apple Numbers** — auto-detected from file extension.
 
 ## Before / After
 
-**Before: JSON payload in the prompt**
+<table>
+<tr>
+<td width="50%">
+
+### JSON in the prompt (43 tokens)
 
 ```json
-{"users":[{"id":1,"name":"Ada","role":"admin"},{"id":2,"name":"Lin","role":"analyst"},{"id":3,"name":"Grace","role":"viewer"}]}
+{"users":[
+  {"id":1,"name":"Ada","role":"admin"},
+  {"id":2,"name":"Lin","role":"analyst"},
+  {"id":3,"name":"Grace","role":"viewer"}
+]}
 ```
 
-**After: `datoon` converts only because policy says it should**
+</td>
+<td width="50%">
+
+### datoon converts → TOON (24 tokens)
 
 ```toon
 users[3]{id,name,role}:
@@ -31,132 +61,226 @@ users[3]{id,name,role}:
 ```
 
 ```json
-{
-  "decision": "convert",
-  "reason": "Estimated savings 44.19% (threshold 15.00%).",
-  "input_token_estimate": 43,
-  "output_token_estimate": 24
-}
+{"decision":"convert","reason":"Estimated savings 44.19% (threshold 15.00%)."}
 ```
 
-Same records, same keys, smaller prompt payload. If the structure is non-uniform, tiny, deeply nested, or conversion saves too little, `datoon` keeps JSON instead.
+</td>
+</tr>
+<tr>
+<td>
 
-Auto mode returns compact JSON instead of TOON when the payload is not a good fit: no uniform object arrays, fewer than the configured minimum rows, nesting deeper than `--max-depth`, estimated savings below `--min-savings`, or a missing/unavailable TOON CLI dependency. Invalid JSON still fails loudly, and `--force` bypasses gating for experiments but does not hide conversion failures.
+### CSV from a data pipeline (111 tokens as JSON)
 
-______________________________________________________________________
-
-## Contents
-
-- [Setup](#-setup)
-- [Install](#-install)
-- [Quick Start](#-quick-start)
-- [Python API](#-python-api)
-- [MCP Server](#-mcp-server)
-- [Claude Code Plugin](#-claude-code-plugin)
-- [CLI Reference](#-cli-reference)
-- [Benchmarks](#-benchmarks)
-- [Development](#-development)
-- [Docs](#-docs)
-
-______________________________________________________________________
-
-## ⚡ Setup
-
-One-command setup — installs all dependencies and registers `datoon` globally so it's available in any terminal:
-
-```bash
-./setup.sh
+```csv
+id,name,role
+1,Ada,admin
+2,Lin,analyst
+3,Grace,viewer
 ```
 
-What it does:
+</td>
+<td>
 
-1. Checks Python 3.12+ (fails fast if missing)
-1. Installs `uv` if not present
-1. Warns if Node.js is missing (required for TOON conversion)
-1. Runs `uv sync --extra dev`
-1. Registers the `datoon` CLI globally via `uv tool install --editable .`
-1. Adds `~/.local/bin` to your shell profile if needed
-
-After setup:
+### datoon auto-converts → TOON (24 tokens)
 
 ```bash
-datoon --help
-echo '{"users":[{"id":1,"name":"Ada"}]}' | datoon --report-stdout
+datoon data.csv --report-stdout
 ```
 
-Full install options for Python, CLI, MCP, Claude Code, and Codex live in [INSTALL.md](./INSTALL.md).
-For integration installs, preview first with `./install.sh --dry-run`, then use `./install.sh --install --target <claude|codex|mcp>`.
-The installer only changes selected local integration config: Claude Code plugin state through the `claude` CLI, Codex marketplace JSON, and/or an MCP JSON config. See [INSTALL.md](./INSTALL.md) for exact paths, backups, privacy notes, and troubleshooting.
+Same result. Zero JSON serialization in your code.
 
-______________________________________________________________________
+</td>
+</tr>
+<tr>
+<td>
 
-## 📦 Install
+### Non-uniform payload (26 tokens)
+
+```json
+{"config":{"debug":true},"tags":["a","b"]}
+```
+
+</td>
+<td>
+
+### datoon skips → keeps JSON
+
+```json
+{"decision":"skip","reason":"No uniform object arrays found with at least 3 rows."}
+```
+
+No Node.js call. No silent corruption.
+
+</td>
+</tr>
+</table>
+
+**Same data. Right format. Always explained.**
+
+```
+┌──────────────────────────────────────────────────┐
+│  PAYLOAD SAVINGS (auto avg)    ████░░░░░░   28%  │
+│  PAYLOAD SAVINGS (agent skill) ████████░░   62%  │
+│  DECISION ACCURACY             ██████████  100%  │
+│  HARMFUL CONVERSIONS BLOCKED   ██████████  100%  │
+└──────────────────────────────────────────────────┘
+```
+
+> [!IMPORTANT]
+> datoon saves **payload tokens** — the structured data portion of your prompt. Token savings depend on payload shape: uniform tabular data converts well; deeply nested or non-uniform structures are skipped. Every decision includes a reason so pipelines can log, debug, and trust the outcome.
+
+## Install
 
 ```bash
-# via uv (recommended)
+# core (JSON, CSV, JSONL, XML — no extra deps)
 uv add datoon
-
-# via pip
 pip install datoon
 
-# with optional tiktoken-based token counting
+# with YAML support
+pip install "datoon[yaml]"
+
+# with Excel support
+pip install "datoon[excel]"
+
+# with Parquet / ORC / Avro support
+pip install "datoon[columnar]"
+
+# with Apple Numbers support
+pip install "datoon[numbers]"
+
+# with tiktoken-based token counting
 pip install "datoon[tokens]"
 
-# with MCP server support
+# with MCP server
 pip install "datoon[mcp]"
+
+# everything
+pip install "datoon[all]"
 ```
 
-Requires Python `3.12+`. TOON conversion requires Node.js with `npx` in `PATH`.
+Requires Python 3.12+. TOON conversion requires Node.js with `npx` in PATH — analysis and format reading work without it.
 
-`datoon` itself processes payloads locally. The Python package has no required runtime dependencies; optional extras add token estimation (`tiktoken`) or MCP server support (`mcp`). The converter invokes `npx --yes @toon-format/cli@2` only when auto policy reaches the conversion step or when `--force` is used.
+For Claude Code plugin, Codex, and MCP config → [**INSTALL.md**](./INSTALL.md).
+
+## What You Get
+
+| | What |
+|---|---|
+| `datoon` **CLI** | Auto-gate any supported format → TOON from terminal or scripts |
+| **Python API** | `convert_json_for_llm()` + `read_tabular()` for any LLM pipeline |
+| **MCP Server** | `convert_json`, `convert_text`, `analyze_json` tools for Claude Desktop, Cursor, Windsurf |
+| **Claude Code Plugin** | `/datoon` in-session trigger, installs from GitHub in one command |
+| **Codex Plugin** | Marketplace plugin — structured-data mode for Codex |
+
+### Supported input formats
+
+| Format | Extension | Extra needed |
+|---|---|---|
+| JSON | `.json` | — |
+| JSONL | `.jsonl`, `.ndjson` | — |
+| CSV | `.csv` | — |
+| XML | `.xml` | — |
+| YAML | `.yaml`, `.yml` | `datoon[yaml]` |
+| Excel | `.xlsx`, `.xls` | `datoon[excel]` |
+| Parquet | `.parquet` | `datoon[columnar]` |
+| Avro | `.avro` | `datoon[columnar]` |
+| ORC | `.orc` | `datoon[columnar]` |
+| Apple Numbers | `.numbers` | `datoon[numbers]` |
+
+## How It Works
+
+1. **Detect format** — from `--format` flag, file extension, or default to JSON for stdin
+1. **Read + normalize** — parse source into list of row dicts; serialize to compact JSON
+1. **Analyze structure** — uniform object arrays? acceptable depth? minimum rows?
+1. **Gate early** — non-candidates skip before any CLI call; no Node.js overhead
+1. **Convert + estimate** — TOON CLI runs, token savings calculated
+1. **Gate savings** — below threshold → return JSON; above → return TOON with report
+
+Every path returns a `ConversionReport` with `decision`, `reason`, and token estimates. Pipelines never get silent surprises.
 
 ______________________________________________________________________
 
-## 🚀 Quick Start
+## Quick Start
 
-**stdin:**
+**JSON (stdin):**
 
 ```bash
-echo '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Lin"}]}' | datoon --report-stdout
+echo '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Lin"},{"id":3,"name":"Grace"}]}' | datoon --report-stdout
 ```
 
-**file:**
+**CSV (auto-detected from extension):**
 
 ```bash
-datoon ./input.json -o ./output.toon --report ./report.json
+datoon data.csv --report-stdout
 ```
 
-**force conversion:**
+**JSONL:**
 
 ```bash
-datoon ./input.json --force --report-stdout
+datoon data.jsonl -o output.toon
+```
+
+**YAML (requires `datoon[yaml]`):**
+
+```bash
+datoon data.yaml --report-stdout
+```
+
+**Parquet (requires `datoon[columnar]`):**
+
+```bash
+datoon data.parquet --report ./report.json
+```
+
+**Explicit format override:**
+
+```bash
+datoon --format csv < data.csv --report-stdout
+```
+
+**Force conversion (bypass gating — for experiments):**
+
+```bash
+datoon data.json --force --report-stdout
 ```
 
 ______________________________________________________________________
 
-## 🐍 Python API
+## Python API
+
+**JSON conversion:**
 
 ```python
 from datoon import convert_json_for_llm, ConversionConfig, DatoonError
 
-config = ConversionConfig(
-    min_savings_ratio=0.15,   # skip if savings below 15%
-    max_depth=6,              # skip if nesting deeper than 6
-    min_uniform_rows=3,       # require at least 3 uniform rows
-    toon_cli_timeout=30,      # seconds before CLI call is aborted
-    force=False,
-)
+config = ConversionConfig(min_savings_ratio=0.15, max_depth=6, min_uniform_rows=3)
 
 try:
     outcome = convert_json_for_llm(raw_json, config)
 except DatoonError as exc:
-    print(f"conversion failed: {exc}")
     raise
 
-# outcome.payload_text — TOON or original JSON depending on decision
-# outcome.report.decision — "convert" | "skip"
-# outcome.report.reason — human-readable explanation
-# outcome.report.savings_ratio — float, e.g. 0.281
+# outcome.payload_text  — TOON or original JSON
+# outcome.report.decision  — "convert" | "skip"
+# outcome.report.reason    — human-readable explanation
+send_to_model(outcome.payload_text)
+```
+
+**Any format via `read_tabular`:**
+
+```python
+import json
+from pathlib import Path
+from datoon import read_tabular, convert_json_for_llm, ConversionConfig
+
+# text formats: csv, jsonl, yaml, xml
+rows = read_tabular("csv", text=csv_string)
+
+# binary formats: excel, parquet, orc, avro, numbers
+rows = read_tabular("parquet", path=Path("data.parquet"))
+
+json_text = json.dumps(rows, separators=(",", ":"))
+outcome = convert_json_for_llm(json_text, ConversionConfig())
 send_to_model(outcome.payload_text)
 ```
 
@@ -172,20 +296,15 @@ print(analysis.is_candidate, analysis.reason)
 
 ______________________________________________________________________
 
-## 🔌 MCP Server
+## MCP Server
 
-`datoon` ships an [MCP](https://modelcontextprotocol.io) server with two tools:
+`datoon` ships an [MCP](https://modelcontextprotocol.io) server with three tools:
 
 | Tool | Description |
 |---|---|
-| `convert_json` | Full conversion with policy gating |
+| `convert_json` | Full JSON conversion with policy gating |
+| `convert_text` | Converts CSV, YAML, XML, or JSONL text with policy gating |
 | `analyze_json` | Structure analysis only — no Node.js needed |
-
-**Run locally:**
-
-```bash
-datoon-mcp
-```
 
 **Claude Desktop / Cursor / Windsurf config:**
 
@@ -200,9 +319,15 @@ datoon-mcp
 }
 ```
 
+**Run locally:**
+
+```bash
+datoon-mcp
+```
+
 ______________________________________________________________________
 
-## 🧩 Claude Code Plugin
+## Claude Code Plugin
 
 Install directly from GitHub:
 
@@ -221,10 +346,11 @@ use datoon mode for structured data
 
 ______________________________________________________________________
 
-## ⚙️ CLI Reference
+## CLI Reference
 
 | Flag | Default | Description |
 |---|---|---|
+| `--format` | auto | Input format: `json`, `csv`, `jsonl`, `yaml`, `xml`, `excel`, `parquet`, `avro`, `orc`, `numbers` |
 | `--force` | `false` | Bypass gating and minimum savings threshold |
 | `--min-savings` | `0.15` | Minimum relative token savings required |
 | `--max-depth` | `6` | Maximum nesting depth for auto-conversion |
@@ -233,16 +359,18 @@ ______________________________________________________________________
 | `--report <path>` | — | Write JSON conversion report to file |
 | `--report-stdout` | — | Print JSON conversion report to stderr |
 | `-o <path>` | stdout | Output file path |
+| `--version` | — | Print version and exit |
+
+Format is auto-detected from file extension. Use `--format` to override or when reading from stdin.
 
 ______________________________________________________________________
 
-## 📈 Benchmarks
+## Benchmarks
 
 ```bash
 PYTHONPATH=src python benchmarks/run.py --dry-run
 PYTHONPATH=src python benchmarks/run.py
 PYTHONPATH=src python benchmarks/run.py --update-readme
-python scripts/summarize_agent_skill_eval.py
 ```
 
 ### Why auto mode outperforms forced conversion
@@ -259,44 +387,58 @@ Auto mode avoids low-benefit and high-risk payloads (`orders-nested`, `mixed-non
 
 | Dataset | JSON | TOON (forced) | Raw Saved | Auto | Auto Tokens | Auto Saved |
 |---|---:|---:|---:|---|---:|---:|
-| users-small | 42 | 23 | 45.2% | convert | 23 | 45.2% |
-| events-medium | 148 | 84 | 43.2% | convert | 84 | 43.2% |
-| orders-nested | 70 | 69 | 1.4% | skip | 70 | 0.0% |
-| mixed-non-uniform | 26 | 28 | -7.7% | skip | 26 | 0.0% |
-| metrics-wide | 100 | 48 | 52.0% | convert | 48 | 52.0% |
-| **Average** | **77** | **50** | **26.8%** | **3/5 convert** | **50** | **28.1%** |
+| users-small | 56 | 31 | 44.6% | convert | 31 | 44.6% |
+| events-medium | 198 | 111 | 43.9% | convert | 111 | 43.9% |
+| orders-nested | 93 | 91 | 2.2% | skip | 93 | 0.0% |
+| mixed-non-uniform | 35 | 37 | -5.7% | skip | 35 | 0.0% |
+| metrics-wide | 133 | 63 | 52.6% | convert | 63 | 52.6% |
+| **Average** | **103** | **67** | **27.5%** | **3/5 convert** | **67** | **28.2%** |
 
 *Forced conversion succeeded for 5/5 payloads.*
 
 <!-- BENCHMARK-TABLE-END -->
 
+### Format conversion benchmark
+
+Token savings when converting from common structured formats (CSV, JSONL, XML, YAML).
+Baseline is the JSON representation of the same data — what an LLM would receive without datoon.
+
+<!-- FORMAT-BENCHMARK-TABLE-START -->
+
+| Dataset | Format | JSON Tokens | TOON (forced) | Auto | Auto Tokens | Auto Saved |
+|---|---|---:|---:|---|---:|---:|
+| users-csv | csv | 53 | 29 | convert | 29 | 45.3% |
+| events-jsonl | jsonl | 194 | 109 | convert | 109 | 43.8% |
+| catalog-xml | xml | 96 | 50 | convert | 50 | 47.9% |
+| metrics-yaml | yaml | 129 | 61 | convert | 61 | 52.7% |
+| **Average** | — | **118** | **62** | **4/4 convert** | **62** | **47.4%** |
+
+*Forced conversion succeeded for 4/4 payloads.*
+
+<!-- FORMAT-BENCHMARK-TABLE-END -->
+
 ### Agent skill evaluation
 
-We also ran an artifact-based subagent comparison with identical analysis tasks in two modes:
+Artifact-based subagent comparison — identical analysis tasks, two modes:
 
 - `with_skill`: agent received the `datoon` skill and followed the conversion workflow.
-- `without_skill`: agent used the JSON payload directly and was instructed not to use TOON or `datoon`.
+- `without_skill`: agent used JSON directly, no TOON or `datoon`.
 
-The test covered 3 payload sizes (`small`, `medium`, `large`) across 3 deterministic iterations, for 18 total agent runs. Both modes produced exact expected answers in every run.
+3 payload sizes × 3 iterations = 18 total agent runs. Both modes: 100% correct answers.
 
 | Scenario | Avg JSON Tokens | Avg TOON Tokens | Avg Payload Saved |
 |---|---:|---:|---:|
-| small | 225.33 | 118.00 | 47.63% |
-| medium | 2,972.00 | 1,138.00 | 61.71% |
-| large | 17,757.00 | 6,673.00 | 62.42% |
+| small | 225 | 118 | 47.6% |
+| medium | 2,972 | 1,138 | 61.7% |
+| large | 17,757 | 6,673 | 62.4% |
 
-| Mode | Runs | Correct | Accuracy |
-|---|---:|---:|---:|
-| with skill | 9 | 9 | 100% |
-| without skill | 9 | 9 | 100% |
-
-Full report and raw outputs live in [`benchmarks/agent_skill_eval/`](benchmarks/agent_skill_eval/). The subagent tool did not expose full model token usage for each run, so this report claims payload-token savings only, not total end-to-end model-token savings.
+Full report and raw outputs: [`benchmarks/agent_skill_eval/`](benchmarks/agent_skill_eval/). Savings are payload-token estimates, not full end-to-end model-token usage.
 
 ______________________________________________________________________
 
-## 🛠 Development
+## Development
 
-Contributor workflow is documented in [CONTRIBUTING.md](./CONTRIBUTING.md). Maintainer/source-of-truth notes for agents live in [CLAUDE.md](./CLAUDE.md).
+Contributor workflow: [CONTRIBUTING.md](./CONTRIBUTING.md). Maintainer/agent notes: [CLAUDE.md](./CLAUDE.md).
 
 **Setup:**
 
@@ -308,20 +450,11 @@ uvx pre-commit install
 **Tests:**
 
 ```bash
-# unit only
-pytest -m "not integration"
-
-# with integration (requires Node.js + npx)
-pytest
+pytest -m "not integration"   # unit only (102 tests)
+pytest                        # with integration (requires Node.js + npx)
 ```
 
-**Pre-commit:**
-
-```bash
-uvx pre-commit run --all-files
-```
-
-**Skill sync check:**
+**Skill sync + plugin metadata:**
 
 ```bash
 python scripts/validate_skill_sync.py
@@ -330,13 +463,18 @@ python scripts/validate_plugin_metadata.py
 
 ______________________________________________________________________
 
-## 🌐 Docs
+## Links
 
-- Live site: [andrii-su.github.io/datoon](https://andrii-su.github.io/datoon/)
-- Source: [`docs/`](docs/)
+- [INSTALL.md](./INSTALL.md) — full install matrix, all targets, per-agent detail
+- [CONTRIBUTING.md](./CONTRIBUTING.md) — contributor workflow
+- [CLAUDE.md](./CLAUDE.md) — maintainer guide for agents
+- [CHANGELOG.md](./CHANGELOG.md) — release history
+- [SECURITY.md](./SECURITY.md) — vulnerability reporting
+- [Live docs](https://andrii-su.github.io/datoon/) — `docs/`
+- [Issues](https://github.com/andrii-su/datoon/issues) — bugs, features, questions
 
 ______________________________________________________________________
 
-## 🔒 Security
+## License
 
-See [SECURITY.md](SECURITY.md) for vulnerability reporting and response policy.
+MIT

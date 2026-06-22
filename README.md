@@ -298,6 +298,8 @@ ______________________________________________________________________
 
 ## MCP Server
 
+<!-- mcp-name: io.github.andrii-su/datoon -->
+
 `datoon` ships an [MCP](https://modelcontextprotocol.io) server with three tools:
 
 | Tool | Description |
@@ -313,7 +315,7 @@ ______________________________________________________________________
   "mcpServers": {
     "datoon": {
       "command": "uvx",
-      "args": ["datoon[mcp]", "datoon-mcp"]
+      "args": ["--from", "datoon[mcp]", "datoon", "mcp"]
     }
   }
 }
@@ -322,8 +324,10 @@ ______________________________________________________________________
 **Run locally:**
 
 ```bash
-datoon-mcp
+datoon mcp     # or the standalone script: datoon-mcp
 ```
+
+Listed on the [MCP Registry](https://registry.modelcontextprotocol.io), [Smithery](https://smithery.ai), and [Glama](https://glama.ai). See [MARKETPLACES.md](./MARKETPLACES.md).
 
 ______________________________________________________________________
 

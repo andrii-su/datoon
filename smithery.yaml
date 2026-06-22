@@ -1,0 +1,18 @@
+# Smithery configuration for the datoon MCP server.
+# https://smithery.ai/docs/build/project-config
+#
+# datoon runs locally over stdio and needs no API keys or runtime config.
+# Node.js (npx) is required only when conversion actually runs; structure
+# analysis works without it.
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+    additionalProperties: false
+  commandFunction: |-
+    () => ({
+      command: "uvx",
+      args: ["--from", "datoon[mcp]", "datoon", "mcp"]
+    })

@@ -184,5 +184,35 @@
         ]
       }
     }
+  ],
+  "format_payloads": [
+    {
+      "id": "users-csv",
+      "category": "csv",
+      "description": "User records from CSV source",
+      "format": "csv",
+      "data": "id,name,role,active\n1,Ada,admin,true\n2,Lin,analyst,true\n3,Sam,viewer,false\n"
+    },
+    {
+      "id": "events-jsonl",
+      "category": "jsonl",
+      "description": "Event stream from JSONL source",
+      "format": "jsonl",
+      "data": "{\"ts\":\"2026-01-01T00:00:00Z\",\"event\":\"page_view\",\"user_id\":1001,\"country\":\"US\",\"is_mobile\":true}\n{\"ts\":\"2026-01-01T00:01:00Z\",\"event\":\"signup\",\"user_id\":1002,\"country\":\"DE\",\"is_mobile\":false}\n{\"ts\":\"2026-01-01T00:02:00Z\",\"event\":\"page_view\",\"user_id\":1003,\"country\":\"US\",\"is_mobile\":true}\n{\"ts\":\"2026-01-01T00:03:00Z\",\"event\":\"purchase\",\"user_id\":1001,\"country\":\"US\",\"is_mobile\":true}\n{\"ts\":\"2026-01-01T00:04:00Z\",\"event\":\"page_view\",\"user_id\":1004,\"country\":\"CA\",\"is_mobile\":false}\n{\"ts\":\"2026-01-01T00:05:00Z\",\"event\":\"page_view\",\"user_id\":1005,\"country\":\"FR\",\"is_mobile\":true}\n"
+    },
+    {
+      "id": "catalog-xml",
+      "category": "xml",
+      "description": "Product catalog from XML source",
+      "format": "xml",
+      "data": "<catalog><product><id>1</id><name>Widget A</name><price>9.99</price><category>tools</category><stock>150</stock></product><product><id>2</id><name>Widget B</name><price>24.99</price><category>tools</category><stock>80</stock></product><product><id>3</id><name>Widget C</name><price>4.99</price><category>parts</category><stock>500</stock></product><product><id>4</id><name>Widget D</name><price>14.99</price><category>tools</category><stock>200</stock></product></catalog>"
+    },
+    {
+      "id": "metrics-yaml",
+      "category": "yaml",
+      "description": "Metrics table from YAML source (requires datoon[yaml])",
+      "format": "yaml",
+      "data": "metrics:\n  - date: \"2026-01-01\"\n    country: US\n    sessions: 1024\n    revenue: 345.12\n    refunds: 2\n    new_users: 88\n  - date: \"2026-01-02\"\n    country: US\n    sessions: 998\n    revenue: 301.9\n    refunds: 1\n    new_users: 79\n  - date: \"2026-01-01\"\n    country: DE\n    sessions: 440\n    revenue: 133.44\n    refunds: 0\n    new_users: 31\n  - date: \"2026-01-02\"\n    country: DE\n    sessions: 455\n    revenue: 149.87\n    refunds: 1\n    new_users: 36\n"
+    }
   ]
 }

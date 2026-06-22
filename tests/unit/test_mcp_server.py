@@ -35,7 +35,7 @@ def _install_mcp_mock() -> None:
 
 _install_mcp_mock()
 
-from datoon.mcp_server import analyze_json, convert_json  # noqa: E402
+from datoon.mcp_server import analyze_json, convert_json, convert_text  # noqa: E402
 
 
 def test_analyze_json_detects_candidate() -> None:
@@ -111,6 +111,82 @@ def test_convert_json_invalid_config_returns_error() -> None:
     result = convert_json('{"x":1}', min_savings=2.0)
     assert "error" in result
     assert "Invalid config" in result["error"]
+
+
+def test_convert_text_csv_converts(monkeypatch: pytest.MonkeyPatch) -> None:
+    """CSV text should convert when savings clear threshold."""
+    csv_text = "id,name,role\n1,Ada,admin\n2,Lin,analyst\n3,Grace,viewer\n"
+    monkeypatch.setattr(
+        "datoon.converter._run_toon_cli",
+        lambda _,
+        **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n  2,Lin,analyst\n  3,Grace,viewer\n",
+    )
+    token_seq = iter([100, 40])
+    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+
+    result = convert_text(csv_text, fmt="csv")
+    assert "error" not in result
+    assert result["report"]["decision"] == "convert"
+
+
+def test_convert_text_jsonl_converts(monkeypatch: pytest.MonkeyPatch) -> None:
+    """JSONL text should convert when savings clear threshold."""
+    jsonl_text = (
+        '{"id":1,"name":"Ada","role":"admin"}\n'
+        '{"id":2,"name":"Lin","role":"analyst"}\n'
+        '{"id":3,"name":"Grace","role":"viewer"}\n'
+    )
+    monkeypatch.setattr(
+        "datoon.converter._run_toon_cli",
+        lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
+    )
+    token_seq = iter([100, 40])
+    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+
+    result = convert_text(jsonl_text, fmt="jsonl")
+    assert "error" not in result
+    assert result["report"]["decision"] == "convert"
+
+
+def test_convert_text_xml_converts(monkeypatch: pytest.MonkeyPatch) -> None:
+    """XML text should convert when structure and savings qualify."""
+    xml_text = (
+        "<users>"
+        "<user><id>1</id><name>Ada</name></user>"
+        "<user><id>2</id><name>Lin</name></user>"
+        "<user><id>3</id><name>Grace</name></user>"
+        "</users>"
+    )
+    monkeypatch.setattr(
+        "datoon.converter._run_toon_cli",
+        lambda _, **kw: "rows[3]{id,name}:\n  1,Ada\n",
+    )
+    token_seq = iter([100, 40])
+    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+
+    result = convert_text(xml_text, fmt="xml")
+    assert "error" not in result
+    assert result["report"]["decision"] == "convert"
+
+
+def test_convert_text_unsupported_format_returns_error() -> None:
+    """Binary formats must return error — they cannot be passed as text."""
+    result = convert_text("data", fmt="parquet")
+    assert "error" in result
+    assert "parquet" in result["error"]
+
+
+def test_convert_text_invalid_csv_returns_error() -> None:
+    """Empty CSV (no rows) should result in a skip, not an error key."""
+    result = convert_text("id,name\n", fmt="csv")
+    assert "error" not in result
+    assert result["report"]["decision"] == "skip"
+
+
+def test_convert_text_invalid_xml_returns_error() -> None:
+    """Malformed XML must return error key, not raise."""
+    result = convert_text("<not closed", fmt="xml")
+    assert "error" in result
 
 
 def test_convert_json_cli_failure_returns_skip(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 try:
@@ -14,6 +15,7 @@ except ImportError as exc:
 from datoon.analyzer import analyze_payload
 from datoon.converter import DatoonError, convert_json_for_llm
 from datoon.models import ConversionConfig
+from datoon.readers import TEXT_FORMATS, read_tabular
 
 mcp = FastMCP(
     "datoon",
@@ -68,8 +70,6 @@ def analyze_json(
 
     Does not invoke the TOON CLI — safe to call without Node.js installed.
     """
-    import json
-
     try:
         parsed = json.loads(json_text)
     except json.JSONDecodeError as exc:
@@ -89,6 +89,47 @@ def analyze_json(
         "max_depth": analysis.max_depth,
         "uniform_array_count": analysis.uniform_array_count,
     }
+
+
+@mcp.tool()
+def convert_text(
+    text: str,
+    fmt: str = "csv",
+    force: bool = False,
+    min_savings: float = 0.15,
+    max_depth: int = 6,
+    min_uniform_rows: int = 3,
+    timeout: int = 30,
+) -> dict[str, Any]:
+    """Convert structured text (csv, yaml, xml, jsonl) to TOON with policy gating.
+
+    Supported formats: csv, yaml, xml, jsonl.
+    For JSON input use convert_json. Binary formats (parquet, excel, etc.) require the CLI.
+    """
+    if fmt not in TEXT_FORMATS:
+        return {
+            "error": (
+                f"Unsupported format '{fmt}' for text input. "
+                f"Supported: {sorted(TEXT_FORMATS)}."
+            )
+        }
+    try:
+        rows = read_tabular(fmt, text=text)
+        json_text = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
+        config = ConversionConfig(
+            min_savings_ratio=min_savings,
+            max_depth=max_depth,
+            min_uniform_rows=min_uniform_rows,
+            force=force,
+            toon_cli_timeout=timeout,
+        )
+        outcome = convert_json_for_llm(json_text, config)
+        return {
+            "payload": outcome.payload_text,
+            "report": outcome.report.as_dict(),
+        }
+    except (DatoonError, ValueError, ImportError) as exc:
+        return {"error": str(exc)}
 
 
 def main() -> None:

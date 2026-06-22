@@ -23,9 +23,7 @@ def read_excel(path: Path, *, sheet: int = 0) -> list[dict[str, Any]]:
     if not rows:
         return []
 
-    headers = [
-        str(h) if h is not None else f"col{i}" for i, h in enumerate(rows[0])
-    ]
+    headers = [str(h) if h is not None else f"col{i}" for i, h in enumerate(rows[0])]
     return [
         {h: v for h, v in zip(headers, row)}
         for row in rows[1:]

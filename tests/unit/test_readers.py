@@ -7,7 +7,13 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from datoon.readers import ALL_FORMATS, BINARY_FORMATS, TEXT_FORMATS, detect_format, read_tabular
+from datoon.readers import (
+    ALL_FORMATS,
+    BINARY_FORMATS,
+    TEXT_FORMATS,
+    detect_format,
+    read_tabular,
+)
 from datoon.readers.csv import read_csv
 from datoon.readers.jsonl import read_jsonl
 from datoon.readers.xml import read_xml

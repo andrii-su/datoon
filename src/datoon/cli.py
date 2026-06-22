@@ -8,25 +8,43 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
+from datoon import __version__
 from datoon.converter import DatoonError, convert_json_for_llm
 from datoon.models import ConversionConfig
+from datoon.readers import ALL_FORMATS, BINARY_FORMATS, detect_format, read_tabular
 
 
 def build_parser() -> argparse.ArgumentParser:
     """Create CLI parser with conversion policy and reporting options."""
     parser = argparse.ArgumentParser(
         prog="datoon",
-        description="Convert JSON payloads to TOON only when conversion is beneficial.",
+        description=(
+            "Convert structured data (JSON, CSV, YAML, XML, JSONL, Parquet, "
+            "Avro, ORC, Excel, Numbers) to TOON only when conversion is beneficial."
+        ),
+    )
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__}",
     )
     parser.add_argument(
         "input",
         nargs="?",
-        help="Path to JSON input file. If omitted, reads from stdin.",
+        help="Path to input file. If omitted, reads from stdin (JSON/CSV/YAML/XML/JSONL).",
     )
     parser.add_argument(
         "-o",
         "--output",
         help="Path to write resulting payload. If omitted, writes to stdout.",
+    )
+    parser.add_argument(
+        "--format",
+        choices=sorted(ALL_FORMATS | {"json"}),
+        help=(
+            "Input format. Auto-detected from file extension when omitted; "
+            "defaults to 'json' for stdin."
+        ),
     )
     parser.add_argument(
         "--force",
@@ -73,7 +91,6 @@ def _read_input(path: str | None) -> str:
     """Read input payload from file path or stdin."""
     if path is None:
         return sys.stdin.read()
-
     return Path(path).read_text(encoding="utf-8")
 
 
@@ -82,7 +99,6 @@ def _write_text(path: str | None, text: str) -> None:
     if path is None:
         sys.stdout.write(text)
         return
-
     Path(path).write_text(text, encoding="utf-8")
 
 
@@ -91,12 +107,21 @@ def _emit_report(
 ) -> None:
     """Emit conversion report to selected destinations."""
     report_json = json.dumps(payload, ensure_ascii=False, indent=2)
-
     if report_path:
         Path(report_path).write_text(f"{report_json}\n", encoding="utf-8")
-
     if report_stdout:
         sys.stderr.write(f"{report_json}\n")
+
+
+def _resolve_format(input_path: str | None, format_override: str | None) -> str:
+    """Determine input format from explicit flag, file extension, or default."""
+    if format_override:
+        return format_override
+    if input_path is not None:
+        detected = detect_format(input_path)
+        if detected is not None:
+            return detected
+    return "json"
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -112,8 +137,26 @@ def main(argv: Sequence[str] | None = None) -> int:
             force=args.force,
             toon_cli_timeout=args.timeout,
         )
-        raw_input = _read_input(args.input)
-        outcome = convert_json_for_llm(raw_input, config)
+
+        fmt = _resolve_format(args.input, args.format)
+
+        if fmt == "json":
+            raw_input = _read_input(args.input)
+            outcome = convert_json_for_llm(raw_input, config)
+        elif fmt in BINARY_FORMATS:
+            if args.input is None:
+                sys.stderr.write(
+                    f"datoon error: --format {fmt} requires a file path, not stdin.\n"
+                )
+                return 1
+            rows = read_tabular(fmt, path=Path(args.input))
+            json_text = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
+            outcome = convert_json_for_llm(json_text, config)
+        else:
+            raw_input = _read_input(args.input)
+            rows = read_tabular(fmt, text=raw_input)
+            json_text = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
+            outcome = convert_json_for_llm(json_text, config)
 
         _write_text(args.output, outcome.payload_text)
         _emit_report(

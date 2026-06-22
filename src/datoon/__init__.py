@@ -11,10 +11,13 @@ from datoon.models import (
     ConversionReport,
     PayloadAnalysis,
 )
+from datoon.readers import detect_format, read_tabular
 
 __all__ = [
     "__version__",
     "convert_json_for_llm",
+    "read_tabular",
+    "detect_format",
     "ConversionConfig",
     "ConversionOutcome",
     "ConversionReport",

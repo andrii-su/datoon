@@ -5,7 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-BINARY_FORMATS: frozenset[str] = frozenset({"excel", "parquet", "orc", "avro", "numbers"})
+BINARY_FORMATS: frozenset[str] = frozenset(
+    {"excel", "parquet", "orc", "avro", "numbers"}
+)
 TEXT_FORMATS: frozenset[str] = frozenset({"csv", "jsonl", "yaml", "xml"})
 ALL_FORMATS: frozenset[str] = BINARY_FORMATS | TEXT_FORMATS
 

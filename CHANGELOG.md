@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/andrii-su/datoon/compare/v1.6.0...v1.7.0) (2026-06-22)
+
+
+### Features
+
+* list datoon on MCP marketplaces (Registry, Smithery, Glama) ([8eff5a0](https://github.com/andrii-su/datoon/commit/8eff5a0a118c078c3f58cc688dee7951385ca141))
+
 # [1.6.0](https://github.com/andrii-su/datoon/compare/v1.5.0...v1.6.0) (2026-06-22)
 
 

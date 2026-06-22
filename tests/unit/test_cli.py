@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
+from types import ModuleType
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -248,3 +251,32 @@ def test_main_csv_skips_when_savings_insufficient(
     report = json.loads(capsys.readouterr().err)
     assert report["decision"] == "skip"
     assert "below threshold" in report["reason"]
+
+
+# ---------------------------------------------------------------------------
+# `datoon mcp` subcommand
+# ---------------------------------------------------------------------------
+
+
+def test_mcp_subcommand_launches_server(monkeypatch: pytest.MonkeyPatch) -> None:
+    """`datoon mcp` should delegate to the MCP server entrypoint."""
+    stub = ModuleType("datoon.mcp_server")
+    server_main = MagicMock()
+    stub.main = server_main  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "datoon.mcp_server", stub)
+
+    rc = main(["mcp"])
+    assert rc == 0
+    server_main.assert_called_once_with()
+
+
+def test_mcp_subcommand_missing_extra_errors(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """Missing the `mcp` extra must produce a friendly error, not a traceback."""
+    # Setting the module to None forces `import datoon.mcp_server` to raise.
+    monkeypatch.setitem(sys.modules, "datoon.mcp_server", None)
+
+    rc = main(["mcp"])
+    assert rc == 1
+    assert "mcp" in capsys.readouterr().err

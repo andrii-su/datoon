@@ -124,8 +124,31 @@ def _resolve_format(input_path: str | None, format_override: str | None) -> str:
     return "json"
 
 
+def _run_mcp_server() -> int:
+    """Launch the bundled MCP server via the `datoon mcp` subcommand.
+
+    Kept as a thin wrapper so the official MCP Registry can launch datoon
+    through its package command (`uvx --from datoon[mcp] datoon mcp`) without a
+    separate distribution. The standalone `datoon-mcp` script remains available.
+    """
+    try:
+        from datoon.mcp_server import main as mcp_main
+    except ImportError:
+        sys.stderr.write(
+            "datoon error: MCP support requires the 'mcp' extra: "
+            "pip install 'datoon[mcp]'\n"
+        )
+        return 1
+    mcp_main()
+    return 0
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """CLI entrypoint that executes conversion and returns process exit code."""
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    if raw_argv and raw_argv[0] == "mcp":
+        return _run_mcp_server()
+
     parser = build_parser()
     args = parser.parse_args(argv)
 

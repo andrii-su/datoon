@@ -1,0 +1,70 @@
+name: Publish to MCP Registry
+
+# Publishes server.json to the official MCP Registry after a GitHub Release.
+# Ownership is proven via GitHub OIDC (namespace io.github.andrii-su/*) and the
+# `mcp-name: io.github.andrii-su/datoon` token in the PyPI package README.
+#
+# Runs after publish.yml has pushed the tagged version to PyPI, so the registry
+# can validate the package + ownership token for the released version.
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Resolve release version
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Sync server.json version to release tag
+        if: github.event_name == 'release'
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          tmp="$(mktemp)"
+          jq --arg v "$version" \
+            '.version = $v | .packages[0].version = $v' \
+            server.json > "$tmp"
+          mv "$tmp" server.json
+          cat server.json
+
+      - name: Install mcp-publisher
+        run: |
+          curl -sSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" \
+            | tar -xz mcp-publisher
+          sudo mv mcp-publisher /usr/local/bin/
+
+      - name: Validate server.json
+        run: mcp-publisher validate
+
+      - name: Wait for the released version to appear on PyPI
+        if: github.event_name == 'release'
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          url="https://pypi.org/pypi/datoon/${version}/json"
+          for attempt in $(seq 1 30); do
+            code="$(curl -s -o /dev/null -w '%{http_code}' "$url")"
+            if [ "$code" = "200" ]; then
+              echo "datoon ${version} is live on PyPI."
+              exit 0
+            fi
+            echo "Attempt ${attempt}: PyPI returned ${code} for ${version}; retrying in 20s..."
+            sleep 20
+          done
+          echo "::error::datoon ${version} did not appear on PyPI in time." >&2
+          exit 1
+
+      - name: Login via GitHub OIDC
+        run: mcp-publisher login github-oidc
+
+      - name: Publish to MCP Registry
+        run: mcp-publisher publish

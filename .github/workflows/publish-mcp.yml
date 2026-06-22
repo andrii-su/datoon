@@ -46,6 +46,23 @@ jobs:
       - name: Validate server.json
         run: mcp-publisher validate
 
+      - name: Wait for the released version to appear on PyPI
+        if: github.event_name == 'release'
+        run: |
+          version="${{ steps.version.outputs.version }}"
+          url="https://pypi.org/pypi/datoon/${version}/json"
+          for attempt in $(seq 1 30); do
+            code="$(curl -s -o /dev/null -w '%{http_code}' "$url")"
+            if [ "$code" = "200" ]; then
+              echo "datoon ${version} is live on PyPI."
+              exit 0
+            fi
+            echo "Attempt ${attempt}: PyPI returned ${code} for ${version}; retrying in 20s..."
+            sleep 20
+          done
+          echo "::error::datoon ${version} did not appear on PyPI in time." >&2
+          exit 1
+
       - name: Login via GitHub OIDC
         run: mcp-publisher login github-oidc
 

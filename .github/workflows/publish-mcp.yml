@@ -1,15 +1,18 @@
 name: Publish to MCP Registry
 
-# Publishes server.json to the official MCP Registry after a GitHub Release.
+# Publishes server.json to the official MCP Registry after a release.
 # Ownership is proven via GitHub OIDC (namespace io.github.andrii-su/*) and the
 # `mcp-name: io.github.andrii-su/datoon` token in the PyPI package README.
 #
-# Runs after publish.yml has pushed the tagged version to PyPI, so the registry
-# can validate the package + ownership token for the released version.
+# Keys off the Release workflow's completion (GITHUB_TOKEN-created releases do
+# not fire `release: published`). Runs only when main HEAD carries a new version
+# tag, and waits for that version to appear on PyPI before publishing, so it
+# never races the parallel Publish to PyPI workflow.
 
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
@@ -18,16 +21,32 @@ permissions:
 
 jobs:
   publish:
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: main
+          fetch-depth: 0
 
-      - name: Resolve release version
+      - name: Resolve version to publish
         id: version
-        run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+        run: |
+          version="$(git tag --points-at HEAD | sed 's/^v//' | head -1)"
+          if [ -z "$version" ] && [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            version="$(git describe --tags --abbrev=0 | sed 's/^v//')"
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          if [ -z "$version" ]; then
+            echo "No release tag at HEAD - nothing to publish."
+          else
+            echo "Publishing datoon ${version} to the MCP Registry."
+          fi
 
-      - name: Sync server.json version to release tag
-        if: github.event_name == 'release'
+      - name: Sync server.json version
+        if: steps.version.outputs.version != ''
         run: |
           version="${{ steps.version.outputs.version }}"
           tmp="$(mktemp)"
@@ -38,16 +57,18 @@ jobs:
           cat server.json
 
       - name: Install mcp-publisher
+        if: steps.version.outputs.version != ''
         run: |
           curl -sSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_linux_amd64.tar.gz" \
             | tar -xz mcp-publisher
           sudo mv mcp-publisher /usr/local/bin/
 
       - name: Validate server.json
+        if: steps.version.outputs.version != ''
         run: mcp-publisher validate
 
       - name: Wait for the released version to appear on PyPI
-        if: github.event_name == 'release'
+        if: steps.version.outputs.version != ''
         run: |
           version="${{ steps.version.outputs.version }}"
           url="https://pypi.org/pypi/datoon/${version}/json"
@@ -64,7 +85,9 @@ jobs:
           exit 1
 
       - name: Login via GitHub OIDC
+        if: steps.version.outputs.version != ''
         run: mcp-publisher login github-oidc
 
       - name: Publish to MCP Registry
+        if: steps.version.outputs.version != ''
         run: mcp-publisher publish

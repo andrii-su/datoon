@@ -1,8 +1,15 @@
 name: Publish to PyPI
 
+# Releases are cut by the Release workflow using GITHUB_TOKEN, and GitHub does
+# not fire `release: published` for events created by GITHUB_TOKEN. So this
+# workflow keys off the Release workflow's completion instead, and publishes
+# only when the current main HEAD carries a new version tag.
+
 on:
-  release:
-    types: [published]
+  workflow_run:
+    workflows: ["Release"]
+    types: [completed]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -10,19 +17,42 @@ permissions:
 
 jobs:
   build:
+    if: >-
+      github.event_name == 'workflow_dispatch'
+      || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.ver.outputs.version }}
     steps:
       - uses: actions/checkout@v6
         with:
+          ref: main
           fetch-depth: 0
 
+      - name: Resolve version to publish
+        id: ver
+        run: |
+          version="$(git tag --points-at HEAD | sed 's/^v//' | head -1)"
+          if [ -z "$version" ] && [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            version="$(git describe --tags --abbrev=0 | sed 's/^v//')"
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          if [ -z "$version" ]; then
+            echo "No release tag at HEAD - nothing to publish."
+          else
+            echo "Publishing datoon ${version}."
+          fi
+
       - name: Install uv
+        if: steps.ver.outputs.version != ''
         uses: astral-sh/setup-uv@v7
 
       - name: Build distributions
+        if: steps.ver.outputs.version != ''
         run: uv build
 
       - name: Upload distributions
+        if: steps.ver.outputs.version != ''
         uses: actions/upload-artifact@v7
         with:
           name: dist
@@ -30,6 +60,7 @@ jobs:
 
   publish:
     needs: build
+    if: needs.build.outputs.version != ''
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -43,3 +74,5 @@ jobs:
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          skip-existing: true

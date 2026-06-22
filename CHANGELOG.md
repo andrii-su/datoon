@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/andrii-su/datoon/compare/v1.7.0...v1.7.1) (2026-06-22)
+
+
+### Bug Fixes
+
+* **mcp:** report datoon version in the MCP initialize handshake ([22ba5fd](https://github.com/andrii-su/datoon/commit/22ba5fd23071cf2fa6a2d2c51d306d761dce9dc4))
+
 # [1.7.0](https://github.com/andrii-su/datoon/compare/v1.6.0...v1.7.0) (2026-06-22)
 
 

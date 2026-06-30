@@ -79,29 +79,29 @@ PYTHONPATH=src python benchmarks/run.py --update-readme
 
 | Scenario | JSON Baseline | Forced TOON | `datoon` Auto |
 |---|---:|---:|---:|
-| Average tokens | 77 | 50 | 50 |
-| Avg token saved | 0.0% | 26.8% | **28.1%** |
+| Average tokens | 109 | 94 | 88 |
+| Avg token saved | 0.0% | 4.8% | **15.4%** |
 | Decision quality | n/a | Converts all | Converts `3/5`, skips harmful cases |
+
+> Token counts use `tiktoken` (`cl100k_base`). Savings are shape-dependent: the per-payload cut on converted data runs ~24–27% on this suite, while the suite average is pulled down by the payloads `datoon` correctly declines to convert.
 
 Why auto wins:
 
-- 🧠 it avoids low-benefit/high-risk payloads (`orders-nested`, `mixed-non-uniform`);
-- 📉 it keeps the same average token count as forced mode while improving stability;
+- 🧠 it avoids high-risk payloads — forced TOON *regresses* `orders-nested` (−14.9%) and `mixed-non-uniform` (−38.2%); auto skips both;
+- 📉 it beats forced mode on average (15.4% vs 4.8%) precisely because it declines the conversions that lose tokens;
 - 🧾 it always returns a reasoned conversion report.
 
 <!-- BENCHMARK-TABLE-START -->
-
 | Dataset | JSON | TOON (forced) | Raw Saved | Auto | Auto Tokens | Auto Saved |
 |---|---:|---:|---:|---|---:|---:|
-| users-small | 42 | 23 | 45.2% | convert | 23 | 45.2% |
-| events-medium | 148 | 84 | 43.2% | convert | 84 | 43.2% |
-| orders-nested | 70 | 69 | 1.4% | skip | 70 | 0.0% |
-| mixed-non-uniform | 26 | 28 | -7.7% | skip | 26 | 0.0% |
-| metrics-wide | 100 | 48 | 52.0% | convert | 48 | 52.0% |
-| **Average** | **77** | **50** | **26.8%** | **3/5 convert** | **50** | **28.1%** |
+| users-small | 53 | 40 | 24.5% | convert | 40 | 24.5% |
+| events-medium | 218 | 162 | 25.7% | convert | 162 | 25.7% |
+| orders-nested | 101 | 116 | -14.9% | skip | 101 | 0.0% |
+| mixed-non-uniform | 34 | 47 | -38.2% | skip | 34 | 0.0% |
+| metrics-wide | 141 | 103 | 27.0% | convert | 103 | 27.0% |
+| **Average** | **109** | **94** | **4.8%** | **3/5 convert** | **88** | **15.4%** |
 
 *Forced conversion succeeded for 5/5 payloads.*
-
 <!-- BENCHMARK-TABLE-END -->
 
 ## ⚙️ Decision Model (Auto Mode)

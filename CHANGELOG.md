@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/andrii-su/datoon/compare/v1.7.1...v1.7.2) (2026-07-07)
+
+
+### Bug Fixes
+
+* **readers:** preserve semantic values during scalar and row coercion ([#36](https://github.com/andrii-su/datoon/issues/36)) ([5b24c00](https://github.com/andrii-su/datoon/commit/5b24c0098da620e14158b457a04d639663ba33f0))
+
 ## [1.7.1](https://github.com/andrii-su/datoon/compare/v1.7.0...v1.7.1) (2026-06-22)
 
 

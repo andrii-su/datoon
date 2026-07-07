@@ -250,6 +250,26 @@ def test_read_xml_rejects_non_finite() -> None:
     assert rows[1]["v"] == "nan"
 
 
+def test_read_xml_rejects_dtd_billion_laughs() -> None:
+    # Internal entity expansion (billion laughs) is a DoS vector; DTDs are refused.
+    payload = (
+        '<!DOCTYPE lolz [<!ENTITY lol "lol">'
+        '<!ENTITY lol2 "&lol;&lol;&lol;">]>'
+        "<rows><r>&lol2;</r></rows>"
+    )
+    with pytest.raises(ValueError, match="DOCTYPE"):
+        read_xml(payload)
+
+
+def test_read_xml_rejects_external_entity_dtd() -> None:
+    payload = (
+        '<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>'
+        "<rows><r>&xxe;</r></rows>"
+    )
+    with pytest.raises(ValueError, match="DOCTYPE"):
+        read_xml(payload)
+
+
 def test_read_xml_invalid_raises() -> None:
     with pytest.raises(ValueError, match="Invalid XML"):
         read_xml("<not closed>")

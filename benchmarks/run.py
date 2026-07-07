@@ -316,7 +316,8 @@ def _replace_between_markers(
         )
     before = content[: start + len(start_marker)]
     after = content[end:]
-    return f"{before}\n{replacement}\n{after}"
+    # Blank lines around the block keep the injected README mdformat-clean.
+    return f"{before}\n\n{replacement}\n\n{after}"
 
 
 def update_readme(table_md: str) -> None:

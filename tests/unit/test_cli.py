@@ -310,6 +310,8 @@ def test_main_forwards_sheet_and_table_for_binary(
     xlsx = tmp_path / "data.xlsx"
     xlsx.write_bytes(b"")
 
-    rc = main(["--format", "excel", "--sheet", "2", "--table", "1", "--force", str(xlsx)])
+    rc = main(
+        ["--format", "excel", "--sheet", "2", "--table", "1", "--force", str(xlsx)]
+    )
     assert rc == 0
     assert captured == {"sheet": 2, "table": 1}

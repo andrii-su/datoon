@@ -107,7 +107,7 @@ def test_policy_converts_when_savings_above_threshold(
 
     token_sequence = iter([100, 60])  # input, output
     monkeypatch.setattr(
-        "datoon.converter.estimate_tokens", lambda _: next(token_sequence)
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_sequence)
     )
 
     outcome = convert_json_for_llm(payload, ConversionConfig(min_savings_ratio=0.15))
@@ -127,7 +127,7 @@ def test_policy_skips_when_savings_below_threshold(
 
     token_sequence = iter([100, 95])  # input, output
     monkeypatch.setattr(
-        "datoon.converter.estimate_tokens", lambda _: next(token_sequence)
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_sequence)
     )
 
     outcome = convert_json_for_llm(payload, ConversionConfig(min_savings_ratio=0.10))

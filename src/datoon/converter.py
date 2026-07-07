@@ -11,6 +11,7 @@ from typing import Any
 from datoon.analyzer import analyze_payload
 from datoon.errors import DatoonError
 from datoon.models import (
+    DEFAULT_TOKEN_ENCODING,
     ConversionConfig,
     ConversionOutcome,
     ConversionReport,
@@ -42,20 +43,20 @@ def _normalize_json(raw_text: str) -> tuple[Any, str]:
     return parsed, normalized
 
 
-@lru_cache(maxsize=1)
-def _load_token_encoder() -> Any | None:
-    """Load a token encoder once, returning None when optional dependency is absent."""
+@lru_cache(maxsize=8)
+def _load_token_encoder(encoding: str) -> Any | None:
+    """Load a token encoder once per name, None when the optional dep is absent."""
     try:
         import tiktoken  # type: ignore
     except ImportError:
         return None
 
-    return tiktoken.get_encoding("cl100k_base")
+    return tiktoken.get_encoding(encoding)
 
 
-def estimate_tokens(text: str) -> int:
+def estimate_tokens(text: str, encoding: str = DEFAULT_TOKEN_ENCODING) -> int:
     """Estimate token count with tiktoken when installed, else use a char heuristic."""
-    encoder = _load_token_encoder()
+    encoder = _load_token_encoder(encoding)
     if encoder is not None:
         return len(encoder.encode(text))
 
@@ -118,7 +119,7 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
     """Convert JSON to TOON when structure and savings meet configured policy."""
     parsed, normalized_json = _normalize_json(raw_text)
     analysis = analyze_payload(parsed, config)
-    input_tokens = estimate_tokens(normalized_json)
+    input_tokens = estimate_tokens(normalized_json, config.token_encoding)
 
     if not analysis.is_candidate and not config.force:
         return _build_skip_outcome(
@@ -143,7 +144,7 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
             analysis=analysis,
         )
 
-    output_tokens = estimate_tokens(toon_text)
+    output_tokens = estimate_tokens(toon_text, config.token_encoding)
     savings_ratio = (input_tokens - output_tokens) / input_tokens
 
     if savings_ratio < config.min_savings_ratio and not config.force:

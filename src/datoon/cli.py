@@ -10,7 +10,7 @@ from pathlib import Path
 
 from datoon import __version__
 from datoon.converter import DatoonError, convert_json_for_llm
-from datoon.models import ConversionConfig
+from datoon.models import DEFAULT_TOKEN_ENCODING, ConversionConfig
 from datoon.readers import ALL_FORMATS, BINARY_FORMATS, detect_format, read_tabular
 
 
@@ -86,6 +86,14 @@ def build_parser() -> argparse.ArgumentParser:
         type=int,
         default=0,
         help="Table index within a Numbers sheet (default: 0).",
+    )
+    parser.add_argument(
+        "--encoding",
+        default=DEFAULT_TOKEN_ENCODING,
+        help=(
+            "tiktoken encoding for token estimates "
+            f"(default: {DEFAULT_TOKEN_ENCODING})."
+        ),
     )
     parser.add_argument(
         "--report",
@@ -171,6 +179,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             min_uniform_rows=args.min_uniform_rows,
             force=args.force,
             toon_cli_timeout=args.timeout,
+            token_encoding=args.encoding,
         )
 
         fmt = _resolve_format(args.input, args.format)

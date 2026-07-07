@@ -53,7 +53,9 @@ def test_main_converts_json_from_stdin(
         lambda _, **kw: "rows[3]{id,v}:\n  1,a\n  2,b\n  3,c\n",
     )
     token_seq = iter([100, 40])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     rc = main([])
     assert rc == 0
@@ -88,7 +90,9 @@ def test_main_converts_csv_via_flag(
         lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     rc = main([str(csv_file), "--format", "csv"])
     assert rc == 0
@@ -107,7 +111,9 @@ def test_main_auto_detects_csv_from_extension(
         lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     rc = main([str(csv_file)])
     assert rc == 0
@@ -134,7 +140,9 @@ def test_main_converts_jsonl_from_stdin(
         lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     rc = main(["--format", "jsonl"])
     assert rc == 0
@@ -153,7 +161,9 @@ def test_main_auto_detects_jsonl_from_extension(
         lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     rc = main([str(f)])
     assert rc == 0
@@ -182,7 +192,9 @@ def test_main_converts_xml_via_flag(
         lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     rc = main([str(f), "--format", "xml"])
     assert rc == 0
@@ -223,7 +235,9 @@ def test_main_csv_report_stdout(
         lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     rc = main([str(csv_file), "--report-stdout"])
     assert rc == 0
@@ -244,7 +258,9 @@ def test_main_csv_skips_when_savings_insufficient(
         lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 98])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     rc = main([str(csv_file), "--report-stdout"])
     assert rc == 0
@@ -315,3 +331,23 @@ def test_main_forwards_sheet_and_table_for_binary(
     )
     assert rc == 0
     assert captured == {"sheet": 2, "table": 1}
+
+
+def test_main_forwards_encoding_to_estimate(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    payload = '{"rows":[{"id":1,"v":"a"},{"id":2,"v":"b"},{"id":3,"v":"c"}]}'
+    monkeypatch.setattr("sys.stdin", __import__("io").StringIO(payload))
+    monkeypatch.setattr("datoon.converter._run_toon_cli", lambda _, **kw: "x\n")
+
+    seen: list[str] = []
+
+    def fake_estimate(text: str, encoding: str = "o200k_base") -> int:
+        seen.append(encoding)
+        return 50 if len(seen) == 1 else 10
+
+    monkeypatch.setattr("datoon.converter.estimate_tokens", fake_estimate)
+
+    rc = main(["--force", "--encoding", "cl100k_base"])
+    assert rc == 0
+    assert seen and all(enc == "cl100k_base" for enc in seen)

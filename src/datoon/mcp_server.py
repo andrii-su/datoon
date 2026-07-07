@@ -15,7 +15,7 @@ except ImportError as exc:
 from datoon import __version__
 from datoon.analyzer import analyze_payload
 from datoon.converter import DatoonError, convert_json_for_llm
-from datoon.models import ConversionConfig
+from datoon.models import DEFAULT_TOKEN_ENCODING, ConversionConfig
 from datoon.readers import TEXT_FORMATS, read_tabular
 
 mcp = FastMCP(
@@ -40,6 +40,7 @@ def convert_json(
     max_depth: int = 6,
     min_uniform_rows: int = 3,
     timeout: int = 30,
+    encoding: str = DEFAULT_TOKEN_ENCODING,
 ) -> dict[str, Any]:
     """Convert a JSON payload to TOON when structure and savings meet policy.
 
@@ -53,6 +54,7 @@ def convert_json(
             min_uniform_rows=min_uniform_rows,
             force=force,
             toon_cli_timeout=timeout,
+            token_encoding=encoding,
         )
         outcome = convert_json_for_llm(json_text, config)
         return {
@@ -105,6 +107,7 @@ def convert_text(
     max_depth: int = 6,
     min_uniform_rows: int = 3,
     timeout: int = 30,
+    encoding: str = DEFAULT_TOKEN_ENCODING,
 ) -> dict[str, Any]:
     """Convert structured text (csv, yaml, xml, jsonl) to TOON with policy gating.
 
@@ -127,6 +130,7 @@ def convert_text(
             min_uniform_rows=min_uniform_rows,
             force=force,
             toon_cli_timeout=timeout,
+            token_encoding=encoding,
         )
         outcome = convert_json_for_llm(json_text, config)
         return {

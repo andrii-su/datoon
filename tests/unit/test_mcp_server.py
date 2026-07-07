@@ -92,7 +92,9 @@ def test_convert_json_converts_when_savings_sufficient(
         lambda _, **kw: "rows[3]{id,v}:\n  1,a\n  2,b\n  3,c\n",
     )
     token_seq = iter([100, 60])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     result = convert_json(payload, min_savings=0.15)
     assert "error" not in result
@@ -122,7 +124,9 @@ def test_convert_text_csv_converts(monkeypatch: pytest.MonkeyPatch) -> None:
         **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n  2,Lin,analyst\n  3,Grace,viewer\n",
     )
     token_seq = iter([100, 40])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     result = convert_text(csv_text, fmt="csv")
     assert "error" not in result
@@ -141,7 +145,9 @@ def test_convert_text_jsonl_converts(monkeypatch: pytest.MonkeyPatch) -> None:
         lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 40])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     result = convert_text(jsonl_text, fmt="jsonl")
     assert "error" not in result
@@ -162,7 +168,9 @@ def test_convert_text_xml_converts(monkeypatch: pytest.MonkeyPatch) -> None:
         lambda _, **kw: "rows[3]{id,name}:\n  1,Ada\n",
     )
     token_seq = iter([100, 40])
-    monkeypatch.setattr("datoon.converter.estimate_tokens", lambda _: next(token_seq))
+    monkeypatch.setattr(
+        "datoon.converter.estimate_tokens", lambda *_a, **_k: next(token_seq)
+    )
 
     result = convert_text(xml_text, fmt="xml")
     assert "error" not in result

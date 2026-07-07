@@ -391,12 +391,12 @@ Auto mode avoids low-benefit and high-risk payloads (`orders-nested`, `mixed-non
 
 | Dataset | JSON | TOON (forced) | Raw Saved | Auto | Auto Tokens | Auto Saved |
 |---|---:|---:|---:|---|---:|---:|
-| users-small | 56 | 31 | 44.6% | convert | 31 | 44.6% |
-| events-medium | 198 | 111 | 43.9% | convert | 111 | 43.9% |
-| orders-nested | 93 | 91 | 2.2% | skip | 93 | 0.0% |
-| mixed-non-uniform | 35 | 37 | -5.7% | skip | 35 | 0.0% |
-| metrics-wide | 133 | 63 | 52.6% | convert | 63 | 52.6% |
-| **Average** | **103** | **67** | **27.5%** | **3/5 convert** | **67** | **28.2%** |
+| users-small | 54 | 40 | 25.9% | convert | 40 | 25.9% |
+| events-medium | 219 | 162 | 26.0% | convert | 162 | 26.0% |
+| orders-nested | 106 | 116 | -9.4% | skip | 106 | 0.0% |
+| mixed-non-uniform | 35 | 47 | -34.3% | skip | 35 | 0.0% |
+| metrics-wide | 142 | 103 | 27.5% | convert | 103 | 27.5% |
+| **Average** | **111** | **94** | **7.1%** | **3/5 convert** | **89** | **15.9%** |
 
 *Forced conversion succeeded for 5/5 payloads.*
 

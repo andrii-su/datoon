@@ -7,6 +7,10 @@ from typing import Literal
 
 Decision = Literal["convert", "skip"]
 
+# Default tiktoken encoding for token estimates. o200k_base matches GPT-4o and
+# the o-series; it is closer to modern targets than the older cl100k_base.
+DEFAULT_TOKEN_ENCODING = "o200k_base"
+
 
 @dataclass(frozen=True, slots=True)
 class ConversionConfig:
@@ -17,6 +21,7 @@ class ConversionConfig:
     min_uniform_rows: int = 3
     force: bool = False
     toon_cli_timeout: int = 30
+    token_encoding: str = DEFAULT_TOKEN_ENCODING
 
     def __post_init__(self) -> None:
         """Validate boundary values to avoid ambiguous runtime decisions."""
@@ -28,6 +33,8 @@ class ConversionConfig:
             raise ValueError("min_uniform_rows must be at least 2.")
         if self.toon_cli_timeout < 1:
             raise ValueError("toon_cli_timeout must be at least 1.")
+        if not self.token_encoding:
+            raise ValueError("token_encoding must be a non-empty encoding name.")
 
 
 @dataclass(frozen=True, slots=True)

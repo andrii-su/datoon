@@ -1,3 +1,10 @@
+# [1.9.0](https://github.com/andrii-su/datoon/compare/v1.8.0...v1.9.0) (2026-07-07)
+
+
+### Features
+
+* **tokens:** make token encoding configurable, default to o200k_base ([#46](https://github.com/andrii-su/datoon/issues/46)) ([8483eb7](https://github.com/andrii-su/datoon/commit/8483eb7aca27c97df2827d552e0086cf9bfbe157))
+
 # [1.8.0](https://github.com/andrii-su/datoon/compare/v1.7.4...v1.8.0) (2026-07-07)
 
 

@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/andrii-su/datoon/compare/v1.9.0...v1.9.1) (2026-07-07)
+
+
+### Bug Fixes
+
+* **benchmarks:** pad README table block with blank lines for mdformat ([#47](https://github.com/andrii-su/datoon/issues/47)) ([0bef8de](https://github.com/andrii-su/datoon/commit/0bef8de40266d2f026e4ee18e91f599b72a7cbcf))
+
 # [1.9.0](https://github.com/andrii-su/datoon/compare/v1.8.0...v1.9.0) (2026-07-07)
 
 

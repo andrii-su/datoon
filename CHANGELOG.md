@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/andrii-su/datoon/compare/v1.7.2...v1.7.3) (2026-07-07)
+
+
+### Bug Fixes
+
+* **converter:** reject non-finite JSON constants instead of passing them through ([#37](https://github.com/andrii-su/datoon/issues/37)) ([ed73b53](https://github.com/andrii-su/datoon/commit/ed73b53922ac9b72a906e565303043d27f7ae686))
+
 ## [1.7.2](https://github.com/andrii-su/datoon/compare/v1.7.1...v1.7.2) (2026-07-07)
 
 

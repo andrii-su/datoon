@@ -5,6 +5,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from datoon.readers._tabular import header_rows_to_dicts
+
 
 def read_numbers(path: Path, *, sheet: int = 0, table: int = 0) -> list[dict[str, Any]]:
     """Read an Apple Numbers file into a list of row dicts."""
@@ -19,12 +21,4 @@ def read_numbers(path: Path, *, sheet: int = 0, table: int = 0) -> list[dict[str
     tbl = doc.sheets[sheet].tables[table]
     rows = list(tbl.rows(values_only=True))
 
-    if not rows:
-        return []
-
-    headers = [str(h) if h is not None else f"col{i}" for i, h in enumerate(rows[0])]
-    return [
-        {h: v for h, v in zip(headers, row)}
-        for row in rows[1:]
-        if any(v is not None for v in row)
-    ]
+    return header_rows_to_dicts(rows)

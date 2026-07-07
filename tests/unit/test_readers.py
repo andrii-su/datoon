@@ -104,6 +104,33 @@ def test_read_csv_no_coercion() -> None:
     assert rows[0]["id"] == "1"
 
 
+def test_read_csv_preserves_leading_zero_ids() -> None:
+    # Zip codes, phone numbers, and IDs must not lose leading zeros.
+    rows = read_csv("code\n00123\n0042\n")
+    assert rows[0]["code"] == "00123"
+    assert rows[1]["code"] == "0042"
+
+
+def test_read_csv_rejects_non_finite_floats() -> None:
+    # float("inf")/float("nan") would serialize to invalid JSON (Infinity/NaN).
+    rows = read_csv("v\ninf\nnan\n-inf\nInfinity\n")
+    assert rows[0]["v"] == "inf"
+    assert rows[1]["v"] == "nan"
+    assert rows[2]["v"] == "-inf"
+    assert rows[3]["v"] == "Infinity"
+
+
+def test_read_csv_float_overflow_stays_string() -> None:
+    # 1e400 overflows to inf; keep the original string instead.
+    rows = read_csv("v\n1e400\n")
+    assert rows[0]["v"] == "1e400"
+
+
+def test_read_csv_underscore_number_stays_string() -> None:
+    rows = read_csv("v\n1_000\n")
+    assert rows[0]["v"] == "1_000"
+
+
 # ---------------------------------------------------------------------------
 # JSONL reader
 # ---------------------------------------------------------------------------
@@ -207,6 +234,20 @@ def test_read_xml_basic() -> None:
 def test_read_xml_type_coercion() -> None:
     rows = read_xml(_XML_TEXT)
     assert isinstance(rows[0]["id"], int)
+
+
+def test_read_xml_preserves_leading_zero() -> None:
+    xml = "<rows><r><code>00755</code></r><r><code>00644</code></r></rows>"
+    rows = read_xml(xml)
+    assert rows[0]["code"] == "00755"
+    assert rows[1]["code"] == "00644"
+
+
+def test_read_xml_rejects_non_finite() -> None:
+    xml = "<rows><r><v>inf</v></r><r><v>nan</v></r></rows>"
+    rows = read_xml(xml)
+    assert rows[0]["v"] == "inf"
+    assert rows[1]["v"] == "nan"
 
 
 def test_read_xml_invalid_raises() -> None:

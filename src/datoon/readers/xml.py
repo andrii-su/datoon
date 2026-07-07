@@ -5,6 +5,8 @@ from __future__ import annotations
 import xml.etree.ElementTree as ET
 from typing import Any
 
+from datoon.readers._coerce import coerce_scalar as _coerce
+
 
 def read_xml(text: str) -> list[dict[str, Any]]:
     """Parse XML into a list of row dicts from the dominant repeated child element."""
@@ -36,23 +38,3 @@ def _element_to_dict(element: ET.Element) -> dict[str, Any]:
     if not list(element) and element.text and element.text.strip():
         result["_text"] = element.text.strip()
     return result
-
-
-def _coerce(value: str) -> int | float | bool | str | None:
-    stripped = value.strip()
-    if not stripped:
-        return None
-    low = stripped.lower()
-    if low == "true":
-        return True
-    if low == "false":
-        return False
-    try:
-        return int(stripped)
-    except ValueError:
-        pass
-    try:
-        return float(stripped)
-    except ValueError:
-        pass
-    return stripped

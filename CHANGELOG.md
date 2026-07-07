@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/andrii-su/datoon/compare/v1.7.4...v1.8.0) (2026-07-07)
+
+
+### Features
+
+* **cli:** add --sheet and --table for excel/numbers input ([#39](https://github.com/andrii-su/datoon/issues/39)) ([4799712](https://github.com/andrii-su/datoon/commit/4799712b003ca4fae25cd555aec83b2b1cece136))
+
 ## [1.7.4](https://github.com/andrii-su/datoon/compare/v1.7.3...v1.7.4) (2026-07-07)
 
 

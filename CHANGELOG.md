@@ -1,3 +1,10 @@
+## [1.7.4](https://github.com/andrii-su/datoon/compare/v1.7.3...v1.7.4) (2026-07-07)
+
+
+### Bug Fixes
+
+* **xml:** refuse DTD/DOCTYPE to block entity-expansion DoS ([#38](https://github.com/andrii-su/datoon/issues/38)) ([ef6a35e](https://github.com/andrii-su/datoon/commit/ef6a35e624176aab0a648794715c2d99411421d7))
+
 ## [1.7.3](https://github.com/andrii-su/datoon/compare/v1.7.2...v1.7.3) (2026-07-07)
 
 

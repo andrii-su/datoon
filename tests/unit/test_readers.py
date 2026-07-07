@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
@@ -254,6 +255,35 @@ def test_read_tabular_text_without_text_raises() -> None:
     for fmt in TEXT_FORMATS:
         with pytest.raises(ValueError, match="requires text input"):
             read_tabular(fmt, path=None)
+
+
+def test_read_tabular_forwards_sheet_to_excel(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict[str, int] = {}
+
+    def fake_read_excel(path: Path, *, sheet: int = 0) -> list[dict[str, int]]:
+        captured["sheet"] = sheet
+        return [{"a": 1}]
+
+    monkeypatch.setattr("datoon.readers.excel.read_excel", fake_read_excel)
+    read_tabular("excel", path=Path("x.xlsx"), sheet=2)
+    assert captured["sheet"] == 2
+
+
+def test_read_tabular_forwards_sheet_and_table_to_numbers(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, int] = {}
+
+    def fake_read_numbers(
+        path: Path, *, sheet: int = 0, table: int = 0
+    ) -> list[dict[str, int]]:
+        captured["sheet"] = sheet
+        captured["table"] = table
+        return [{"a": 1}]
+
+    monkeypatch.setattr("datoon.readers.numbers.read_numbers", fake_read_numbers)
+    read_tabular("numbers", path=Path("x.numbers"), sheet=1, table=3)
+    assert captured == {"sheet": 1, "table": 3}
 
 
 # ---------------------------------------------------------------------------

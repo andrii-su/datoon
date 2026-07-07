@@ -23,14 +23,23 @@ class DatoonError(RuntimeError):
     """Raised when datoon cannot process the payload safely."""
 
 
+def _reject_non_finite(constant: str) -> Any:
+    """Reject Infinity/-Infinity/NaN, which are invalid JSON and break serialization."""
+    raise DatoonError(
+        f"Input contains non-finite constant '{constant}', which is not valid JSON."
+    )
+
+
 def _normalize_json(raw_text: str) -> tuple[Any, str]:
     """Parse and re-serialize JSON into a deterministic compact representation."""
     try:
-        parsed = json.loads(raw_text)
+        parsed = json.loads(raw_text, parse_constant=_reject_non_finite)
     except json.JSONDecodeError as exc:
         raise DatoonError(f"Invalid JSON input: {exc.msg} (pos={exc.pos}).") from exc
 
-    normalized = json.dumps(parsed, ensure_ascii=False, separators=(",", ":"))
+    normalized = json.dumps(
+        parsed, ensure_ascii=False, separators=(",", ":"), allow_nan=False
+    )
     return parsed, normalized
 
 

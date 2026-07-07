@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
+from datoon.errors import DatoonError
 from datoon.readers import (
     ALL_FORMATS,
     BINARY_FORMATS,
@@ -215,6 +216,39 @@ def test_read_yaml_missing_dep(monkeypatch: pytest.MonkeyPatch) -> None:
         yaml_reader.read_yaml("- id: 1")
 
 
+def test_read_yaml_rejects_list_of_scalars(monkeypatch: pytest.MonkeyPatch) -> None:
+    yaml_mock = MagicMock()
+    yaml_mock.safe_load.return_value = [1, 2, 3]
+    monkeypatch.setitem(sys.modules, "yaml", yaml_mock)
+
+    from datoon.readers.yaml import read_yaml
+
+    with pytest.raises(DatoonError, match="list of objects"):
+        read_yaml("- 1\n- 2\n")
+
+
+def test_read_yaml_rejects_mixed_list(monkeypatch: pytest.MonkeyPatch) -> None:
+    yaml_mock = MagicMock()
+    yaml_mock.safe_load.return_value = [{"id": 1}, "oops", {"id": 3}]
+    monkeypatch.setitem(sys.modules, "yaml", yaml_mock)
+
+    from datoon.readers.yaml import read_yaml
+
+    with pytest.raises(DatoonError, match="list of objects"):
+        read_yaml("- id: 1\n- oops\n")
+
+
+def test_read_yaml_rejects_bad_shape(monkeypatch: pytest.MonkeyPatch) -> None:
+    yaml_mock = MagicMock()
+    yaml_mock.safe_load.return_value = 42
+    monkeypatch.setitem(sys.modules, "yaml", yaml_mock)
+
+    from datoon.readers.yaml import read_yaml
+
+    with pytest.raises(DatoonError, match="list of objects"):
+        read_yaml("42\n")
+
+
 # ---------------------------------------------------------------------------
 # XML reader
 # ---------------------------------------------------------------------------
@@ -258,7 +292,7 @@ def test_read_xml_rejects_dtd_billion_laughs() -> None:
         '<!ENTITY lol2 "&lol;&lol;&lol;">]>'
         "<rows><r>&lol2;</r></rows>"
     )
-    with pytest.raises(ValueError, match="DOCTYPE"):
+    with pytest.raises(DatoonError, match="DOCTYPE"):
         read_xml(payload)
 
 
@@ -267,17 +301,17 @@ def test_read_xml_rejects_external_entity_dtd() -> None:
         '<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>'
         "<rows><r>&xxe;</r></rows>"
     )
-    with pytest.raises(ValueError, match="DOCTYPE"):
+    with pytest.raises(DatoonError, match="DOCTYPE"):
         read_xml(payload)
 
 
 def test_read_xml_invalid_raises() -> None:
-    with pytest.raises(ValueError, match="Invalid XML"):
+    with pytest.raises(DatoonError, match="Invalid XML"):
         read_xml("<not closed>")
 
 
 def test_read_xml_empty_root_raises() -> None:
-    with pytest.raises(ValueError, match="no children"):
+    with pytest.raises(DatoonError, match="no children"):
         read_xml("<root/>")
 
 

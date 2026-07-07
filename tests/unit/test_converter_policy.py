@@ -28,6 +28,13 @@ def test_convert_json_for_llm_rejects_invalid_json() -> None:
         convert_json_for_llm("{bad json", ConversionConfig())
 
 
+@pytest.mark.parametrize("literal", ["Infinity", "-Infinity", "NaN"])
+def test_convert_json_for_llm_rejects_non_finite_constants(literal: str) -> None:
+    """Non-finite constants are invalid JSON per spec and must fail loudly."""
+    with pytest.raises(DatoonError, match="non-finite"):
+        convert_json_for_llm(f'{{"x": {literal}}}', ConversionConfig())
+
+
 def test_policy_skips_non_uniform_arrays(monkeypatch: pytest.MonkeyPatch) -> None:
     """Non-uniform arrays should skip conversion before CLI invocation."""
     called = {"value": False}

@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from datoon.converter import DatoonError
+from datoon.errors import DatoonError
 
 
 def read_jsonl(text: str) -> list[dict[str, Any]]:

@@ -9,6 +9,7 @@ from functools import lru_cache
 from typing import Any
 
 from datoon.analyzer import analyze_payload
+from datoon.errors import DatoonError
 from datoon.models import (
     ConversionConfig,
     ConversionOutcome,
@@ -18,9 +19,7 @@ from datoon.models import (
 
 TOON_CLI_PACKAGE = "@toon-format/cli@2"
 
-
-class DatoonError(RuntimeError):
-    """Raised when datoon cannot process the payload safely."""
+__all__ = ["DatoonError", "convert_json_for_llm", "estimate_tokens"]
 
 
 def _reject_non_finite(constant: str) -> Any:

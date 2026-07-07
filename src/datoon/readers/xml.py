@@ -13,6 +13,7 @@ import re
 import xml.etree.ElementTree as ET
 from typing import Any
 
+from datoon.errors import DatoonError
 from datoon.readers._coerce import coerce_scalar as _coerce
 
 _DOCTYPE_RE = re.compile(r"<!DOCTYPE", re.IGNORECASE)
@@ -21,18 +22,18 @@ _DOCTYPE_RE = re.compile(r"<!DOCTYPE", re.IGNORECASE)
 def read_xml(text: str) -> list[dict[str, Any]]:
     """Parse XML into a list of row dicts from the dominant repeated child element."""
     if _DOCTYPE_RE.search(text):
-        raise ValueError(
+        raise DatoonError(
             "XML with a DOCTYPE/DTD is not allowed (entity-expansion risk)."
         )
 
     try:
         root = ET.fromstring(text)
     except ET.ParseError as exc:
-        raise ValueError(f"Invalid XML: {exc}") from exc
+        raise DatoonError(f"Invalid XML: {exc}") from exc
 
     children = list(root)
     if not children:
-        raise ValueError("XML root element has no children.")
+        raise DatoonError("XML root element has no children.")
 
     tag_counts: dict[str, int] = {}
     for child in children:

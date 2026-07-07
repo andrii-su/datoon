@@ -280,3 +280,38 @@ def test_mcp_subcommand_missing_extra_errors(
     rc = main(["mcp"])
     assert rc == 1
     assert "mcp" in capsys.readouterr().err
+
+
+# ---------------------------------------------------------------------------
+# --sheet / --table passthrough for spreadsheet formats
+# ---------------------------------------------------------------------------
+
+
+def test_main_forwards_sheet_and_table_for_binary(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    captured: dict[str, int] = {}
+
+    def fake_read_tabular(
+        fmt: str,
+        *,
+        text: str | None = None,
+        path: Path | None = None,
+        sheet: int = 0,
+        table: int = 0,
+    ) -> list[dict[str, object]]:
+        captured["sheet"] = sheet
+        captured["table"] = table
+        return [{"id": 1, "v": "a"}]
+
+    monkeypatch.setattr("datoon.cli.read_tabular", fake_read_tabular)
+    monkeypatch.setattr("datoon.converter._run_toon_cli", lambda _, **kw: "x\n")
+    xlsx = tmp_path / "data.xlsx"
+    xlsx.write_bytes(b"")
+
+    rc = main(
+        ["--format", "excel", "--sheet", "2", "--table", "1", "--force", str(xlsx)]
+    )
+    assert rc == 0
+    assert captured == {"sheet": 2, "table": 1}

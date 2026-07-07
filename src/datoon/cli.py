@@ -76,6 +76,18 @@ def build_parser() -> argparse.ArgumentParser:
         help="Seconds to wait for the TOON CLI before aborting (default: 30).",
     )
     parser.add_argument(
+        "--sheet",
+        type=int,
+        default=0,
+        help="Worksheet index for excel/numbers input (default: 0).",
+    )
+    parser.add_argument(
+        "--table",
+        type=int,
+        default=0,
+        help="Table index within a Numbers sheet (default: 0).",
+    )
+    parser.add_argument(
         "--report",
         help="Optional path to write conversion report as JSON.",
     )
@@ -172,7 +184,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                     f"datoon error: --format {fmt} requires a file path, not stdin.\n"
                 )
                 return 1
-            rows = read_tabular(fmt, path=Path(args.input))
+            rows = read_tabular(
+                fmt, path=Path(args.input), sheet=args.sheet, table=args.table
+            )
             json_text = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
             outcome = convert_json_for_llm(json_text, config)
         else:

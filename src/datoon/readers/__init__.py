@@ -37,16 +37,20 @@ def read_tabular(
     *,
     text: str | None = None,
     path: Path | None = None,
+    sheet: int = 0,
+    table: int = 0,
 ) -> list[dict[str, Any]]:
     """Read structured data and return rows as a list of dicts.
 
     Text formats (csv, jsonl, yaml, xml) require ``text``.
     Binary formats (excel, parquet, orc, avro, numbers) require ``path``.
+    ``sheet`` selects the worksheet for excel/numbers; ``table`` selects the
+    table within a Numbers sheet. Both are ignored by columnar formats.
     """
     if fmt in BINARY_FORMATS:
         if path is None:
             raise ValueError(f"Format '{fmt}' requires a file path, not text input.")
-        return _read_binary(fmt, path)
+        return _read_binary(fmt, path, sheet=sheet, table=table)
     if fmt in TEXT_FORMATS:
         if text is None:
             raise ValueError(f"Format '{fmt}' requires text input.")
@@ -74,11 +78,13 @@ def _read_text(fmt: str, text: str) -> list[dict[str, Any]]:
     raise ValueError(f"Unknown text format: {fmt}")
 
 
-def _read_binary(fmt: str, path: Path) -> list[dict[str, Any]]:
+def _read_binary(
+    fmt: str, path: Path, *, sheet: int = 0, table: int = 0
+) -> list[dict[str, Any]]:
     if fmt == "excel":
         from datoon.readers.excel import read_excel
 
-        return read_excel(path)
+        return read_excel(path, sheet=sheet)
     if fmt == "parquet":
         from datoon.readers.columnar import read_parquet
 
@@ -94,5 +100,5 @@ def _read_binary(fmt: str, path: Path) -> list[dict[str, Any]]:
     if fmt == "numbers":
         from datoon.readers.numbers import read_numbers
 
-        return read_numbers(path)
+        return read_numbers(path, sheet=sheet, table=table)
     raise ValueError(f"Unknown binary format: {fmt}")

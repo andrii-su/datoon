@@ -1,15 +1,30 @@
-"""XML reader using stdlib xml.etree.ElementTree."""
+"""XML reader using stdlib xml.etree.ElementTree.
+
+The stdlib parser rejects external entities but expands internal ones, so a DTD
+can smuggle a billion-laughs DoS. datoon may process untrusted payloads, so DTDs
+are refused outright. ``<!DOCTYPE`` is a fixed XML token (no internal
+whitespace), so a literal scan reliably catches every declaration expat would
+process.
+"""
 
 from __future__ import annotations
 
+import re
 import xml.etree.ElementTree as ET
 from typing import Any
 
 from datoon.readers._coerce import coerce_scalar as _coerce
 
+_DOCTYPE_RE = re.compile(r"<!DOCTYPE", re.IGNORECASE)
+
 
 def read_xml(text: str) -> list[dict[str, Any]]:
     """Parse XML into a list of row dicts from the dominant repeated child element."""
+    if _DOCTYPE_RE.search(text):
+        raise ValueError(
+            "XML with a DOCTYPE/DTD is not allowed (entity-expansion risk)."
+        )
+
     try:
         root = ET.fromstring(text)
     except ET.ParseError as exc:

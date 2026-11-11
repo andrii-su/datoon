@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Validate datoon skill copies and packaged .skill artifact consistency."""
 
 from __future__ import annotations
@@ -56,8 +55,7 @@ def validate() -> list[str]:
         mirror_hash = _sha256_bytes(mirror_bytes)
         if mirror_hash != source_hash:
             errors.append(
-                f"Out-of-sync SKILL.md copy: {mirror_path} "
-                f"(expected hash {source_hash}, got {mirror_hash})"
+                f"Out-of-sync SKILL.md copy: {mirror_path} (expected hash {source_hash}, got {mirror_hash})"
             )
 
     archived_bytes = _read_archive_member(SKILL_ARCHIVE_PATH, SKILL_ARCHIVE_MEMBER)

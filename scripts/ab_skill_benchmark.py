@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """A/B benchmark for datoon skill usage in Claude CLI.
 
 This script compares the same prompts in two modes:
@@ -18,7 +17,7 @@ import math
 import statistics
 import subprocess
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -427,7 +426,7 @@ def main() -> int:
     if args.payload_limit < 1:
         raise ValueError("--payload-limit must be >= 1.")
 
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     log_path = args.output_dir / "logs" / f"ab_skill_{timestamp}.log"
     logger = configure_logging(log_path, verbose=args.verbose)
 
@@ -606,7 +605,7 @@ def main() -> int:
 
     output = {
         "metadata": {
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "payload_ids": payload_ids,
             "iterations": args.iterations,
             "model": args.model,

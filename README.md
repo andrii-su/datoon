@@ -151,6 +151,10 @@ pip install "datoon[numbers]"
 # with tiktoken-based token counting
 pip install "datoon[tokens]"
 
+# with Claude token counting (Anthropic API) / Hugging Face tokenizers
+pip install "datoon[claude]"
+pip install "datoon[hf]"
+
 # with MCP server
 pip install "datoon[mcp]"
 
@@ -196,7 +200,22 @@ For Claude Code plugin, Codex, and MCP config → [**INSTALL.md**](./INSTALL.md)
 1. **Convert + estimate** — TOON encoder runs in-process, token savings calculated
 1. **Gate savings** — below threshold → return JSON; above → return TOON with report
 
-Every path returns a `ConversionReport` with `decision`, `reason`, and token estimates. Pipelines never get silent surprises.
+Every path returns a `ConversionReport` with `decision`, `reason`, token estimates, and the `tokenizer` that produced them. Pipelines never get silent surprises.
+
+## Choosing a tokenizer
+
+Token estimates drive the savings gate, so pick the counter that fits the job. Pass one spec with `--tokenizer`, the `tokenizer` MCP argument, `ConversionConfig(tokenizer=...)`, or the `DATOON_TOKENIZER` environment variable; in Python any callable `str -> int` works too. The MCP tools accept only local counters (`auto`, `chars`, `tiktoken`) per call; `claude:` and `hf:` reach the network, so only the server operator can enable them through `DATOON_TOKENIZER`.
+
+| Spec | Counts with | Needs |
+|---|---|---|
+| `auto` (default) | `tiktoken:o200k_base` when tiktoken is installed, else `chars:3` | — |
+| `chars` / `chars:<N>` | `ceil(len(text) / N)`, default `N = 3` | — |
+| `tiktoken` / `tiktoken:<encoding>` | tiktoken, default `o200k_base` | `datoon[tokens]` |
+| `claude:<model-id>` | Anthropic token counting API for that model | `datoon[claude]`, Anthropic credentials (e.g. `ANTHROPIC_API_KEY`) |
+| `hf:<repo-id>` | Hugging Face `tokenizers` tokenizer from the Hub | `datoon[hf]` |
+| a callable (Python) | your own function, reported as `custom` | — |
+
+Use the local counters (`auto`, `chars`, `tiktoken`) to gate payloads at runtime: they are fast and run locally (tiktoken fetches its encoding file once on first use). Use `claude:` or `hf:` in benchmarks and evals where counts for the target model matter. `claude:` makes network calls, and Anthropic documents its counts as estimates. Only `auto` falls back silently: an explicit spec with a missing package fails with an error that names the extra to install, and `claude:` without Anthropic credentials fails too. Every report records the resolved name in `tokenizer`.
 
 ______________________________________________________________________
 
@@ -359,6 +378,7 @@ ______________________________________________________________________
 | `--min-savings` | `0.15` | Minimum relative token savings required |
 | `--max-depth` | `6` | Maximum nesting depth for auto-conversion |
 | `--min-uniform-rows` | `3` | Minimum rows in uniform object arrays |
+| `--tokenizer <spec>` | `$DATOON_TOKENIZER`, else `auto` | Token counter for estimates — see [Choosing a tokenizer](#choosing-a-tokenizer) |
 | `--report <path>` | — | Write JSON conversion report to file |
 | `--report-stdout` | — | Print JSON conversion report to stderr |
 | `-o <path>` | stdout | Output file path |

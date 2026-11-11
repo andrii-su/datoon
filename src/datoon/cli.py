@@ -4,14 +4,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 from collections.abc import Sequence
 from pathlib import Path
 
 from datoon import __version__
 from datoon.converter import DatoonError, convert_json_for_llm
-from datoon.models import DEFAULT_TOKEN_ENCODING, ConversionConfig
+from datoon.models import ConversionConfig
 from datoon.readers import ALL_FORMATS, BINARY_FORMATS, detect_format, read_tabular
+from datoon.tokenizers import DEFAULT_TOKENIZER, TOKENIZER_ENV_VAR
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -82,11 +84,14 @@ def build_parser() -> argparse.ArgumentParser:
         help="Table index within a Numbers sheet (default: 0).",
     )
     parser.add_argument(
-        "--encoding",
-        default=DEFAULT_TOKEN_ENCODING,
+        "--tokenizer",
+        default=None,
+        metavar="SPEC",
         help=(
-            "tiktoken encoding for token estimates "
-            f"(default: {DEFAULT_TOKEN_ENCODING})."
+            "Token counter for estimates: auto, chars[:N], tiktoken[:ENCODING], "
+            "claude:MODEL_ID (network, needs datoon[claude]) or hf:REPO_ID "
+            f"(needs datoon[hf]). Default: ${TOKENIZER_ENV_VAR}, "
+            f"else {DEFAULT_TOKENIZER}."
         ),
     )
     parser.add_argument(
@@ -172,7 +177,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             max_depth=args.max_depth,
             min_uniform_rows=args.min_uniform_rows,
             force=args.force,
-            token_encoding=args.encoding,
+            tokenizer=(
+                args.tokenizer or os.environ.get(TOKENIZER_ENV_VAR) or DEFAULT_TOKENIZER
+            ),
         )
 
         fmt = _resolve_format(args.input, args.format)

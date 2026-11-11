@@ -12,7 +12,6 @@ import pytest
 
 from datoon.cli import _resolve_format, main
 
-
 # ---------------------------------------------------------------------------
 # _resolve_format
 # ---------------------------------------------------------------------------
@@ -333,21 +332,47 @@ def test_main_forwards_sheet_and_table_for_binary(
     assert captured == {"sheet": 2, "table": 1}
 
 
-def test_main_forwards_encoding_to_estimate(
+def test_main_forwards_tokenizer_to_report(
     monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
 ) -> None:
     payload = '{"rows":[{"id":1,"v":"a"},{"id":2,"v":"b"},{"id":3,"v":"c"}]}'
     monkeypatch.setattr("sys.stdin", __import__("io").StringIO(payload))
-    monkeypatch.setattr("datoon.converter._encode_toon", lambda _: "x\n")
 
-    seen: list[str] = []
-
-    def fake_estimate(text: str, encoding: str = "o200k_base") -> int:
-        seen.append(encoding)
-        return 50 if len(seen) == 1 else 10
-
-    monkeypatch.setattr("datoon.converter.estimate_tokens", fake_estimate)
-
-    rc = main(["--force", "--encoding", "cl100k_base"])
+    rc = main(["--force", "--tokenizer", "chars:2", "--report-stdout"])
     assert rc == 0
-    assert seen and all(enc == "cl100k_base" for enc in seen)
+    report = json.loads(capsys.readouterr().err)
+    assert report["tokenizer"] == "chars:2"
+    assert report["input_token_estimate"] == (len(payload) + 1) // 2
+
+
+def test_main_reads_tokenizer_from_env(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    payload = '{"x":1}'
+    monkeypatch.setattr("sys.stdin", __import__("io").StringIO(payload))
+    monkeypatch.setenv("DATOON_TOKENIZER", "chars:4")
+
+    rc = main(["--report-stdout"])
+    assert rc == 0
+    assert json.loads(capsys.readouterr().err)["tokenizer"] == "chars:4"
+
+
+def test_main_tokenizer_flag_overrides_env(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr("sys.stdin", __import__("io").StringIO('{"x":1}'))
+    monkeypatch.setenv("DATOON_TOKENIZER", "chars:4")
+
+    rc = main(["--tokenizer", "chars:5", "--report-stdout"])
+    assert rc == 0
+    assert json.loads(capsys.readouterr().err)["tokenizer"] == "chars:5"
+
+
+def test_main_rejects_unknown_tokenizer(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr("sys.stdin", __import__("io").StringIO('{"x":1}'))
+
+    rc = main(["--tokenizer", "nope"])
+    assert rc == 1
+    assert "Unknown tokenizer 'nope'" in capsys.readouterr().err

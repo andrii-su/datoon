@@ -196,7 +196,9 @@ def test_convert_text_invalid_xml_returns_error() -> None:
     assert "error" in result
 
 
-def test_convert_json_encoder_failure_returns_skip(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_convert_json_encoder_failure_returns_skip(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
     """Encoder failure in non-force mode returns skip outcome, not error key."""
     from datoon.converter import DatoonError
 
@@ -209,3 +211,42 @@ def test_convert_json_encoder_failure_returns_skip(monkeypatch: pytest.MonkeyPat
     result = convert_json(payload, force=False)
     assert "error" not in result
     assert result["report"]["decision"] == "skip"
+
+
+def test_convert_json_forwards_tokenizer_to_report(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The tokenizer argument selects the counter and is named in the report."""
+    monkeypatch.setenv("DATOON_TOKENIZER", "chars:4")
+    result = convert_json('{"x":1}', tokenizer="chars:2")
+    assert "error" not in result
+    assert result["report"]["tokenizer"] == "chars:2"
+
+
+def test_convert_text_defaults_tokenizer_from_env(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Without an argument the tokenizer comes from DATOON_TOKENIZER."""
+    monkeypatch.setenv("DATOON_TOKENIZER", "chars:4")
+    result = convert_text("id,name\n1,Ada\n", fmt="csv")
+    assert "error" not in result
+    assert result["report"]["tokenizer"] == "chars:4"
+
+
+def test_convert_json_unknown_tokenizer_returns_error() -> None:
+    """A bad tokenizer spec is reported as an error, not a silent skip."""
+    result = convert_json('{"x":1}', tokenizer="nope")
+    assert "Unknown tokenizer 'nope'" in result["error"]
+
+
+@pytest.mark.parametrize(
+    "spec", ["claude:claude-opus-5-5", "hf:org/model", " HF:org/model"]
+)
+def test_convert_tools_refuse_network_tokenizer_argument(spec: str) -> None:
+    """A model-supplied tokenizer may not name a network-backed counter."""
+    for result in (
+        convert_json('{"x":1}', tokenizer=spec),
+        convert_text("a,b\n1,2\n", "csv", tokenizer=spec),
+    ):
+        assert "cannot be chosen per call" in result["error"]
+        assert "DATOON_TOKENIZER" in result["error"]

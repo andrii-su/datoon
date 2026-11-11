@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 from typing import Any
 
 try:
@@ -15,8 +16,13 @@ except ImportError as exc:
 from datoon import __version__
 from datoon.analyzer import analyze_payload
 from datoon.converter import DatoonError, convert_json_for_llm
-from datoon.models import DEFAULT_TOKEN_ENCODING, ConversionConfig
+from datoon.models import ConversionConfig
 from datoon.readers import TEXT_FORMATS, read_tabular
+from datoon.tokenizers import (
+    DEFAULT_TOKENIZER,
+    TOKENIZER_ENV_VAR,
+    is_network_tokenizer,
+)
 
 mcp = FastMCP(
     "datoon",
@@ -32,6 +38,22 @@ mcp = FastMCP(
 mcp._mcp_server.version = __version__
 
 
+def _tokenizer_spec(tokenizer: str | None) -> str:
+    """Pick the tokenizer spec: argument, then environment, then the default.
+
+    A tool argument comes from the model, so it may only name a local counter.
+    Network-backed counters (claude:, hf:) would send the payload to a remote
+    API under the operator's credentials or download a caller-chosen repo;
+    only the operator can enable them, through the environment variable.
+    """
+    if tokenizer and is_network_tokenizer(tokenizer):
+        raise DatoonError(
+            f"Tokenizer '{tokenizer}' uses the network and cannot be chosen per call. "
+            f"The server operator can set it with ${TOKENIZER_ENV_VAR}."
+        )
+    return tokenizer or os.environ.get(TOKENIZER_ENV_VAR) or DEFAULT_TOKENIZER
+
+
 @mcp.tool()
 def convert_json(
     json_text: str,
@@ -39,12 +61,18 @@ def convert_json(
     min_savings: float = 0.15,
     max_depth: int = 6,
     min_uniform_rows: int = 3,
-    encoding: str = DEFAULT_TOKEN_ENCODING,
+    tokenizer: str | None = None,
 ) -> dict[str, Any]:
     """Convert a JSON payload to TOON when structure and savings meet policy.
 
     Returns the final payload text (TOON or original JSON) and a report
     explaining the conversion decision.
+
+    `tokenizer` picks a local token counter for the estimates: auto (tiktoken
+    o200k_base when installed, else chars:3), chars[:N] or tiktoken[:ENCODING].
+    Defaults to $DATOON_TOKENIZER, else auto. Network-backed counters
+    (claude:MODEL_ID, hf:REPO_ID) are set only by the server operator through
+    $DATOON_TOKENIZER, never per call. Counts are estimates.
     """
     try:
         config = ConversionConfig(
@@ -52,7 +80,7 @@ def convert_json(
             max_depth=max_depth,
             min_uniform_rows=min_uniform_rows,
             force=force,
-            token_encoding=encoding,
+            tokenizer=_tokenizer_spec(tokenizer),
         )
         outcome = convert_json_for_llm(json_text, config)
         return {
@@ -104,12 +132,18 @@ def convert_text(
     min_savings: float = 0.15,
     max_depth: int = 6,
     min_uniform_rows: int = 3,
-    encoding: str = DEFAULT_TOKEN_ENCODING,
+    tokenizer: str | None = None,
 ) -> dict[str, Any]:
     """Convert structured text (csv, yaml, xml, jsonl) to TOON with policy gating.
 
     Supported formats: csv, yaml, xml, jsonl.
     For JSON input use convert_json. Binary formats (parquet, excel, etc.) require the CLI.
+
+    `tokenizer` picks a local token counter for the estimates: auto (tiktoken
+    o200k_base when installed, else chars:3), chars[:N] or tiktoken[:ENCODING].
+    Defaults to $DATOON_TOKENIZER, else auto. Network-backed counters
+    (claude:MODEL_ID, hf:REPO_ID) are set only by the server operator through
+    $DATOON_TOKENIZER, never per call. Counts are estimates.
     """
     if fmt not in TEXT_FORMATS:
         return {
@@ -126,7 +160,7 @@ def convert_text(
             max_depth=max_depth,
             min_uniform_rows=min_uniform_rows,
             force=force,
-            token_encoding=encoding,
+            tokenizer=_tokenizer_spec(tokenizer),
         )
         outcome = convert_json_for_llm(json_text, config)
         return {

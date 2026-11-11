@@ -32,6 +32,7 @@ datoon/
 │   ├── analyzer.py                   # Payload structure suitability checks
 │   ├── converter.py                  # JSON normalization, TOON encoder call, policy gating
 │   ├── models.py                     # Config/report/outcome dataclasses
+│   ├── tokenizers.py                 # Token counter specs and estimates
 │   ├── cli.py                        # CLI entrypoint
 │   └── mcp_server.py                 # MCP server tools
 │
@@ -68,6 +69,7 @@ Edit these files directly:
 | Conversion policy | `src/datoon/converter.py` |
 | Payload analysis | `src/datoon/analyzer.py` |
 | Public data contracts | `src/datoon/models.py` |
+| Token counters | `src/datoon/tokenizers.py` |
 | CLI behavior | `src/datoon/cli.py` |
 | MCP behavior | `src/datoon/mcp_server.py` |
 | Skill behavior | `skills/datoon/SKILL.md` |
@@ -109,7 +111,8 @@ It runs on pull requests and pushes to `main`. The old auto-sync-on-main flow wa
 - `--force` is for controlled experiments and should bypass gating, not hide conversion errors.
 - Auto mode skips before conversion when analysis rejects the payload, and skips after conversion when estimated savings are below `min_savings_ratio`.
 - Keep skip reasons user-facing, specific, and stable enough for CLI/MCP troubleshooting.
-- Token counts are estimates. Be precise about whether a number is payload-token estimate, visible output estimate, or real model usage.
+- Token counts are estimates, whichever tokenizer produced them (`claude:` counts included). Be precise about whether a number is payload-token estimate, visible output estimate, or real model usage, and name the tokenizer it came from.
+- Only the `auto` tokenizer falls back silently; an explicit spec with a missing package or credentials must raise `DatoonError`, in auto and force mode alike.
 - Benchmarks in README must come from committed scripts/artifacts.
 - Keep generated caches out of commits: `.venv/`, `.pytest_cache/`, `.ruff_cache/`, `__pycache__/`, local benchmark result JSON under `benchmarks/results/`.
 

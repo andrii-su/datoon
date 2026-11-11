@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Generate deterministic JSON payloads for agent skill evaluation."""
 
 from __future__ import annotations
@@ -67,12 +66,10 @@ def expected_for(payload: dict[str, object]) -> dict[str, object]:
         region_totals[region] = region_totals.get(region, 0) + revenue
         category_totals[category] = category_totals.get(category, 0) + revenue
 
-    top_region = sorted(region_totals.items(), key=lambda item: (-item[1], item[0]))[0][
+    top_region = min(region_totals.items(), key=lambda item: (-item[1], item[0]))[0][0]
+    top_category = min(category_totals.items(), key=lambda item: (-item[1], item[0]))[
         0
-    ]
-    top_category = sorted(
-        category_totals.items(), key=lambda item: (-item[1], item[0])
-    )[0][0]
+    ][0]
 
     return {
         "scenario": payload["scenario"],

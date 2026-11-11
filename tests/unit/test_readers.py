@@ -20,7 +20,6 @@ from datoon.readers.csv import read_csv
 from datoon.readers.jsonl import read_jsonl
 from datoon.readers.xml import read_xml
 
-
 # ---------------------------------------------------------------------------
 # detect_format
 # ---------------------------------------------------------------------------
@@ -287,20 +286,13 @@ def test_read_xml_rejects_non_finite() -> None:
 
 def test_read_xml_rejects_dtd_billion_laughs() -> None:
     # Internal entity expansion (billion laughs) is a DoS vector; DTDs are refused.
-    payload = (
-        '<!DOCTYPE lolz [<!ENTITY lol "lol">'
-        '<!ENTITY lol2 "&lol;&lol;&lol;">]>'
-        "<rows><r>&lol2;</r></rows>"
-    )
+    payload = '<!DOCTYPE lolz [<!ENTITY lol "lol"><!ENTITY lol2 "&lol;&lol;&lol;">]><rows><r>&lol2;</r></rows>'
     with pytest.raises(DatoonError, match="DOCTYPE"):
         read_xml(payload)
 
 
 def test_read_xml_rejects_external_entity_dtd() -> None:
-    payload = (
-        '<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]>'
-        "<rows><r>&xxe;</r></rows>"
-    )
+    payload = '<!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><rows><r>&xxe;</r></rows>'
     with pytest.raises(DatoonError, match="DOCTYPE"):
         read_xml(payload)
 

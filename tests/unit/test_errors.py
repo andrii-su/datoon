@@ -25,7 +25,7 @@ def test_converter_reexports_the_same_error_object() -> None:
 def test_jsonl_reader_does_not_depend_on_converter() -> None:
     # The low-level reader must not import the high-level conversion service
     # just for an exception type (layering inversion).
-    import datoon.readers.jsonl as jsonl
+    from datoon.readers import jsonl
 
     source = inspect.getsource(jsonl)
     assert "datoon.converter" not in source

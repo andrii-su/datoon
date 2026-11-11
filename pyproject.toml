@@ -20,7 +20,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
 ]
-dependencies = []
+dependencies = [
+    "toon-format>=1.2.0",
+]
 
 [project.optional-dependencies]
 dev = ["pytest>=9.0.3", "pre-commit>=4.6.0", "pyyaml>=6.0"]
@@ -60,6 +62,3 @@ local_scheme = "no-local-version"
 testpaths = ["tests"]
 pythonpath = ["src"]
 addopts = "-ra"
-markers = [
-    "integration: tests that require Node.js and @toon-format/cli access",
-]

@@ -2,8 +2,7 @@
 # https://smithery.ai/docs/build/project-config
 #
 # datoon runs locally over stdio and needs no API keys or runtime config.
-# Node.js (npx) is required only when conversion actually runs; structure
-# analysis works without it.
+# Conversion is pure Python (toon-format), so no Node.js is needed.
 
 startCommand:
   type: stdio

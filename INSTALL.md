@@ -16,7 +16,6 @@ The setup script:
 
 - checks for Python 3.12+;
 - installs `uv` if it is missing;
-- warns if Node.js is missing;
 - runs `uv sync --extra dev`;
 - installs the editable `datoon` CLI globally through `uv tool install`.
 
@@ -69,21 +68,16 @@ datoon input.json --force --report-stdout
 
 ## TOON Dependency
 
-`datoon` calls the official TOON CLI through `npx`.
+`datoon` converts to TOON in pure Python using the official [`toon-format`](https://pypi.org/project/toon-format/) package, which is installed automatically as a dependency. No Node.js is needed.
 
-Required for conversion:
-
-- Node.js
-- `npx` in `PATH`
-
-Without Node.js, structure analysis still works, but conversion falls back to JSON in auto mode. Forced conversion fails loudly.
+If the encoder fails, auto mode falls back to JSON. Forced conversion fails loudly.
 
 In auto mode, `datoon` skips conversion and returns compact JSON when:
 
 - the payload has no uniform object array with at least the configured row count;
 - the payload exceeds the configured maximum nesting depth;
 - estimated TOON savings are below `--min-savings`;
-- Node.js or `npx` is unavailable, or the TOON CLI fails.
+- the TOON encoder fails.
 
 Invalid JSON never falls back silently. It raises an error.
 
@@ -232,12 +226,7 @@ echo '{"users":[{"id":1,"name":"Ada"},{"id":2,"name":"Lin"},{"id":3,"name":"Grac
   | datoon --report-stdout
 ```
 
-If the reason mentions the TOON dependency, install Node.js and confirm `npx` is available:
-
-```bash
-node --version
-npx --version
-```
+If the reason says TOON encoding failed, rerun with `--force` to see the underlying encoder error.
 
 If the reason mentions structure or savings, the skip is expected auto-mode behavior. Use `--force` only for controlled experiments where a failed TOON conversion should fail the command.
 
@@ -263,8 +252,6 @@ uv run pytest
 python scripts/validate_skill_sync.py
 PYTHONPATH=src python benchmarks/run.py --dry-run
 ```
-
-Full integration tests require Node.js and `npx`.
 
 ## Uninstall
 

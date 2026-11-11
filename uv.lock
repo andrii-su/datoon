@@ -1,5 +1,5 @@
 version = 1
-revision = 5
+revision = 3
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32'",
@@ -356,6 +356,9 @@ wheels = [
 [[package]]
 name = "datoon"
 source = { editable = "." }
+dependencies = [
+    { name = "toon-format" },
+]
 
 [package.optional-dependencies]
 all = [
@@ -405,6 +408,7 @@ requires-dist = [
     { name = "pyyaml", marker = "extra == 'dev'", specifier = ">=6.0" },
     { name = "pyyaml", marker = "extra == 'yaml'", specifier = ">=6.0" },
     { name = "tiktoken", marker = "extra == 'tokens'", specifier = ">=0.13.0" },
+    { name = "toon-format", specifier = ">=1.2.0" },
 ]
 provides-extras = ["dev", "tokens", "mcp", "yaml", "excel", "columnar", "numbers", "all"]
 
@@ -1368,6 +1372,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/4e/f6/80760e98a08e6649d2d68afb6035af713121dfb615acce8c4f73810ec438/tiktoken-0.14.0-cp315-cp315t-musllinux_1_2_aarch64.whl", hash = "sha256:86f66c85e796f5d05d5c4a60ec1d40cbfebc47a32464053528c797163fa9ab89", size = 1251479, upload-time = "2026-08-17T19:49:36.419Z" },
     { url = "https://files.pythonhosted.org/packages/c5/84/50966fb6918a0fb9b32721277e5342bf729a2d74350074d662fbedf9772e/tiktoken-0.14.0-cp315-cp315t-musllinux_1_2_x86_64.whl", hash = "sha256:149d97453c4c98c04b081d64a85e635921269b532710d6faf81e9e82b790e7d3", size = 1316673, upload-time = "2026-08-17T19:49:37.756Z" },
     { url = "https://files.pythonhosted.org/packages/35/5e/9b01afd037bfa22a0033963fa091e0f75b6fb15cd85bffb42ff86e697323/tiktoken-0.14.0-cp315-cp315t-win_amd64.whl", hash = "sha256:561e7580f84a79859af1ef6f676968e9030fcc3fe195700b15235bca64f009c9", size = 987929, upload-time = "2026-08-17T19:49:38.947Z" },
+]
+
+[[package]]
+name = "toon-format"
+version = "1.2.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/06/9e/88b94e00ae3589130bb2bde233c60b55776deb670cc3d077657d6a8b9a2e/toon_format-1.2.0.tar.gz", hash = "sha256:ed09c0cb8ba58f17372f876df1e43400d2d916aef67c641f152d8a28c5898669", size = 20775, upload-time = "2026-10-18T13:23:36.594Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/f3/9e/69331571d5b91b3f34f0dcd7c8135bb3241e41c3c3effb4af8f57772a9ca/toon_format-1.2.0-py3-none-any.whl", hash = "sha256:d94db4b088a281a7bbc85e75d7fbd24e6a0ec7bc110edb129285259eca6522c0", size = 22863, upload-time = "2026-10-18T13:23:35.557Z" },
 ]
 
 [[package]]

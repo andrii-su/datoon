@@ -30,7 +30,7 @@ datoon/
 │
 ├── src/datoon/                       # Python package source
 │   ├── analyzer.py                   # Payload structure suitability checks
-│   ├── converter.py                  # JSON normalization, TOON CLI call, policy gating
+│   ├── converter.py                  # JSON normalization, TOON encoder call, policy gating
 │   ├── models.py                     # Config/report/outcome dataclasses
 │   ├── cli.py                        # CLI entrypoint
 │   └── mcp_server.py                 # MCP server tools
@@ -105,7 +105,7 @@ It runs on pull requests and pushes to `main`. The old auto-sync-on-main flow wa
 
 - Never change semantic values or key names during conversion.
 - Invalid JSON must fail loudly.
-- Missing `npx` must not break auto mode; fallback to JSON unless `force=True`.
+- An encoder failure must not break auto mode; fallback to JSON unless `force=True`.
 - `--force` is for controlled experiments and should bypass gating, not hide conversion errors.
 - Auto mode skips before conversion when analysis rejects the payload, and skips after conversion when estimated savings are below `min_savings_ratio`.
 - Keep skip reasons user-facing, specific, and stable enough for CLI/MCP troubleshooting.
@@ -122,7 +122,7 @@ python scripts/validate_plugin_metadata.py
 uvx pre-commit run --all-files
 ```
 
-Integration tests require Node.js and `npx`.
+Conversion is pure Python (`toon-format`); no Node.js is needed for tests.
 
 ## Benchmark Commands
 
@@ -168,7 +168,7 @@ Config writes must:
 - remove only `datoon`-owned entries on uninstall;
 - keep dry-run side-effect free.
 
-Security and privacy docs should state that the installer does not read or upload user payloads, but selected targets may call external tooling: Claude Code through `claude plugin ...`, Python package resolution through `uvx`, and TOON conversion through `npx --yes @toon-format/cli@2` when conversion actually runs.
+Security and privacy docs should state that the installer does not read or upload user payloads, but selected targets may call external tooling: Claude Code through `claude plugin ...`, Python package resolution through `uvx`; TOON conversion runs in-process through the `toon-format` package and calls no external tooling.
 
 ## Known Gaps
 

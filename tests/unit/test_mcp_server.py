@@ -68,14 +68,14 @@ def test_analyze_json_invalid_config_returns_error() -> None:
 
 
 def test_convert_json_skips_non_candidate(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Non-candidate payload should skip without calling CLI."""
+    """Non-candidate payload should skip without encoding."""
     called = {"value": False}
 
-    def _unexpected(_: str, **kw: object) -> str:
+    def _unexpected(_: object) -> str:
         called["value"] = True
-        raise AssertionError("CLI must not be called for non-candidates.")
+        raise AssertionError("Encoder must not be called for non-candidates.")
 
-    monkeypatch.setattr("datoon.converter._run_toon_cli", _unexpected)
+    monkeypatch.setattr("datoon.converter._encode_toon", _unexpected)
     result = convert_json('{"x":1}')
     assert "error" not in result
     assert result["report"]["decision"] == "skip"
@@ -88,8 +88,8 @@ def test_convert_json_converts_when_savings_sufficient(
     """Candidate payload should convert when savings clear threshold."""
     payload = '{"rows":[{"id":1,"v":"a"},{"id":2,"v":"b"},{"id":3,"v":"c"}]}'
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,v}:\n  1,a\n  2,b\n  3,c\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,v}:\n  1,a\n  2,b\n  3,c\n",
     )
     token_seq = iter([100, 60])
     monkeypatch.setattr(
@@ -119,9 +119,8 @@ def test_convert_text_csv_converts(monkeypatch: pytest.MonkeyPatch) -> None:
     """CSV text should convert when savings clear threshold."""
     csv_text = "id,name,role\n1,Ada,admin\n2,Lin,analyst\n3,Grace,viewer\n"
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _,
-        **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n  2,Lin,analyst\n  3,Grace,viewer\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name,role}:\n  1,Ada,admin\n  2,Lin,analyst\n  3,Grace,viewer\n",
     )
     token_seq = iter([100, 40])
     monkeypatch.setattr(
@@ -141,8 +140,8 @@ def test_convert_text_jsonl_converts(monkeypatch: pytest.MonkeyPatch) -> None:
         '{"id":3,"name":"Grace","role":"viewer"}\n'
     )
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 40])
     monkeypatch.setattr(
@@ -164,8 +163,8 @@ def test_convert_text_xml_converts(monkeypatch: pytest.MonkeyPatch) -> None:
         "</users>"
     )
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,name}:\n  1,Ada\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name}:\n  1,Ada\n",
     )
     token_seq = iter([100, 40])
     monkeypatch.setattr(
@@ -197,16 +196,16 @@ def test_convert_text_invalid_xml_returns_error() -> None:
     assert "error" in result
 
 
-def test_convert_json_cli_failure_returns_skip(monkeypatch: pytest.MonkeyPatch) -> None:
-    """CLI failure in non-force mode returns skip outcome, not error key."""
+def test_convert_json_encoder_failure_returns_skip(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Encoder failure in non-force mode returns skip outcome, not error key."""
     from datoon.converter import DatoonError
 
     payload = '{"rows":[{"id":1,"v":"a"},{"id":2,"v":"b"},{"id":3,"v":"c"}]}'
 
-    def _fail(_: str, **kw: object) -> str:
-        raise DatoonError("cli down")
+    def _fail(_: object) -> str:
+        raise DatoonError("encoder down")
 
-    monkeypatch.setattr("datoon.converter._run_toon_cli", _fail)
+    monkeypatch.setattr("datoon.converter._encode_toon", _fail)
     result = convert_json(payload, force=False)
     assert "error" not in result
     assert result["report"]["decision"] == "skip"

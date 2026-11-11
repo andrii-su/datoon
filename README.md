@@ -109,7 +109,7 @@ Same result. Zero JSON serialization in your code.
 {"decision":"skip","reason":"No uniform object arrays found with at least 3 rows."}
 ```
 
-No Node.js call. No silent corruption.
+No silent corruption.
 
 </td>
 </tr>
@@ -158,7 +158,7 @@ pip install "datoon[mcp]"
 pip install "datoon[all]"
 ```
 
-Requires Python 3.12+. TOON conversion requires Node.js with `npx` in PATH — analysis and format reading work without it.
+Requires Python 3.12+. TOON conversion is pure Python (official [`toon-format`](https://pypi.org/project/toon-format/) encoder, installed automatically) — no Node.js needed.
 
 For Claude Code plugin, Codex, and MCP config → [**INSTALL.md**](./INSTALL.md).
 
@@ -192,8 +192,8 @@ For Claude Code plugin, Codex, and MCP config → [**INSTALL.md**](./INSTALL.md)
 1. **Detect format** — from `--format` flag, file extension, or default to JSON for stdin
 1. **Read + normalize** — parse source into list of row dicts; serialize to compact JSON
 1. **Analyze structure** — uniform object arrays? acceptable depth? minimum rows?
-1. **Gate early** — non-candidates skip before any CLI call; no Node.js overhead
-1. **Convert + estimate** — TOON CLI runs, token savings calculated
+1. **Gate early** — non-candidates skip before any TOON encoding
+1. **Convert + estimate** — TOON encoder runs in-process, token savings calculated
 1. **Gate savings** — below threshold → return JSON; above → return TOON with report
 
 Every path returns a `ConversionReport` with `decision`, `reason`, and token estimates. Pipelines never get silent surprises.
@@ -284,7 +284,7 @@ outcome = convert_json_for_llm(json_text, ConversionConfig())
 send_to_model(outcome.payload_text)
 ```
 
-**Structure-only analysis (no Node.js required):**
+**Structure-only analysis:**
 
 ```python
 from datoon.analyzer import analyze_payload
@@ -306,7 +306,7 @@ ______________________________________________________________________
 |---|---|
 | `convert_json` | Full JSON conversion with policy gating |
 | `convert_text` | Converts CSV, YAML, XML, or JSONL text with policy gating |
-| `analyze_json` | Structure analysis only — no Node.js needed |
+| `analyze_json` | Structure analysis only — no conversion |
 
 **Claude Desktop / Cursor / Windsurf config:**
 
@@ -359,7 +359,6 @@ ______________________________________________________________________
 | `--min-savings` | `0.15` | Minimum relative token savings required |
 | `--max-depth` | `6` | Maximum nesting depth for auto-conversion |
 | `--min-uniform-rows` | `3` | Minimum rows in uniform object arrays |
-| `--timeout` | `30` | Seconds before TOON CLI call is aborted |
 | `--report <path>` | — | Write JSON conversion report to file |
 | `--report-stdout` | — | Print JSON conversion report to stderr |
 | `-o <path>` | stdout | Output file path |
@@ -454,8 +453,7 @@ uvx pre-commit install
 **Tests:**
 
 ```bash
-pytest -m "not integration"   # unit only (102 tests)
-pytest                        # with integration (requires Node.js + npx)
+pytest
 ```
 
 **Skill sync + plugin metadata:**

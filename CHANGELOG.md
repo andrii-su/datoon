@@ -1,3 +1,22 @@
+# [3.0.0](https://github.com/andrii-su/datoon/compare/v2.0.0...v3.0.0) (2026-11-11)
+
+
+* feat!: selectable token counters (auto, chars, tiktoken, claude, hf, callable) ([cab2bfb](https://github.com/andrii-su/datoon/commit/cab2bfb9f1106f2a4cf40122588249acb0371f94))
+
+
+### Bug Fixes
+
+* **mcp:** accept only local token counters as a tool argument ([1f2e54d](https://github.com/andrii-su/datoon/commit/1f2e54d4f83ea266590933f0762019d2d37f7270))
+
+
+### BREAKING CHANGES
+
+* `ConversionConfig.token_encoding` is replaced by
+`tokenizer`; the CLI flag `--encoding` and the MCP `encoding` argument are
+replaced by `--tokenizer` / `tokenizer` (default from `DATOON_TOKENIZER`,
+else `auto`). `ConversionReport` gains a `tokenizer` field. Every counter
+returns at least 1, including for empty text.
+
 # [2.0.0](https://github.com/andrii-su/datoon/compare/v1.9.1...v2.0.0) (2026-11-11)
 
 

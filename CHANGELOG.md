@@ -1,3 +1,23 @@
+# [2.0.0](https://github.com/andrii-su/datoon/compare/v1.9.1...v2.0.0) (2026-11-11)
+
+
+* feat!: encode TOON in pure Python, drop the Node.js CLI ([1bffef7](https://github.com/andrii-su/datoon/commit/1bffef7c068cd3f2a73df80a9348f0af28dd3040))
+* feat!: encode TOON in pure Python, drop the Node.js CLI ([#69](https://github.com/andrii-su/datoon/issues/69)) ([7e28513](https://github.com/andrii-su/datoon/commit/7e28513aa1fb0cf0be315d8e09586eedb0ce6800))
+
+
+### BREAKING CHANGES
+
+* `toon-format` is a required dependency; the
+`ConversionConfig.toon_cli_timeout` field, the `--timeout` CLI flag and
+the `timeout` argument of the `convert_json` / `convert_text` MCP tools
+are removed. The skip reason for a failed conversion is now
+"TOON encoding failed; falling back to JSON."
+* `toon-format` is a required dependency; the
+`ConversionConfig.toon_cli_timeout` field, the `--timeout` CLI flag and
+the `timeout` argument of the `convert_json` / `convert_text` MCP tools
+are removed. The skip reason for a failed conversion is now
+"TOON encoding failed; falling back to JSON."
+
 ## [1.9.1](https://github.com/andrii-su/datoon/compare/v1.9.0...v1.9.1) (2026-07-07)
 
 

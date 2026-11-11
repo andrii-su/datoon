@@ -126,7 +126,7 @@ def benchmark_payload(
                 raw_error=str(exc),
             )
 
-    json_tokens = estimate_tokens(raw_json)
+    json_tokens = estimate_tokens(raw_json, auto_config.tokenizer)
 
     toon_tokens: int | None = None
     raw_savings_pct: float | None = None
@@ -258,6 +258,7 @@ def save_results(
                 "min_savings_ratio": config.min_savings_ratio,
                 "max_depth": config.max_depth,
                 "min_uniform_rows": config.min_uniform_rows,
+                "tokenizer": config.tokenizer,
             },
         },
         "summary": asdict(summary),
@@ -348,6 +349,7 @@ def dry_run(
     print(f"- min_savings_ratio: {config.min_savings_ratio}")
     print(f"- max_depth: {config.max_depth}")
     print(f"- min_uniform_rows: {config.min_uniform_rows}")
+    print(f"- tokenizer: {config.tokenizer}")
     print(f"- json payloads: {len(payloads)}")
     for payload in payloads:
         print(
@@ -385,6 +387,15 @@ def parse_args() -> argparse.Namespace:
         help="Auto mode minimum rows for uniform object arrays.",
     )
     parser.add_argument(
+        "--tokenizer",
+        default="auto",
+        metavar="SPEC",
+        help=(
+            "Token counter for estimates: auto, chars[:N], tiktoken[:ENCODING], "
+            "claude:MODEL_ID (network) or hf:REPO_ID (default: auto)."
+        ),
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Print benchmark plan without conversion.",
@@ -413,12 +424,14 @@ def main() -> int:
         max_depth=args.max_depth,
         min_uniform_rows=args.min_uniform_rows,
         force=False,
+        tokenizer=args.tokenizer,
     )
     force_config = ConversionConfig(
         min_savings_ratio=0.0,
         max_depth=max(64, args.max_depth),
         min_uniform_rows=2,
         force=True,
+        tokenizer=args.tokenizer,
     )
 
     if args.dry_run:

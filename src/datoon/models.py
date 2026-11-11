@@ -5,11 +5,9 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 from typing import Literal
 
-Decision = Literal["convert", "skip"]
+from datoon.tokenizers import DEFAULT_TOKENIZER, TokenCounter
 
-# Default tiktoken encoding for token estimates. o200k_base matches GPT-4o and
-# the o-series; it is closer to modern targets than the older cl100k_base.
-DEFAULT_TOKEN_ENCODING = "o200k_base"
+Decision = Literal["convert", "skip"]
 
 
 @dataclass(frozen=True, slots=True)
@@ -20,7 +18,7 @@ class ConversionConfig:
     max_depth: int = 6
     min_uniform_rows: int = 3
     force: bool = False
-    token_encoding: str = DEFAULT_TOKEN_ENCODING
+    tokenizer: str | TokenCounter = DEFAULT_TOKENIZER
 
     def __post_init__(self) -> None:
         """Validate boundary values to avoid ambiguous runtime decisions."""
@@ -30,8 +28,11 @@ class ConversionConfig:
             raise ValueError("max_depth must be at least 1.")
         if self.min_uniform_rows < 2:
             raise ValueError("min_uniform_rows must be at least 2.")
-        if not self.token_encoding:
-            raise ValueError("token_encoding must be a non-empty encoding name.")
+        if isinstance(self.tokenizer, str):
+            if not self.tokenizer.strip():
+                raise ValueError("tokenizer must be a non-empty spec string.")
+        elif not callable(self.tokenizer):
+            raise ValueError("tokenizer must be a spec string or a callable.")
 
 
 @dataclass(frozen=True, slots=True)
@@ -54,6 +55,7 @@ class ConversionReport:
     input_token_estimate: int
     output_token_estimate: int
     savings_ratio: float
+    tokenizer: str
     analysis: PayloadAnalysis
 
     def as_dict(self) -> dict[str, object]:

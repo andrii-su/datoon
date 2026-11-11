@@ -121,7 +121,9 @@ def test_chars_never_returns_below_one() -> None:
     assert counter("") == 1
 
 
-@pytest.mark.parametrize("spec", ["chars:", "chars:0", "chars:-2", "chars:abc", "chars:nan", "chars:inf"])
+@pytest.mark.parametrize(
+    "spec", ["chars:", "chars:0", "chars:-2", "chars:abc", "chars:nan", "chars:inf"]
+)
 def test_chars_rejects_malformed_divisor(spec: str) -> None:
     with pytest.raises(DatoonError, match="chars"):
         resolve_tokenizer(spec)
@@ -236,7 +238,11 @@ def test_claude_measures_overhead_once_per_model(
     again("two")
     resolve_tokenizer("claude:model-b")
 
-    marker_calls = [call["model"] for call in client.messages.calls if call["messages"][0]["content"] == "x"]
+    marker_calls = [
+        call["model"]
+        for call in client.messages.calls
+        if call["messages"][0]["content"] == "x"
+    ]
     assert marker_calls == ["model-a", "model-b"]
     assert len(built) == 2
 
@@ -247,14 +253,20 @@ def test_claude_caches_counts_per_text(monkeypatch: pytest.MonkeyPatch) -> None:
     counter, _ = resolve_tokenizer("claude:test-model")
 
     assert counter("payload") == counter("payload")
-    payload_calls = [call for call in client.messages.calls if call["messages"][0]["content"] == "payload"]
+    payload_calls = [
+        call
+        for call in client.messages.calls
+        if call["messages"][0]["content"] == "payload"
+    ]
     assert len(payload_calls) == 1
 
 
 def test_claude_count_never_below_one(monkeypatch: pytest.MonkeyPatch) -> None:
     client = _FakeAnthropicClient()
     client.messages.count_tokens = (  # type: ignore[method-assign]
-        lambda *, model, messages: SimpleNamespace(input_tokens=9 if messages[0]["content"] == "x" else 3)
+        lambda *, model, messages: SimpleNamespace(
+            input_tokens=9 if messages[0]["content"] == "x" else 3
+        )
     )
     _install_fake_client(monkeypatch, client)
     counter, _ = resolve_tokenizer("claude:test-model")

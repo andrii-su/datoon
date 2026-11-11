@@ -67,17 +67,29 @@ def expected_for(payload: dict[str, object]) -> dict[str, object]:
         category_totals[category] = category_totals.get(category, 0) + revenue
 
     top_region = min(region_totals.items(), key=lambda item: (-item[1], item[0]))[0][0]
-    top_category = min(category_totals.items(), key=lambda item: (-item[1], item[0]))[0][0]
+    top_category = min(category_totals.items(), key=lambda item: (-item[1], item[0]))[
+        0
+    ][0]
 
     return {
         "scenario": payload["scenario"],
         "iteration": payload["iteration"],
         "record_count": len(records),
-        "active_count": sum(1 for record in records if isinstance(record, dict) and record["active"]),
-        "total_revenue_cents": sum(int(record["revenue_cents"]) for record in records if isinstance(record, dict)),
+        "active_count": sum(
+            1 for record in records if isinstance(record, dict) and record["active"]
+        ),
+        "total_revenue_cents": sum(
+            int(record["revenue_cents"])
+            for record in records
+            if isinstance(record, dict)
+        ),
         "top_region": top_region,
         "top_category": top_category,
-        "anomaly_ids": [str(record["id"]) for record in records if isinstance(record, dict) and record["anomaly"]],
+        "anomaly_ids": [
+            str(record["id"])
+            for record in records
+            if isinstance(record, dict) and record["anomaly"]
+        ],
     }
 
 

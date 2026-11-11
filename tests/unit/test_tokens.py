@@ -32,7 +32,7 @@ def test_config_rejects_empty_tokenizer(value: str) -> None:
 
 
 def test_config_rejects_non_callable_tokenizer() -> None:
-    with pytest.raises(ValueError, match="tokenizer"):
+    with pytest.raises(TypeError, match="tokenizer"):
         ConversionConfig(tokenizer=42)  # type: ignore[arg-type]
 
 

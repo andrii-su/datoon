@@ -90,7 +90,9 @@ def write_json_with_backup(path: Path, data: dict[str, Any]) -> Path | None:
             index += 1
         shutil.copy2(path, backup_path)
 
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     return backup_path
 
 
@@ -131,7 +133,11 @@ def merge_codex_marketplace(config: dict[str, Any]) -> dict[str, Any]:
     plugins = updated.get("plugins")
     if not isinstance(plugins, list):
         plugins = []
-    next_plugins = [plugin for plugin in plugins if not (isinstance(plugin, dict) and plugin.get("name") == "datoon")]
+    next_plugins = [
+        plugin
+        for plugin in plugins
+        if not (isinstance(plugin, dict) and plugin.get("name") == "datoon")
+    ]
     next_plugins.append(dict(DATOON_CODEX_ENTRY))
     updated["plugins"] = next_plugins
     return updated
@@ -143,7 +149,9 @@ def unmerge_codex_marketplace(config: dict[str, Any]) -> dict[str, Any]:
     plugins = updated.get("plugins")
     if isinstance(plugins, list):
         updated["plugins"] = [
-            plugin for plugin in plugins if not (isinstance(plugin, dict) and plugin.get("name") == "datoon")
+            plugin
+            for plugin in plugins
+            if not (isinstance(plugin, dict) and plugin.get("name") == "datoon")
         ]
     return updated
 
@@ -277,7 +285,11 @@ def plan_codex(path: Path, action: Action) -> list[PlanStep]:
 def apply_codex(path: Path, action: Action) -> Path | None:
     """Apply Codex marketplace config action."""
     current = read_json_object(path)
-    updated = merge_codex_marketplace(current) if action == "install" else unmerge_codex_marketplace(current)
+    updated = (
+        merge_codex_marketplace(current)
+        if action == "install"
+        else unmerge_codex_marketplace(current)
+    )
     return write_json_with_backup(path, updated)
 
 
@@ -302,7 +314,11 @@ def plan_mcp(path: Path, action: Action) -> list[PlanStep]:
 def apply_mcp(path: Path, action: Action) -> Path | None:
     """Apply MCP config action."""
     current = read_json_object(path)
-    updated = merge_mcp_config(current) if action == "install" else unmerge_mcp_config(current)
+    updated = (
+        merge_mcp_config(current)
+        if action == "install"
+        else unmerge_mcp_config(current)
+    )
     return write_json_with_backup(path, updated)
 
 
@@ -327,10 +343,18 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     """Parse installer arguments."""
     parser = argparse.ArgumentParser(description="Install datoon integrations.")
     action = parser.add_mutually_exclusive_group(required=True)
-    action.add_argument("--list", action="store_true", help="List target detection status.")
-    action.add_argument("--dry-run", action="store_true", help="Print planned actions only.")
-    action.add_argument("--install", action="store_true", help="Install selected targets.")
-    action.add_argument("--uninstall", action="store_true", help="Uninstall selected targets.")
+    action.add_argument(
+        "--list", action="store_true", help="List target detection status."
+    )
+    action.add_argument(
+        "--dry-run", action="store_true", help="Print planned actions only."
+    )
+    action.add_argument(
+        "--install", action="store_true", help="Install selected targets."
+    )
+    action.add_argument(
+        "--uninstall", action="store_true", help="Uninstall selected targets."
+    )
     parser.add_argument(
         "--target",
         action="append",

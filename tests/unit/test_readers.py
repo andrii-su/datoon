@@ -361,7 +361,9 @@ def test_read_tabular_forwards_sheet_and_table_to_numbers(
 ) -> None:
     captured: dict[str, int] = {}
 
-    def fake_read_numbers(path: Path, *, sheet: int = 0, table: int = 0) -> list[dict[str, int]]:
+    def fake_read_numbers(
+        path: Path, *, sheet: int = 0, table: int = 0
+    ) -> list[dict[str, int]]:
         captured["sheet"] = sheet
         captured["table"] = table
         return [{"a": 1}]

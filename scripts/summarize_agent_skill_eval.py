@@ -125,18 +125,27 @@ def summarize_payload_tokens(report_dir: Path) -> list[PayloadTokenSummary]:
             PayloadTokenSummary(
                 scenario=scenario,
                 avg_json_tokens=round(
-                    statistics.mean(float(report["input_token_estimate"]) for report in reports),
+                    statistics.mean(
+                        float(report["input_token_estimate"]) for report in reports
+                    ),
                     2,
                 ),
                 avg_toon_tokens=round(
-                    statistics.mean(float(report["output_token_estimate"]) for report in reports),
+                    statistics.mean(
+                        float(report["output_token_estimate"]) for report in reports
+                    ),
                     2,
                 ),
                 avg_savings_pct=round(
-                    statistics.mean(float(report["savings_ratio"]) for report in reports) * 100,
+                    statistics.mean(
+                        float(report["savings_ratio"]) for report in reports
+                    )
+                    * 100,
                     2,
                 ),
-                convert_count=sum(1 for report in reports if report["decision"] == "convert"),
+                convert_count=sum(
+                    1 for report in reports if report["decision"] == "convert"
+                ),
                 run_count=len(reports),
             )
         )
@@ -300,7 +309,9 @@ In this benchmark, using the `datoon` skill did not change answer correctness, b
 
 def parse_args() -> argparse.Namespace:
     """Parse CLI arguments."""
-    parser = argparse.ArgumentParser(description="Summarize artifact-based datoon agent skill evaluation.")
+    parser = argparse.ArgumentParser(
+        description="Summarize artifact-based datoon agent skill evaluation."
+    )
     parser.add_argument(
         "--eval-dir",
         type=Path,

@@ -39,7 +39,9 @@ def _read_archive_member(path: Path, member: str) -> bytes:
         try:
             return archive.read(member)
         except KeyError as exc:
-            raise FileNotFoundError(f"Missing '{member}' inside archive: {path}") from exc
+            raise FileNotFoundError(
+                f"Missing '{member}' inside archive: {path}"
+            ) from exc
 
 
 def validate() -> list[str]:
@@ -52,7 +54,9 @@ def validate() -> list[str]:
         mirror_bytes = _read_file(mirror_path)
         mirror_hash = _sha256_bytes(mirror_bytes)
         if mirror_hash != source_hash:
-            errors.append(f"Out-of-sync SKILL.md copy: {mirror_path} (expected hash {source_hash}, got {mirror_hash})")
+            errors.append(
+                f"Out-of-sync SKILL.md copy: {mirror_path} (expected hash {source_hash}, got {mirror_hash})"
+            )
 
     archived_bytes = _read_archive_member(SKILL_ARCHIVE_PATH, SKILL_ARCHIVE_MEMBER)
     archived_hash = _sha256_bytes(archived_bytes)

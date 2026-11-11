@@ -121,7 +121,9 @@ def configure_logging(log_path: Path, *, verbose: bool) -> logging.Logger:
     return logger
 
 
-def run_subprocess(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
+def run_subprocess(
+    command: list[str], *, cwd: Path
+) -> subprocess.CompletedProcess[str]:
     """Run subprocess with captured output."""
     return subprocess.run(
         command,
@@ -141,7 +143,9 @@ def get_plugin_enabled_state(
     """Read current plugin enabled state from `claude plugins list --json`."""
     process = run_subprocess(["claude", "plugins", "list", "--json"], cwd=cwd)
     if process.returncode != 0:
-        raise RuntimeError(f"Failed to list plugins. stderr={process.stderr.strip() or '<empty>'}")
+        raise RuntimeError(
+            f"Failed to list plugins. stderr={process.stderr.strip() or '<empty>'}"
+        )
 
     try:
         data = json.loads(process.stdout)
@@ -179,7 +183,9 @@ def set_plugin_enabled_state(
                 stderr or "<empty>",
             )
             return
-        raise RuntimeError(f"Failed to {action} plugin {plugin_id}. stderr={stderr or '<empty>'}")
+        raise RuntimeError(
+            f"Failed to {action} plugin {plugin_id}. stderr={stderr or '<empty>'}"
+        )
     logger.debug("Plugin action completed: %s %s", action, plugin_id)
 
 
@@ -218,7 +224,9 @@ def parse_claude_result(
         model_usage = next(iter(parsed["modelUsage"].values()))
 
     result_text = parsed.get("result") or ""
-    result_text_normalized = result_text if isinstance(result_text, str) else str(result_text)
+    result_text_normalized = (
+        result_text if isinstance(result_text, str) else str(result_text)
+    )
     valid_result_json = False
     format_used: str | None = None
     if isinstance(result_text, str):
@@ -266,7 +274,9 @@ def summarize_mode(results: list[RunResult]) -> ModeSummary:
     format_counts: dict[str, int] = {}
     for result in ok_results:
         if result.format_used:
-            format_counts[result.format_used] = format_counts.get(result.format_used, 0) + 1
+            format_counts[result.format_used] = (
+                format_counts.get(result.format_used, 0) + 1
+            )
 
     if not ok_results:
         return ModeSummary(
@@ -287,33 +297,56 @@ def summarize_mode(results: list[RunResult]) -> ModeSummary:
             format_counts=format_counts,
         )
 
-    tps_values = [result.output_tokens / (result.duration_ms / 1000) for result in ok_results if result.duration_ms > 0]
+    tps_values = [
+        result.output_tokens / (result.duration_ms / 1000)
+        for result in ok_results
+        if result.duration_ms > 0
+    ]
 
     return ModeSummary(
         count=len(results),
         ok_count=len(ok_results),
         success_rate=round(len(ok_results) / len(results), 4) if results else None,
         valid_json_rate=round(
-            sum(1 for result in ok_results if result.valid_result_json) / len(ok_results),
+            sum(1 for result in ok_results if result.valid_result_json)
+            / len(ok_results),
             4,
         ),
-        avg_input_tokens=round(statistics.mean(result.input_tokens for result in ok_results), 2),
-        avg_output_tokens=round(statistics.mean(result.output_tokens for result in ok_results), 2),
-        avg_cache_read_input_tokens=round(statistics.mean(result.cache_read_input_tokens for result in ok_results), 2),
-        avg_result_token_estimate=round(statistics.mean(result.result_token_estimate for result in ok_results), 2),
-        avg_cost_usd=round(statistics.mean(result.cost_usd for result in ok_results), 6),
-        avg_duration_ms=round(statistics.mean(result.duration_ms for result in ok_results), 2),
+        avg_input_tokens=round(
+            statistics.mean(result.input_tokens for result in ok_results), 2
+        ),
+        avg_output_tokens=round(
+            statistics.mean(result.output_tokens for result in ok_results), 2
+        ),
+        avg_cache_read_input_tokens=round(
+            statistics.mean(result.cache_read_input_tokens for result in ok_results), 2
+        ),
+        avg_result_token_estimate=round(
+            statistics.mean(result.result_token_estimate for result in ok_results), 2
+        ),
+        avg_cost_usd=round(
+            statistics.mean(result.cost_usd for result in ok_results), 6
+        ),
+        avg_duration_ms=round(
+            statistics.mean(result.duration_ms for result in ok_results), 2
+        ),
         p50_duration_ms=percentile([result.duration_ms for result in ok_results], 0.50),
         p95_duration_ms=percentile([result.duration_ms for result in ok_results], 0.95),
-        avg_output_tokens_per_second=(round(statistics.mean(tps_values), 2) if tps_values else None),
-        avg_num_turns=round(statistics.mean(result.num_turns for result in ok_results), 2),
+        avg_output_tokens_per_second=(
+            round(statistics.mean(tps_values), 2) if tps_values else None
+        ),
+        avg_num_turns=round(
+            statistics.mean(result.num_turns for result in ok_results), 2
+        ),
         format_counts=format_counts,
     )
 
 
 def parse_args() -> argparse.Namespace:
     """Parse CLI arguments."""
-    parser = argparse.ArgumentParser(description="Run A/B benchmark for datoon skill (with and without plugin).")
+    parser = argparse.ArgumentParser(
+        description="Run A/B benchmark for datoon skill (with and without plugin)."
+    )
     parser.add_argument(
         "--payloads",
         type=Path,
@@ -456,7 +489,9 @@ def main() -> int:
                     ensure_ascii=False,
                     separators=(",", ":"),
                 )
-                prompt = mode.prompt_prefix + args.prompt_template.format(payload_json=payload_json)
+                prompt = mode.prompt_prefix + args.prompt_template.format(
+                    payload_json=payload_json
+                )
 
                 for iteration in range(1, args.iterations + 1):
                     logger.info(
@@ -517,13 +552,21 @@ def main() -> int:
         )
         logger.info("Plugin state restored to: %s", initial_plugin_state)
 
-    without_summary = summarize_mode([r for r in all_results if r.mode == "without_skill"])
+    without_summary = summarize_mode(
+        [r for r in all_results if r.mode == "without_skill"]
+    )
     with_summary = summarize_mode([r for r in all_results if r.mode == "with_skill"])
 
     delta: dict[str, float] = {}
-    if without_summary.avg_result_token_estimate and with_summary.avg_result_token_estimate:
+    if (
+        without_summary.avg_result_token_estimate
+        and with_summary.avg_result_token_estimate
+    ):
         delta["visible_output_tokens_pct"] = round(
-            (with_summary.avg_result_token_estimate - without_summary.avg_result_token_estimate)
+            (
+                with_summary.avg_result_token_estimate
+                - without_summary.avg_result_token_estimate
+            )
             / without_summary.avg_result_token_estimate
             * 100,
             2,
@@ -552,7 +595,9 @@ def main() -> int:
                     2,
                 ),
                 "cost_pct": round(
-                    (with_summary.avg_cost_usd - without_summary.avg_cost_usd) / without_summary.avg_cost_usd * 100,
+                    (with_summary.avg_cost_usd - without_summary.avg_cost_usd)
+                    / without_summary.avg_cost_usd
+                    * 100,
                     2,
                 ),
             }
@@ -608,7 +653,9 @@ def main() -> int:
     if delta:
         delta_parts: list[str] = []
         if "visible_output_tokens_pct" in delta:
-            delta_parts.append(f"visible_output_tokens {delta['visible_output_tokens_pct']}%")
+            delta_parts.append(
+                f"visible_output_tokens {delta['visible_output_tokens_pct']}%"
+            )
         if "output_tokens_pct" in delta:
             delta_parts.append(f"output_tokens {delta['output_tokens_pct']}%")
         if "cost_pct" in delta:

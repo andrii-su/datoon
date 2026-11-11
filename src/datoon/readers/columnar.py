@@ -22,7 +22,7 @@ def read_parquet(path: Path) -> list[dict[str, Any]]:
 def read_orc(path: Path) -> list[dict[str, Any]]:
     """Read an ORC file into a list of row dicts."""
     try:
-        import pyarrow.orc as orc  # type: ignore
+        from pyarrow import orc  # type: ignore
     except ImportError as exc:
         raise ImportError(
             f"ORC support requires the 'columnar' extra: {_INSTALL_HINT}"

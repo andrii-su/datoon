@@ -14,6 +14,7 @@ def test_conversion_config_accepts_valid_defaults() -> None:
     assert config.max_depth == 6
     assert config.min_uniform_rows == 3
     assert config.force is False
+    assert config.tokenizer == "auto"
 
 
 @pytest.mark.parametrize("value", [-0.1, 1.1])
@@ -33,3 +34,17 @@ def test_conversion_config_rejects_invalid_uniform_row_threshold() -> None:
     """At least two rows are required for uniform-array analysis."""
     with pytest.raises(ValueError, match="min_uniform_rows"):
         ConversionConfig(min_uniform_rows=1)
+
+
+def test_conversion_config_rejects_empty_tokenizer() -> None:
+    """An empty tokenizer spec is invalid."""
+    with pytest.raises(ValueError, match="tokenizer"):
+        ConversionConfig(tokenizer="")
+
+
+def test_conversion_config_is_frozen() -> None:
+    """Config stays immutable after construction."""
+    import dataclasses
+
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        ConversionConfig().tokenizer = "chars"  # type: ignore[misc]

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Install, dry-run, or uninstall datoon integrations."""
 
 from __future__ import annotations
@@ -10,7 +9,7 @@ import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
 
@@ -74,7 +73,7 @@ def read_json_object(path: Path) -> dict[str, Any]:
     except json.JSONDecodeError as exc:
         raise ValueError(f"Malformed JSON in {path}: {exc.msg}") from exc
     if not isinstance(parsed, dict):
-        raise ValueError(f"Expected JSON object in {path}")
+        raise TypeError(f"Expected JSON object in {path}")
     return parsed
 
 
@@ -83,7 +82,7 @@ def write_json_with_backup(path: Path, data: dict[str, Any]) -> Path | None:
     path.parent.mkdir(parents=True, exist_ok=True)
     backup_path: Path | None = None
     if path.exists():
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S%f")
+        timestamp = datetime.now(UTC).strftime("%Y%m%d%H%M%S%f")
         backup_path = path.with_name(f"{path.name}.bak.{timestamp}")
         index = 1
         while backup_path.exists():

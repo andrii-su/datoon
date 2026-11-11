@@ -42,7 +42,27 @@ Optional extras:
 
 ```bash
 pip install "datoon[tokens]"  # tiktoken token estimates
+pip install "datoon[claude]"  # Claude token counts via the Anthropic API
+pip install "datoon[hf]"      # Hugging Face tokenizers
 pip install "datoon[mcp]"     # MCP server dependencies
+```
+
+### Choosing a tokenizer
+
+Select the token counter with `--tokenizer <spec>` (CLI), the `tokenizer` argument (MCP tools), or `DATOON_TOKENIZER`; the default is `auto`. The MCP tools accept only local counters (`auto`, `chars`, `tiktoken`) per call; `claude:` and `hf:` reach the network, so only the server operator can enable them through `DATOON_TOKENIZER`.
+
+| Spec | Counts with | Needs |
+|---|---|---|
+| `auto` | `tiktoken:o200k_base` when tiktoken is installed, else `chars:3` | — |
+| `chars` / `chars:<N>` | `ceil(len(text) / N)`, default `N = 3` | — |
+| `tiktoken` / `tiktoken:<encoding>` | tiktoken, default `o200k_base` | `datoon[tokens]` |
+| `claude:<model-id>` | Anthropic token counting API | `datoon[claude]`, Anthropic credentials (e.g. `ANTHROPIC_API_KEY`) |
+| `hf:<repo-id>` | Hugging Face `tokenizers` tokenizer | `datoon[hf]` |
+
+Local counters suit runtime gating; `claude:` and `hf:` suit benchmarks and evals where counts for the target model matter. `claude:` makes network calls, and Anthropic documents its counts as estimates. `hf:` downloads the tokenizer from the Hugging Face Hub on first use.
+
+```bash
+datoon input.json --tokenizer claude:claude-opus-5-5 --report-stdout
 ```
 
 ## CLI

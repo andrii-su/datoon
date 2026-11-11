@@ -3,8 +3,6 @@
 from __future__ import annotations
 
 import json
-import math
-from functools import lru_cache
 from typing import Any
 
 from toon_format import encode
@@ -12,12 +10,12 @@ from toon_format import encode
 from datoon.analyzer import analyze_payload
 from datoon.errors import DatoonError
 from datoon.models import (
-    DEFAULT_TOKEN_ENCODING,
     ConversionConfig,
     ConversionOutcome,
     ConversionReport,
     PayloadAnalysis,
 )
+from datoon.tokenizers import estimate_tokens, resolve_tokenizer
 
 __all__ = ["DatoonError", "convert_json_for_llm", "estimate_tokens"]
 
@@ -42,26 +40,6 @@ def _normalize_json(raw_text: str) -> tuple[Any, str]:
     return parsed, normalized
 
 
-@lru_cache(maxsize=8)
-def _load_token_encoder(encoding: str) -> Any | None:
-    """Load a token encoder once per name, None when the optional dep is absent."""
-    try:
-        import tiktoken  # type: ignore
-    except ImportError:
-        return None
-
-    return tiktoken.get_encoding(encoding)
-
-
-def estimate_tokens(text: str, encoding: str = DEFAULT_TOKEN_ENCODING) -> int:
-    """Estimate token count with tiktoken when installed, else use a char heuristic."""
-    encoder = _load_token_encoder(encoding)
-    if encoder is not None:
-        return len(encoder.encode(text))
-
-    return max(1, math.ceil(len(text) / 3))
-
-
 def _encode_toon(parsed: Any) -> str:
     """Encode an already-parsed JSON value as TOON with the official encoder."""
     try:
@@ -81,6 +59,7 @@ def _build_skip_outcome(
     reason: str,
     config: ConversionConfig,
     input_tokens: int,
+    tokenizer_name: str,
     analysis: PayloadAnalysis,
 ) -> ConversionOutcome:
     """Build a standard skip outcome to keep reporting consistent."""
@@ -91,16 +70,23 @@ def _build_skip_outcome(
         input_token_estimate=input_tokens,
         output_token_estimate=input_tokens,
         savings_ratio=0.0,
+        tokenizer=tokenizer_name,
         analysis=analysis,
     )
     return ConversionOutcome(payload_text=normalized_json, report=report)
 
 
 def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionOutcome:
-    """Convert JSON to TOON when structure and savings meet configured policy."""
+    """Convert JSON to TOON when structure and savings meet configured policy.
+
+    The tokenizer is resolved once per call and counts both the JSON and the
+    TOON text. A tokenizer that cannot be resolved is a configuration error and
+    raises ``DatoonError`` in auto and force mode alike.
+    """
     parsed, normalized_json = _normalize_json(raw_text)
+    counter, tokenizer_name = resolve_tokenizer(config.tokenizer)
     analysis = analyze_payload(parsed, config)
-    input_tokens = estimate_tokens(normalized_json, config.token_encoding)
+    input_tokens = estimate_tokens(normalized_json, counter)
 
     if not analysis.is_candidate and not config.force:
         return _build_skip_outcome(
@@ -108,6 +94,7 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
             reason=analysis.reason,
             config=config,
             input_tokens=input_tokens,
+            tokenizer_name=tokenizer_name,
             analysis=analysis,
         )
 
@@ -122,10 +109,11 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
             reason="TOON encoding failed; falling back to JSON.",
             config=config,
             input_tokens=input_tokens,
+            tokenizer_name=tokenizer_name,
             analysis=analysis,
         )
 
-    output_tokens = estimate_tokens(toon_text, config.token_encoding)
+    output_tokens = estimate_tokens(toon_text, counter)
     savings_ratio = (input_tokens - output_tokens) / input_tokens
 
     if savings_ratio < config.min_savings_ratio and not config.force:
@@ -137,6 +125,7 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
             ),
             config=config,
             input_tokens=input_tokens,
+            tokenizer_name=tokenizer_name,
             analysis=analysis,
         )
 
@@ -150,6 +139,7 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
         input_token_estimate=input_tokens,
         output_token_estimate=output_tokens,
         savings_ratio=savings_ratio,
+        tokenizer=tokenizer_name,
         analysis=analysis,
     )
     return ConversionOutcome(payload_text=toon_text, report=report)

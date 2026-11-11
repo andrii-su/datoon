@@ -225,8 +225,48 @@ def test_conversion_preserves_values_and_keys() -> None:
             },
         ]
     }
-    outcome = convert_json_for_llm(
-        json.dumps(payload), ConversionConfig(force=True)
-    )
+    outcome = convert_json_for_llm(json.dumps(payload), ConversionConfig(force=True))
     assert outcome.report.decision == "convert"
     assert decode(outcome.payload_text) == payload
+
+
+def test_report_records_resolved_tokenizer_on_convert() -> None:
+    """A converted payload reports the tokenizer that produced its estimates."""
+    outcome = convert_json_for_llm(
+        _sample_uniform_payload(), ConversionConfig(force=True, tokenizer="chars:2")
+    )
+    assert outcome.report.decision == "convert"
+    assert outcome.report.tokenizer == "chars:2"
+    assert json.loads(json.dumps(outcome.report.as_dict()))["tokenizer"] == "chars:2"
+
+
+def test_report_records_resolved_tokenizer_on_skip() -> None:
+    """A skipped payload reports the resolved tokenizer name, not the raw spec."""
+    outcome = convert_json_for_llm('{"x":1}', ConversionConfig(tokenizer="chars"))
+    assert outcome.report.decision == "skip"
+    assert outcome.report.tokenizer == "chars:3"
+
+
+def test_custom_tokenizer_counts_json_and_toon_and_is_named_custom() -> None:
+    """A callable tokenizer counts both texts and is reported as custom."""
+    seen: list[str] = []
+
+    def counter(text: str) -> int:
+        seen.append(text)
+        return len(text)
+
+    outcome = convert_json_for_llm(
+        _sample_uniform_payload(), ConversionConfig(force=True, tokenizer=counter)
+    )
+    assert outcome.report.tokenizer == "custom"
+    assert seen == [_sample_uniform_payload(), outcome.payload_text]
+    assert outcome.report.output_token_estimate == len(outcome.payload_text)
+
+
+@pytest.mark.parametrize("force", [False, True])
+def test_unresolvable_tokenizer_raises_in_auto_and_force_mode(force: bool) -> None:
+    """A bad tokenizer is a configuration error, never a silent JSON skip."""
+    with pytest.raises(DatoonError, match="Unknown tokenizer 'nope'"):
+        convert_json_for_llm(
+            _sample_uniform_payload(), ConversionConfig(force=force, tokenizer="nope")
+        )

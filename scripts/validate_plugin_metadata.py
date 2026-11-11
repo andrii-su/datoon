@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Validate plugin and marketplace metadata consistency."""
 
 from __future__ import annotations
@@ -35,7 +34,7 @@ def read_json(path: Path) -> dict[str, Any]:
     except FileNotFoundError as exc:
         raise FileNotFoundError(f"Missing required metadata file: {path}") from exc
     if not isinstance(parsed, dict):
-        raise ValueError(f"Expected JSON object in {path}")
+        raise TypeError(f"Expected JSON object in {path}")
     return parsed
 
 

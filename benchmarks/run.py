@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Benchmark JSON vs TOON efficiency and datoon auto-conversion decisions."""
 
 from __future__ import annotations
@@ -9,7 +8,7 @@ import json
 import statistics
 import sys
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -126,7 +125,7 @@ def benchmark_payload(
                 raw_error=str(exc),
             )
 
-    json_tokens = estimate_tokens(raw_json)
+    json_tokens = estimate_tokens(raw_json, auto_config.tokenizer)
 
     toon_tokens: int | None = None
     raw_savings_pct: float | None = None
@@ -248,16 +247,17 @@ def save_results(
 ) -> Path:
     """Save benchmark output to versioned JSON artifact."""
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     output = {
         "metadata": {
             "script_version": SCRIPT_VERSION,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "payloads_sha256": payloads_sha,
             "config": {
                 "min_savings_ratio": config.min_savings_ratio,
                 "max_depth": config.max_depth,
                 "min_uniform_rows": config.min_uniform_rows,
+                "tokenizer": config.tokenizer,
             },
         },
         "summary": asdict(summary),
@@ -348,6 +348,7 @@ def dry_run(
     print(f"- min_savings_ratio: {config.min_savings_ratio}")
     print(f"- max_depth: {config.max_depth}")
     print(f"- min_uniform_rows: {config.min_uniform_rows}")
+    print(f"- tokenizer: {config.tokenizer}")
     print(f"- json payloads: {len(payloads)}")
     for payload in payloads:
         print(
@@ -385,6 +386,15 @@ def parse_args() -> argparse.Namespace:
         help="Auto mode minimum rows for uniform object arrays.",
     )
     parser.add_argument(
+        "--tokenizer",
+        default="auto",
+        metavar="SPEC",
+        help=(
+            "Token counter for estimates: auto, chars[:N], tiktoken[:ENCODING], "
+            "claude:MODEL_ID (network) or hf:REPO_ID (default: auto)."
+        ),
+    )
+    parser.add_argument(
         "--dry-run",
         action="store_true",
         help="Print benchmark plan without conversion.",
@@ -413,12 +423,14 @@ def main() -> int:
         max_depth=args.max_depth,
         min_uniform_rows=args.min_uniform_rows,
         force=False,
+        tokenizer=args.tokenizer,
     )
     force_config = ConversionConfig(
         min_savings_ratio=0.0,
         max_depth=max(64, args.max_depth),
         min_uniform_rows=2,
         force=True,
+        tokenizer=args.tokenizer,
     )
 
     if args.dry_run:

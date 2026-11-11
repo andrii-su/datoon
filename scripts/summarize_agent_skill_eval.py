@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Summarize artifact-based agent skill evaluation results."""
 
 from __future__ import annotations

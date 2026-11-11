@@ -49,7 +49,7 @@ pip install "datoon[mcp]"     # MCP server dependencies
 
 ### Choosing a tokenizer
 
-Select the token counter with `--tokenizer <spec>` (CLI), the `tokenizer` argument (MCP tools), or `DATOON_TOKENIZER`; the default is `auto`.
+Select the token counter with `--tokenizer <spec>` (CLI), the `tokenizer` argument (MCP tools), or `DATOON_TOKENIZER`; the default is `auto`. The MCP tools accept only local counters (`auto`, `chars`, `tiktoken`) per call; `claude:` and `hf:` reach the network, so only the server operator can enable them through `DATOON_TOKENIZER`.
 
 | Spec | Counts with | Needs |
 |---|---|---|

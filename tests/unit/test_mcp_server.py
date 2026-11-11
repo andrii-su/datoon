@@ -235,3 +235,14 @@ def test_convert_json_unknown_tokenizer_returns_error() -> None:
     """A bad tokenizer spec is reported as an error, not a silent skip."""
     result = convert_json('{"x":1}', tokenizer="nope")
     assert "Unknown tokenizer 'nope'" in result["error"]
+
+
+@pytest.mark.parametrize("spec", ["claude:claude-opus-5-5", "hf:org/model", " HF:org/model"])
+def test_convert_tools_refuse_network_tokenizer_argument(spec: str) -> None:
+    """A model-supplied tokenizer may not name a network-backed counter."""
+    for result in (
+        convert_json('{"x":1}', tokenizer=spec),
+        convert_text("a,b\n1,2\n", "csv", tokenizer=spec),
+    ):
+        assert "cannot be chosen per call" in result["error"]
+        assert "DATOON_TOKENIZER" in result["error"]

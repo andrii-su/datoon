@@ -34,6 +34,7 @@ __all__ = [
     "TOKENIZER_ENV_VAR",
     "TokenCounter",
     "estimate_tokens",
+    "is_network_tokenizer",
     "resolve_tokenizer",
 ]
 
@@ -54,10 +55,20 @@ _CLAUDE_OVERHEAD_MARKER = "x"
 _CLAUDE_COUNT_CACHE_SIZE = 4096
 _SPEC_CACHE_SIZE = 32
 
+# Spec kinds that send the counted text to, or download files from, a remote
+# service chosen by the spec. Callers that take specs from untrusted input
+# (the MCP tools) must not accept these.
+_NETWORK_KINDS = frozenset({"claude", "hf"})
+
 _SPEC_HELP = (
     "Expected one of: auto, chars[:N], tiktoken[:ENCODING], claude:MODEL_ID, "
     "hf:REPO_ID, or a callable str -> int."
 )
+
+
+def is_network_tokenizer(spec: str) -> bool:
+    """Tell whether a spec string names a counter that talks to a remote service."""
+    return spec.strip().partition(":")[0].strip().lower() in _NETWORK_KINDS
 
 
 def _missing_package(kind: str, package: str, extra: str) -> DatoonError:

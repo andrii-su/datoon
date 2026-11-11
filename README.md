@@ -204,7 +204,7 @@ Every path returns a `ConversionReport` with `decision`, `reason`, token estimat
 
 ## Choosing a tokenizer
 
-Token estimates drive the savings gate, so pick the counter that fits the job. Pass one spec with `--tokenizer`, the `tokenizer` MCP argument, `ConversionConfig(tokenizer=...)`, or the `DATOON_TOKENIZER` environment variable; in Python any callable `str -> int` works too.
+Token estimates drive the savings gate, so pick the counter that fits the job. Pass one spec with `--tokenizer`, the `tokenizer` MCP argument, `ConversionConfig(tokenizer=...)`, or the `DATOON_TOKENIZER` environment variable; in Python any callable `str -> int` works too. The MCP tools accept only local counters (`auto`, `chars`, `tiktoken`) per call; `claude:` and `hf:` reach the network, so only the server operator can enable them through `DATOON_TOKENIZER`.
 
 | Spec | Counts with | Needs |
 |---|---|---|

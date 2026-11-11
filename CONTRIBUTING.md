@@ -15,7 +15,7 @@ python scripts/validate_skill_sync.py
 python scripts/validate_plugin_metadata.py
 ```
 
-Integration tests need Node.js and `npx`, because conversion uses the official TOON CLI.
+Conversion is pure Python (the `toon-format` package); no Node.js is required for tests.
 
 ## What To Edit
 
@@ -67,12 +67,6 @@ Run the full suite:
 uv run pytest
 ```
 
-Run unit tests only:
-
-```bash
-uv run pytest -m "not integration"
-```
-
 Run pre-commit locally:
 
 ```bash
@@ -112,7 +106,7 @@ Use Conventional Commit subjects:
 
 ```text
 feat: add MCP analyze_json tool
-fix: preserve JSON fallback on missing npx
+fix: preserve JSON fallback on encoder failure
 docs: clarify Claude Code plugin install
 test: cover non-uniform arrays
 ```

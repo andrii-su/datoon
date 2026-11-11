@@ -20,7 +20,6 @@ class ConversionConfig:
     max_depth: int = 6
     min_uniform_rows: int = 3
     force: bool = False
-    toon_cli_timeout: int = 30
     token_encoding: str = DEFAULT_TOKEN_ENCODING
 
     def __post_init__(self) -> None:
@@ -31,8 +30,6 @@ class ConversionConfig:
             raise ValueError("max_depth must be at least 1.")
         if self.min_uniform_rows < 2:
             raise ValueError("min_uniform_rows must be at least 2.")
-        if self.toon_cli_timeout < 1:
-            raise ValueError("toon_cli_timeout must be at least 1.")
         if not self.token_encoding:
             raise ValueError("token_encoding must be a non-empty encoding name.")
 

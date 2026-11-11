@@ -41,23 +41,13 @@ fi
 
 _green "uv OK — $(uv --version)"
 
-# ── 3. Node.js (optional — needed for TOON CLI conversion) ───────────────────
-_blue "Checking Node.js..."
-
-if command -v node &>/dev/null; then
-    _green "Node.js OK — $(node --version)"
-else
-    _warn "Node.js not found. Install from https://nodejs.org to enable TOON conversion."
-    _warn "analyze_json and policy gating work without Node.js; CLI conversion requires it."
-fi
-
-# ── 4. Dev dependencies ───────────────────────────────────────────────────────
+# ── 3. Dev dependencies ───────────────────────────────────────────────────────
 _blue "Installing dev dependencies via uv sync..."
 cd "$REPO_DIR"
 uv sync --extra dev
 _green "Dev dependencies installed"
 
-# ── 5. Register datoon CLI globally via uv tool ───────────────────────────────
+# ── 4. Register datoon CLI globally via uv tool ───────────────────────────────
 _blue "Installing datoon CLI via uv tool..."
 
 uv tool install --editable "$REPO_DIR"
@@ -67,7 +57,7 @@ UV_LOCAL_BIN="$HOME/.local/bin"
 
 _green "datoon CLI installed"
 
-# ── 6. Ensure CLI is on PATH ──────────────────────────────────────────────────
+# ── 5. Ensure CLI is on PATH ──────────────────────────────────────────────────
 _blue "Checking PATH..."
 
 if ! command -v datoon &>/dev/null; then
@@ -96,7 +86,7 @@ if ! command -v datoon &>/dev/null; then
     fi
 fi
 
-# ── 7. Verify ─────────────────────────────────────────────────────────────────
+# ── 6. Verify ─────────────────────────────────────────────────────────────────
 if command -v datoon &>/dev/null; then
     _green "datoon CLI ready — $(datoon --help | head -1)"
 fi
@@ -111,7 +101,7 @@ echo "    echo '{\"users\":[{\"id\":1}]}' | datoon --report-stdout"
 echo "    datoon input.json -o output.toon --report report.json"
 echo ""
 echo "  Run tests:"
-echo "    pytest -m 'not integration'"
+echo "    pytest"
 echo ""
 echo "  MCP server (requires datoon[mcp]):"
 echo "    uv run --extra mcp datoon-mcp"

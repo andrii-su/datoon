@@ -39,7 +39,6 @@ def convert_json(
     min_savings: float = 0.15,
     max_depth: int = 6,
     min_uniform_rows: int = 3,
-    timeout: int = 30,
     encoding: str = DEFAULT_TOKEN_ENCODING,
 ) -> dict[str, Any]:
     """Convert a JSON payload to TOON when structure and savings meet policy.
@@ -53,7 +52,6 @@ def convert_json(
             max_depth=max_depth,
             min_uniform_rows=min_uniform_rows,
             force=force,
-            toon_cli_timeout=timeout,
             token_encoding=encoding,
         )
         outcome = convert_json_for_llm(json_text, config)
@@ -75,7 +73,7 @@ def analyze_json(
 ) -> dict[str, Any]:
     """Analyze a JSON payload and report whether it is a TOON candidate.
 
-    Does not invoke the TOON CLI — safe to call without Node.js installed.
+    Inspects structure only; it does not run the TOON encoder.
     """
     try:
         parsed = json.loads(json_text)
@@ -106,7 +104,6 @@ def convert_text(
     min_savings: float = 0.15,
     max_depth: int = 6,
     min_uniform_rows: int = 3,
-    timeout: int = 30,
     encoding: str = DEFAULT_TOKEN_ENCODING,
 ) -> dict[str, Any]:
     """Convert structured text (csv, yaml, xml, jsonl) to TOON with policy gating.
@@ -129,7 +126,6 @@ def convert_text(
             max_depth=max_depth,
             min_uniform_rows=min_uniform_rows,
             force=force,
-            toon_cli_timeout=timeout,
             token_encoding=encoding,
         )
         outcome = convert_json_for_llm(json_text, config)

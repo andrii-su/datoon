@@ -70,12 +70,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="Minimum row count for uniform object arrays (default: 3).",
     )
     parser.add_argument(
-        "--timeout",
-        type=int,
-        default=30,
-        help="Seconds to wait for the TOON CLI before aborting (default: 30).",
-    )
-    parser.add_argument(
         "--sheet",
         type=int,
         default=0,
@@ -178,7 +172,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             max_depth=args.max_depth,
             min_uniform_rows=args.min_uniform_rows,
             force=args.force,
-            toon_cli_timeout=args.timeout,
             token_encoding=args.encoding,
         )
 

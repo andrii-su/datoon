@@ -20,24 +20,5 @@ jobs:
       - name: Setup uv
         uses: astral-sh/setup-uv@v7
 
-      - name: Run unit tests
-        run: uv run --with ".[dev]" pytest -m "not integration"
-
-  integration-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7.0.1
-
-      - name: Setup uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          python-version: "3.12"
-
-      - name: Setup Node
-        uses: actions/setup-node@v7
-        with:
-          node-version: "22"
-
-      - name: Run integration tests
-        run: uv run --with ".[dev]" pytest -m integration
+      - name: Run tests
+        run: uv run --with ".[dev]" pytest

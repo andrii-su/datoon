@@ -36,16 +36,16 @@ def test_convert_json_for_llm_rejects_non_finite_constants(literal: str) -> None
 
 
 def test_policy_skips_non_uniform_arrays(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Non-uniform arrays should skip conversion before CLI invocation."""
+    """Non-uniform arrays should skip conversion before encoding."""
     called = {"value": False}
 
-    def _unexpected(_: str, **kwargs: object) -> str:
+    def _unexpected(_: object) -> str:
         called["value"] = True
         raise AssertionError(
-            "TOON CLI should not be called for non-candidate payloads."
+            "TOON encoder should not be called for non-candidate payloads."
         )
 
-    monkeypatch.setattr("datoon.converter._run_toon_cli", _unexpected)
+    monkeypatch.setattr("datoon.converter._encode_toon", _unexpected)
     payload = json.dumps(
         {
             "rows": [
@@ -66,11 +66,11 @@ def test_policy_skips_deep_nested_payload(monkeypatch: pytest.MonkeyPatch) -> No
     """Depth gate should skip conversion for nested payloads."""
     called = {"value": False}
 
-    def _unexpected(_: str, **kwargs: object) -> str:
+    def _unexpected(_: object) -> str:
         called["value"] = True
-        raise AssertionError("TOON CLI should not be called when depth gate fails.")
+        raise AssertionError("TOON encoder should not be called when depth gate fails.")
 
-    monkeypatch.setattr("datoon.converter._run_toon_cli", _unexpected)
+    monkeypatch.setattr("datoon.converter._encode_toon", _unexpected)
     payload = json.dumps(
         {
             "root": {
@@ -101,8 +101,8 @@ def test_policy_converts_when_savings_above_threshold(
     """Payload should convert when estimated savings clear the threshold."""
     payload = _sample_uniform_payload()
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
     )
 
     token_sequence = iter([100, 60])  # input, output
@@ -121,8 +121,8 @@ def test_policy_skips_when_savings_below_threshold(
     """Payload should skip when estimated savings are below configured threshold."""
     payload = _sample_uniform_payload()
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,value}:\n  1,a\n  2,b\n  3,c\n",
     )
 
     token_sequence = iter([100, 95])  # input, output
@@ -135,57 +135,98 @@ def test_policy_skips_when_savings_below_threshold(
     assert "below threshold" in outcome.report.reason
 
 
-def test_force_mode_raises_cli_errors(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Force mode should propagate CLI failures rather than silently skipping."""
+def test_force_mode_raises_encoder_errors(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Force mode should propagate encoder failures rather than silently skipping."""
     payload = _sample_uniform_payload()
 
-    def _raise_error(_: str, **kwargs: object) -> str:
-        raise DatoonError("synthetic cli failure")
+    def _raise_error(_: object) -> str:
+        raise DatoonError("synthetic encoder failure")
 
-    monkeypatch.setattr("datoon.converter._run_toon_cli", _raise_error)
+    monkeypatch.setattr("datoon.converter._encode_toon", _raise_error)
 
-    with pytest.raises(DatoonError, match="synthetic cli failure"):
+    with pytest.raises(DatoonError, match="synthetic encoder failure"):
         convert_json_for_llm(payload, ConversionConfig(force=True))
 
 
-def test_non_force_falls_back_to_json_on_cli_errors(
+def test_non_force_falls_back_to_json_on_encoder_errors(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Non-force mode should skip and fallback when CLI fails."""
+    """Non-force mode should skip and fallback when the encoder fails."""
     payload = _sample_uniform_payload()
 
-    def _raise_error(_: str, **kwargs: object) -> str:
-        raise DatoonError("synthetic cli failure")
+    def _raise_error(_: object) -> str:
+        raise DatoonError("synthetic encoder failure")
 
-    monkeypatch.setattr("datoon.converter._run_toon_cli", _raise_error)
+    monkeypatch.setattr("datoon.converter._encode_toon", _raise_error)
     outcome = convert_json_for_llm(payload, ConversionConfig(force=False))
     assert outcome.report.decision == "skip"
     assert "falling back to JSON" in outcome.report.reason
 
 
-def test_cli_timeout_raises_datoon_error(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Subprocess timeout must surface as DatoonError, not hang."""
-
-    payload = _sample_uniform_payload()
-
-    def _timeout(_: str, **kwargs: object) -> str:
-        raise DatoonError("TOON CLI timed out after 30s.")
-
-    monkeypatch.setattr("datoon.converter._run_toon_cli", _timeout)
-    with pytest.raises(DatoonError, match="timed out"):
-        convert_json_for_llm(payload, ConversionConfig(force=True))
-
-
-def test_cli_timeout_falls_back_in_non_force_mode(
+def test_real_encoder_failure_surfaces_as_datoon_error(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Timeout in non-force mode falls back to JSON like other CLI errors."""
-    payload = _sample_uniform_payload()
+    """Unexpected encoder exceptions must become DatoonError in force mode."""
 
-    def _timeout(_: str, **kwargs: object) -> str:
-        raise DatoonError("TOON CLI timed out after 30s.")
+    def _boom(*_a: object, **_k: object) -> str:
+        raise RuntimeError("encoder exploded")
 
-    monkeypatch.setattr("datoon.converter._run_toon_cli", _timeout)
-    outcome = convert_json_for_llm(payload, ConversionConfig(force=False))
+    monkeypatch.setattr("datoon.converter.encode", _boom)
+    with pytest.raises(DatoonError, match="TOON encoding failed: encoder exploded"):
+        convert_json_for_llm(_sample_uniform_payload(), ConversionConfig(force=True))
+
+
+def test_encoder_failure_uses_stable_skip_reason(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Auto mode falls back to JSON with a stable, specific skip reason."""
+
+    def _boom(*_a: object, **_k: object) -> str:
+        raise RuntimeError("encoder exploded")
+
+    monkeypatch.setattr("datoon.converter.encode", _boom)
+    outcome = convert_json_for_llm(_sample_uniform_payload(), ConversionConfig())
     assert outcome.report.decision == "skip"
-    assert "falling back to JSON" in outcome.report.reason
+    assert outcome.report.reason == "TOON encoding failed; falling back to JSON."
+
+
+def test_conversion_preserves_values_and_keys() -> None:
+    """Decoding the produced TOON must equal the input payload exactly."""
+    from toon_format import decode
+
+    payload = {
+        "rows": [
+            {
+                "id": 1,
+                "score": 0.5,
+                "active": True,
+                "note": None,
+                "label": "",
+                "text": "a,b",
+                "created_at": "2026-01-02T03:04:05Z",
+            },
+            {
+                "id": 2,
+                "score": 1.25,
+                "active": False,
+                "note": None,
+                "label": "",
+                "text": "c,d",
+                "created_at": "2026-01-03T03:04:05Z",
+            },
+            {
+                "id": 3,
+                "score": 2.0,
+                "active": True,
+                "note": None,
+                "label": "",
+                "text": "e,f",
+                "created_at": "2026-01-04T03:04:05Z",
+            },
+        ]
+    }
+    outcome = convert_json_for_llm(
+        json.dumps(payload), ConversionConfig(force=True)
+    )
+    assert outcome.report.decision == "convert"
+    assert decode(outcome.payload_text) == payload

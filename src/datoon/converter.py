@@ -4,9 +4,10 @@ from __future__ import annotations
 
 import json
 import math
-import subprocess
 from functools import lru_cache
 from typing import Any
+
+from toon_format import encode
 
 from datoon.analyzer import analyze_payload
 from datoon.errors import DatoonError
@@ -17,8 +18,6 @@ from datoon.models import (
     ConversionReport,
     PayloadAnalysis,
 )
-
-TOON_CLI_PACKAGE = "@toon-format/cli@2"
 
 __all__ = ["DatoonError", "convert_json_for_llm", "estimate_tokens"]
 
@@ -63,33 +62,15 @@ def estimate_tokens(text: str, encoding: str = DEFAULT_TOKEN_ENCODING) -> int:
     return max(1, math.ceil(len(text) / 3))
 
 
-def _run_toon_cli(normalized_json: str, timeout: int = 30) -> str:
-    """Convert normalized JSON to TOON via the official TOON CLI."""
-    command = ["npx", "--yes", TOON_CLI_PACKAGE]
-
+def _encode_toon(parsed: Any) -> str:
+    """Encode an already-parsed JSON value as TOON with the official encoder."""
     try:
-        result = subprocess.run(
-            command,
-            input=normalized_json,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=timeout,
-        )
-    except FileNotFoundError as exc:
-        raise DatoonError(
-            "`npx` is not available in PATH. Install Node.js before TOON conversion."
-        ) from exc
-    except subprocess.TimeoutExpired as exc:
-        raise DatoonError(f"TOON CLI timed out after {timeout}s.") from exc
+        toon_text = encode(parsed).strip()
+    except Exception as exc:  # encoder errors vary; surface all as DatoonError
+        raise DatoonError(f"TOON encoding failed: {exc}") from exc
 
-    if result.returncode != 0:
-        stderr = result.stderr.strip() or "unknown TOON CLI error"
-        raise DatoonError(f"TOON CLI failed: {stderr}")
-
-    toon_text = result.stdout.strip()
     if not toon_text:
-        raise DatoonError("TOON CLI returned empty output.")
+        raise DatoonError("TOON encoding returned empty output.")
 
     return f"{toon_text}\n"
 
@@ -131,14 +112,14 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
         )
 
     try:
-        toon_text = _run_toon_cli(normalized_json, timeout=config.toon_cli_timeout)
+        toon_text = _encode_toon(parsed)
     except DatoonError:
         if config.force:
             raise
 
         return _build_skip_outcome(
             normalized_json,
-            reason="TOON conversion dependency unavailable; falling back to JSON.",
+            reason="TOON encoding failed; falling back to JSON.",
             config=config,
             input_tokens=input_tokens,
             analysis=analysis,

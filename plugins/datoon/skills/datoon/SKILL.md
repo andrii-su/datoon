@@ -50,7 +50,7 @@ Skip conversion when any condition fails:
 
 - Never change semantic values or key names.
 - Fail loudly for invalid JSON.
-- If TOON CLI dependency is unavailable, keep JSON and report fallback reason.
+- If TOON encoding fails, keep JSON and report fallback reason.
 - Use `--force` only for controlled experiments.
 
 ## Boundaries

@@ -49,8 +49,8 @@ def test_main_converts_json_from_stdin(
     payload = '{"rows":[{"id":1,"v":"a"},{"id":2,"v":"b"},{"id":3,"v":"c"}]}'
     monkeypatch.setattr("sys.stdin", __import__("io").StringIO(payload))
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,v}:\n  1,a\n  2,b\n  3,c\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,v}:\n  1,a\n  2,b\n  3,c\n",
     )
     token_seq = iter([100, 40])
     monkeypatch.setattr(
@@ -86,8 +86,8 @@ def test_main_converts_csv_via_flag(
     csv_file = tmp_path / "data.csv"
     csv_file.write_text(_CSV)
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
     monkeypatch.setattr(
@@ -107,8 +107,8 @@ def test_main_auto_detects_csv_from_extension(
     csv_file = tmp_path / "users.csv"
     csv_file.write_text(_CSV)
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
     monkeypatch.setattr(
@@ -136,8 +136,8 @@ def test_main_converts_jsonl_from_stdin(
 ) -> None:
     monkeypatch.setattr("sys.stdin", __import__("io").StringIO(_JSONL))
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
     monkeypatch.setattr(
@@ -157,8 +157,8 @@ def test_main_auto_detects_jsonl_from_extension(
     f = tmp_path / "data.jsonl"
     f.write_text(_JSONL)
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
     monkeypatch.setattr(
@@ -188,8 +188,8 @@ def test_main_converts_xml_via_flag(
     f = tmp_path / "data.xml"
     f.write_text(_XML)
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
     monkeypatch.setattr(
@@ -231,8 +231,8 @@ def test_main_csv_report_stdout(
     csv_file = tmp_path / "data.csv"
     csv_file.write_text(_CSV)
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 30])
     monkeypatch.setattr(
@@ -254,8 +254,8 @@ def test_main_csv_skips_when_savings_insufficient(
     csv_file = tmp_path / "data.csv"
     csv_file.write_text(_CSV)
     monkeypatch.setattr(
-        "datoon.converter._run_toon_cli",
-        lambda _, **kw: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
+        "datoon.converter._encode_toon",
+        lambda _: "rows[3]{id,name,role}:\n  1,Ada,admin\n",
     )
     token_seq = iter([100, 98])
     monkeypatch.setattr(
@@ -322,7 +322,7 @@ def test_main_forwards_sheet_and_table_for_binary(
         return [{"id": 1, "v": "a"}]
 
     monkeypatch.setattr("datoon.cli.read_tabular", fake_read_tabular)
-    monkeypatch.setattr("datoon.converter._run_toon_cli", lambda _, **kw: "x\n")
+    monkeypatch.setattr("datoon.converter._encode_toon", lambda _: "x\n")
     xlsx = tmp_path / "data.xlsx"
     xlsx.write_bytes(b"")
 
@@ -338,7 +338,7 @@ def test_main_forwards_encoding_to_estimate(
 ) -> None:
     payload = '{"rows":[{"id":1,"v":"a"},{"id":2,"v":"b"},{"id":3,"v":"c"}]}'
     monkeypatch.setattr("sys.stdin", __import__("io").StringIO(payload))
-    monkeypatch.setattr("datoon.converter._run_toon_cli", lambda _, **kw: "x\n")
+    monkeypatch.setattr("datoon.converter._encode_toon", lambda _: "x\n")
 
     seen: list[str] = []
 

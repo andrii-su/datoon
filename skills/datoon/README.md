@@ -41,9 +41,8 @@ If policy accepts conversion, the agent should pass the TOON payload forward. If
 ## Requirements
 
 - `datoon` CLI available in `PATH`
-- Node.js and `npx` available for TOON conversion
 
-If TOON conversion is unavailable, auto mode keeps JSON and reports the fallback reason.
+If TOON encoding fails, auto mode keeps JSON and reports the fallback reason.
 
 ## Source Files
 

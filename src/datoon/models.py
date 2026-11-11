@@ -32,7 +32,7 @@ class ConversionConfig:
             if not self.tokenizer.strip():
                 raise ValueError("tokenizer must be a non-empty spec string.")
         elif not callable(self.tokenizer):
-            raise ValueError("tokenizer must be a spec string or a callable.")
+            raise TypeError("tokenizer must be a spec string or a callable.")
 
 
 @dataclass(frozen=True, slots=True)

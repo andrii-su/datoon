@@ -178,9 +178,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             min_uniform_rows=args.min_uniform_rows,
             force=args.force,
             tokenizer=(
-                args.tokenizer
-                or os.environ.get(TOKENIZER_ENV_VAR)
-                or DEFAULT_TOKENIZER
+                args.tokenizer or os.environ.get(TOKENIZER_ENV_VAR) or DEFAULT_TOKENIZER
             ),
         )
 

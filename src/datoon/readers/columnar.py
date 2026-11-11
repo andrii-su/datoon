@@ -13,20 +13,16 @@ def read_parquet(path: Path) -> list[dict[str, Any]]:
     try:
         import pyarrow.parquet as pq  # type: ignore
     except ImportError as exc:
-        raise ImportError(
-            f"Parquet support requires the 'columnar' extra: {_INSTALL_HINT}"
-        ) from exc
+        raise ImportError(f"Parquet support requires the 'columnar' extra: {_INSTALL_HINT}") from exc
     return pq.read_table(path).to_pylist()
 
 
 def read_orc(path: Path) -> list[dict[str, Any]]:
     """Read an ORC file into a list of row dicts."""
     try:
-        import pyarrow.orc as orc  # type: ignore
+        from pyarrow import orc  # type: ignore
     except ImportError as exc:
-        raise ImportError(
-            f"ORC support requires the 'columnar' extra: {_INSTALL_HINT}"
-        ) from exc
+        raise ImportError(f"ORC support requires the 'columnar' extra: {_INSTALL_HINT}") from exc
     return orc.read_table(path).to_pylist()
 
 
@@ -35,8 +31,6 @@ def read_avro(path: Path) -> list[dict[str, Any]]:
     try:
         import fastavro  # type: ignore
     except ImportError as exc:
-        raise ImportError(
-            f"Avro support requires the 'columnar' extra: {_INSTALL_HINT}"
-        ) from exc
+        raise ImportError(f"Avro support requires the 'columnar' extra: {_INSTALL_HINT}") from exc
     with open(path, "rb") as f:
         return list(fastavro.reader(f))

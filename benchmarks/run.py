@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """Benchmark JSON vs TOON efficiency and datoon auto-conversion decisions."""
 
 from __future__ import annotations
@@ -9,7 +8,7 @@ import json
 import statistics
 import sys
 from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -161,27 +160,13 @@ def benchmark_payload(
 
 def compute_summary(rows: list[BenchmarkRow]) -> BenchmarkSummary:
     """Compute aggregate metrics across benchmark rows."""
-    raw_rows = [
-        row
-        for row in rows
-        if row.toon_tokens is not None and row.raw_savings_pct is not None
-    ]
+    raw_rows = [row for row in rows if row.toon_tokens is not None and row.raw_savings_pct is not None]
     avg_toon = (
-        round(
-            statistics.mean(
-                row.toon_tokens for row in raw_rows if row.toon_tokens is not None
-            )
-        )
-        if raw_rows
-        else None
+        round(statistics.mean(row.toon_tokens for row in raw_rows if row.toon_tokens is not None)) if raw_rows else None
     )
     avg_raw_savings = (
         round(
-            statistics.mean(
-                row.raw_savings_pct
-                for row in raw_rows
-                if row.raw_savings_pct is not None
-            ),
+            statistics.mean(row.raw_savings_pct for row in raw_rows if row.raw_savings_pct is not None),
             1,
         )
         if raw_rows
@@ -196,9 +181,7 @@ def compute_summary(rows: list[BenchmarkRow]) -> BenchmarkSummary:
         avg_toon_tokens=avg_toon,
         avg_raw_savings_pct=avg_raw_savings,
         avg_auto_tokens=round(statistics.mean(row.auto_tokens for row in rows)),
-        avg_auto_savings_pct=round(
-            statistics.mean(row.auto_savings_pct for row in rows), 1
-        ),
+        avg_auto_savings_pct=round(statistics.mean(row.auto_savings_pct for row in rows), 1),
     )
 
 
@@ -210,32 +193,22 @@ def format_table(rows: list[BenchmarkRow], summary: BenchmarkSummary) -> str:
     ]
     for row in rows:
         toon_value = str(row.toon_tokens) if row.toon_tokens is not None else "n/a"
-        raw_saved = (
-            f"{row.raw_savings_pct:.1f}%" if row.raw_savings_pct is not None else "n/a"
-        )
+        raw_saved = f"{row.raw_savings_pct:.1f}%" if row.raw_savings_pct is not None else "n/a"
         lines.append(
             f"| {row.payload_id} | {row.json_tokens} | {toon_value} | "
             f"{raw_saved} | {row.auto_decision} | {row.auto_tokens} | "
             f"{row.auto_savings_pct:.1f}% |"
         )
 
-    avg_toon = (
-        str(summary.avg_toon_tokens) if summary.avg_toon_tokens is not None else "n/a"
-    )
-    avg_raw_saved = (
-        f"{summary.avg_raw_savings_pct:.1f}%"
-        if summary.avg_raw_savings_pct is not None
-        else "n/a"
-    )
+    avg_toon = str(summary.avg_toon_tokens) if summary.avg_toon_tokens is not None else "n/a"
+    avg_raw_saved = f"{summary.avg_raw_savings_pct:.1f}%" if summary.avg_raw_savings_pct is not None else "n/a"
     lines.append(
         f"| **Average** | **{summary.avg_json_tokens}** | **{avg_toon}** | "
         f"**{avg_raw_saved}** | **{summary.auto_convert_count}/{summary.payload_count} convert** | "
         f"**{summary.avg_auto_tokens}** | **{summary.avg_auto_savings_pct:.1f}%** |"
     )
     lines.append("")
-    lines.append(
-        f"*Forced conversion succeeded for {summary.raw_success_count}/{summary.payload_count} payloads.*"
-    )
+    lines.append(f"*Forced conversion succeeded for {summary.raw_success_count}/{summary.payload_count} payloads.*")
     return "\n".join(lines)
 
 
@@ -248,11 +221,11 @@ def save_results(
 ) -> Path:
     """Save benchmark output to versioned JSON artifact."""
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
     output = {
         "metadata": {
             "script_version": SCRIPT_VERSION,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "payloads_sha256": payloads_sha,
             "config": {
                 "min_savings_ratio": config.min_savings_ratio,
@@ -288,9 +261,7 @@ def format_table_formats(rows: list[BenchmarkRow], summary: BenchmarkSummary) ->
             f"{row.auto_savings_pct:.1f}% |"
         )
 
-    avg_toon = (
-        str(summary.avg_toon_tokens) if summary.avg_toon_tokens is not None else "n/a"
-    )
+    avg_toon = str(summary.avg_toon_tokens) if summary.avg_toon_tokens is not None else "n/a"
     valid = [r for r in rows if r.json_tokens > 0]
     if valid:
         lines.append(
@@ -299,22 +270,16 @@ def format_table_formats(rows: list[BenchmarkRow], summary: BenchmarkSummary) ->
             f"**{summary.avg_auto_tokens}** | **{summary.avg_auto_savings_pct:.1f}%** |"
         )
     lines.append("")
-    lines.append(
-        f"*Forced conversion succeeded for {summary.raw_success_count}/{summary.payload_count} payloads.*"
-    )
+    lines.append(f"*Forced conversion succeeded for {summary.raw_success_count}/{summary.payload_count} payloads.*")
     return "\n".join(lines)
 
 
-def _replace_between_markers(
-    content: str, start_marker: str, end_marker: str, replacement: str
-) -> str:
+def _replace_between_markers(content: str, start_marker: str, end_marker: str, replacement: str) -> str:
     """Replace content between two markers."""
     start = content.find(start_marker)
     end = content.find(end_marker)
     if start == -1 or end == -1:
-        raise RuntimeError(
-            f"README markers '{start_marker}' / '{end_marker}' are missing."
-        )
+        raise RuntimeError(f"README markers '{start_marker}' / '{end_marker}' are missing.")
     before = content[: start + len(start_marker)]
     after = content[end:]
     # Blank lines around the block keep the injected README mdformat-clean.
@@ -324,18 +289,14 @@ def _replace_between_markers(
 def update_readme(table_md: str) -> None:
     """Replace benchmark table block in README by marker comments."""
     content = README_PATH.read_text(encoding="utf-8")
-    updated = _replace_between_markers(
-        content, BENCHMARK_START, BENCHMARK_END, table_md
-    )
+    updated = _replace_between_markers(content, BENCHMARK_START, BENCHMARK_END, table_md)
     README_PATH.write_text(updated, encoding="utf-8")
 
 
 def update_format_readme(table_md: str) -> None:
     """Replace format benchmark table block in README by marker comments."""
     content = README_PATH.read_text(encoding="utf-8")
-    updated = _replace_between_markers(
-        content, FORMAT_BENCHMARK_START, FORMAT_BENCHMARK_END, table_md
-    )
+    updated = _replace_between_markers(content, FORMAT_BENCHMARK_START, FORMAT_BENCHMARK_END, table_md)
     README_PATH.write_text(updated, encoding="utf-8")
 
 
@@ -352,9 +313,7 @@ def dry_run(
     print(f"- tokenizer: {config.tokenizer}")
     print(f"- json payloads: {len(payloads)}")
     for payload in payloads:
-        print(
-            f"  - {payload.get('id', 'unknown')} ({payload.get('category', 'unknown')})"
-        )
+        print(f"  - {payload.get('id', 'unknown')} ({payload.get('category', 'unknown')})")
     print(f"- format payloads: {len(format_payloads)}")
     for payload in format_payloads:
         print(
@@ -377,9 +336,7 @@ def parse_args() -> argparse.Namespace:
         default=0.15,
         help="Auto mode min savings threshold.",
     )
-    parser.add_argument(
-        "--max-depth", type=int, default=6, help="Auto mode max payload depth."
-    )
+    parser.add_argument("--max-depth", type=int, default=6, help="Auto mode max payload depth.")
     parser.add_argument(
         "--min-uniform-rows",
         type=int,
@@ -465,9 +422,7 @@ def main() -> int:
         for index, payload in enumerate(format_payloads, start=1):
             payload_id = payload.get("id", "unknown")
             print(f"[{index}/{len(format_payloads)}] {payload_id}", file=sys.stderr)
-            row = benchmark_payload(
-                payload, auto_config=config, force_config=force_config
-            )
+            row = benchmark_payload(payload, auto_config=config, force_config=force_config)
             fmt_rows.append(row)
 
         fmt_summary = compute_summary(fmt_rows)

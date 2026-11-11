@@ -225,9 +225,7 @@ def test_conversion_preserves_values_and_keys() -> None:
             },
         ]
     }
-    outcome = convert_json_for_llm(
-        json.dumps(payload), ConversionConfig(force=True)
-    )
+    outcome = convert_json_for_llm(json.dumps(payload), ConversionConfig(force=True))
     assert outcome.report.decision == "convert"
     assert decode(outcome.payload_text) == payload
 

@@ -49,7 +49,11 @@ def test_excel_rows_with_dates_convert_through_the_cli(
     _write_xlsx(path)
 
     rows = read_tabular("excel", path=path)
-    assert rows[0] == {"id": 1, "name": "Ada", "signed_up": datetime(2026, 11, 1, 9, 30)}
+    assert rows[0] == {
+        "id": 1,
+        "name": "Ada",
+        "signed_up": datetime(2026, 11, 1, 9, 30),
+    }
     assert json.loads(rows_to_json(rows))[0]["signed_up"] == "2026-11-01T09:30:00"
 
     assert main([str(path), "--force", "--tokenizer", "chars"]) == 0

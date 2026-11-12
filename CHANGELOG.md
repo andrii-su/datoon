@@ -1,3 +1,11 @@
+# [3.1.0](https://github.com/andrii-su/datoon/compare/v3.0.0...v3.1.0) (2026-11-12)
+
+
+### Features
+
+* add convert_data_for_llm for Python data ([0f119f4](https://github.com/andrii-su/datoon/commit/0f119f45f152f2116ffb61e02dfbf536478d4f6d)), closes [#73](https://github.com/andrii-su/datoon/issues/73)
+* add convert_data_for_llm for Python data ([#74](https://github.com/andrii-su/datoon/issues/74)) ([f4bf38c](https://github.com/andrii-su/datoon/commit/f4bf38c66b74e4e29345631365909e54b3a2d7e8)), closes [#73](https://github.com/andrii-su/datoon/issues/73)
+
 # [3.0.0](https://github.com/andrii-su/datoon/compare/v2.0.0...v3.0.0) (2026-11-11)
 
 

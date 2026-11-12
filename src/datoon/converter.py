@@ -31,12 +31,25 @@ def _normalize_json(raw_text: str) -> tuple[Any, str]:
     """Parse and re-serialize JSON into a deterministic compact representation."""
     try:
         parsed = json.loads(raw_text, parse_constant=_reject_non_finite)
+        normalized = json.dumps(
+            parsed, ensure_ascii=False, separators=(",", ":"), allow_nan=False
+        )
     except json.JSONDecodeError as exc:
         raise DatoonError(f"Invalid JSON input: {exc.msg} (pos={exc.pos}).") from exc
+    except RecursionError as exc:
+        raise DatoonError("Invalid JSON input: nested too deeply.") from exc
+    except ValueError as exc:
+        # Not a syntax error: e.g. an integer past Python's digit limit.
+        raise DatoonError(f"Invalid JSON input: {exc}.") from exc
 
-    normalized = json.dumps(
-        parsed, ensure_ascii=False, separators=(",", ":"), allow_nan=False
-    )
+    try:
+        normalized.encode("utf-8")
+    except UnicodeEncodeError as exc:
+        # A lone surrogate ("\ud800") parses, but neither TOON nor the JSON
+        # fallback could be sent anywhere as UTF-8.
+        raise DatoonError(
+            "Invalid JSON input: text holds an unpaired surrogate."
+        ) from exc
     return parsed, normalized
 
 
@@ -85,7 +98,10 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
     """
     parsed, normalized_json = _normalize_json(raw_text)
     counter, tokenizer_name = resolve_tokenizer(config.tokenizer)
-    analysis = analyze_payload(parsed, config)
+    try:
+        analysis = analyze_payload(parsed, config)
+    except RecursionError as exc:
+        raise DatoonError("Invalid JSON input: nested too deeply.") from exc
     input_tokens = estimate_tokens(normalized_json, counter)
 
     if not analysis.is_candidate and not config.force:
@@ -100,13 +116,16 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
 
     try:
         toon_text = _encode_toon(parsed)
-    except DatoonError:
+    except DatoonError as exc:
         if config.force:
             raise
 
+        # Keep the stable prefix and suffix; the cause goes in between so a
+        # caller can see why without rerunning with force.
+        cause = exc.__cause__ or exc
         return _build_skip_outcome(
             normalized_json,
-            reason="TOON encoding failed; falling back to JSON.",
+            reason=f"TOON encoding failed ({cause}); falling back to JSON.",
             config=config,
             input_tokens=input_tokens,
             tokenizer_name=tokenizer_name,

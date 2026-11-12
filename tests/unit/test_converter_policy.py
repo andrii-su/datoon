@@ -179,7 +179,7 @@ def test_real_encoder_failure_surfaces_as_datoon_error(
 def test_encoder_failure_uses_stable_skip_reason(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Auto mode falls back to JSON with a stable, specific skip reason."""
+    """Auto mode falls back to JSON; the reason keeps its prefix and names the cause."""
 
     def _boom(*_a: object, **_k: object) -> str:
         raise RuntimeError("encoder exploded")
@@ -187,7 +187,9 @@ def test_encoder_failure_uses_stable_skip_reason(
     monkeypatch.setattr("datoon.converter.encode", _boom)
     outcome = convert_json_for_llm(_sample_uniform_payload(), ConversionConfig())
     assert outcome.report.decision == "skip"
-    assert outcome.report.reason == "TOON encoding failed; falling back to JSON."
+    assert outcome.report.reason == (
+        "TOON encoding failed (encoder exploded); falling back to JSON."
+    )
 
 
 def test_conversion_preserves_values_and_keys() -> None:
@@ -270,3 +272,24 @@ def test_unresolvable_tokenizer_raises_in_auto_and_force_mode(force: bool) -> No
         convert_json_for_llm(
             _sample_uniform_payload(), ConversionConfig(force=force, tokenizer="nope")
         )
+
+
+def test_oversized_integer_is_a_datoon_error() -> None:
+    """An integer past Python's digit limit is invalid input, not a bare ValueError."""
+    payload = '[{"a":' + "9" * 5000 + "}]"
+    with pytest.raises(DatoonError, match="Invalid JSON input"):
+        convert_json_for_llm(payload, ConversionConfig())
+
+
+def test_deeply_nested_payload_is_a_datoon_error() -> None:
+    """Nesting past the interpreter's recursion limit must not raise RecursionError."""
+    payload = "[" * 5000 + "]" * 5000
+    with pytest.raises(DatoonError, match="nested too deeply"):
+        convert_json_for_llm(payload, ConversionConfig())
+
+
+def test_unpaired_surrogate_is_a_datoon_error() -> None:
+    """A lone surrogate cannot be sent as UTF-8 in TOON or in the JSON fallback."""
+    payload = '[{"a":"\\ud800"},{"a":"x"},{"a":"y"}]'
+    with pytest.raises(DatoonError, match="unpaired surrogate"):
+        convert_json_for_llm(payload, ConversionConfig())

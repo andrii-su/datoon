@@ -38,7 +38,7 @@ Supports **JSON, CSV, JSONL, YAML, XML, Parquet, Avro, ORC, Excel, and Apple Num
 <tr>
 <td width="50%">
 
-### JSON in the prompt (43 tokens)
+### JSON in the prompt (42 tokens)
 
 ```json
 {"users":[
@@ -51,7 +51,7 @@ Supports **JSON, CSV, JSONL, YAML, XML, Parquet, Avro, ORC, Excel, and Apple Num
 </td>
 <td width="50%">
 
-### datoon converts → TOON (24 tokens)
+### datoon converts → TOON (35 tokens)
 
 ```toon
 users[3]{id,name,role}:
@@ -61,7 +61,7 @@ users[3]{id,name,role}:
 ```
 
 ```json
-{"decision":"convert","reason":"Estimated savings 44.19% (threshold 15.00%)."}
+{"decision":"convert","reason":"Estimated savings 16.67% (threshold 15.00%)."}
 ```
 
 </td>
@@ -69,7 +69,7 @@ users[3]{id,name,role}:
 <tr>
 <td>
 
-### CSV from a data pipeline (111 tokens as JSON)
+### CSV from a data pipeline (40 tokens as JSON)
 
 ```csv
 id,name,role
@@ -81,20 +81,20 @@ id,name,role
 </td>
 <td>
 
-### datoon auto-converts → TOON (24 tokens)
+### datoon auto-converts → TOON (34 tokens)
 
 ```bash
 datoon data.csv --report-stdout
 ```
 
-Same result. Zero JSON serialization in your code.
+Same rows as TOON. Zero JSON serialization in your code.
 
 </td>
 </tr>
 <tr>
 <td>
 
-### Non-uniform payload (26 tokens)
+### Non-uniform payload (14 tokens)
 
 ```json
 {"config":{"debug":true},"tags":["a","b"]}
@@ -117,14 +117,7 @@ No silent corruption.
 
 **Same data. Right format. Always explained.**
 
-```
-┌──────────────────────────────────────────────────┐
-│  PAYLOAD SAVINGS (auto avg)    ████░░░░░░   28%  │
-│  PAYLOAD SAVINGS (agent skill) ████████░░   62%  │
-│  DECISION ACCURACY             ██████████  100%  │
-│  HARMFUL CONVERSIONS BLOCKED   ██████████  100%  │
-└──────────────────────────────────────────────────┘
-```
+Token counts on this page come from `tiktoken:o200k_base`. Three rows barely clear the 15% threshold; savings grow with the table. Uniform payloads in the [benchmarks](#benchmarks) save 22–28%, and 100–300-row query results cost Claude about half the input tokens of JSON objects.
 
 > [!IMPORTANT]
 > datoon saves **payload tokens** — the structured data portion of your prompt. Token savings depend on payload shape: uniform tabular data converts well; deeply nested or non-uniform structures are skipped. Every decision includes a reason so pipelines can log, debug, and trust the outcome.
@@ -378,6 +371,8 @@ ______________________________________________________________________
 | `--min-savings` | `0.15` | Minimum relative token savings required |
 | `--max-depth` | `6` | Maximum nesting depth for auto-conversion |
 | `--min-uniform-rows` | `3` | Minimum rows in uniform object arrays |
+| `--sheet` | `0` | Worksheet index for Excel / Numbers input |
+| `--table` | `0` | Table index within a Numbers sheet |
 | `--tokenizer <spec>` | `$DATOON_TOKENIZER`, else `auto` | Token counter for estimates — see [Choosing a tokenizer](#choosing-a-tokenizer) |
 | `--report <path>` | — | Write JSON conversion report to file |
 | `--report-stdout` | — | Print JSON conversion report to stderr |
@@ -392,19 +387,15 @@ ______________________________________________________________________
 
 ```bash
 PYTHONPATH=src python benchmarks/run.py --dry-run
-PYTHONPATH=src python benchmarks/run.py
-PYTHONPATH=src python benchmarks/run.py --update-readme
+PYTHONPATH=src python benchmarks/run.py --tokenizer tiktoken
+PYTHONPATH=src python benchmarks/run.py --formats --tokenizer tiktoken --update-readme
 ```
 
-### Why auto mode outperforms forced conversion
+Both tables below are counted with `tiktoken:o200k_base`. The `chars` counter is a length heuristic and reports larger savings on the same payloads.
 
-Auto mode avoids low-benefit and high-risk payloads (`orders-nested`, `mixed-non-uniform`) while matching forced TOON's average token count on suitable ones. Every decision comes with a reasoned report.
+### Auto mode against forced conversion
 
-| Scenario | JSON Baseline | Forced TOON | `datoon` Auto |
-|---|---:|---:|---:|
-| Average tokens | 77 | 50 | 50 |
-| Avg token saved | 0.0% | 26.8% | **28.1%** |
-| Decision quality | n/a | Converts all | Converts `3/5`, skips harmful cases |
+Forced conversion makes two of the five payloads larger (`orders-nested`, `mixed-non-uniform`). Auto mode skips those two, converts the other three, and returns a reason for every decision.
 
 <!-- BENCHMARK-TABLE-START -->
 
@@ -430,32 +421,34 @@ Baseline is the JSON representation of the same data — what an LLM would recei
 
 | Dataset | Format | JSON Tokens | TOON (forced) | Auto | Auto Tokens | Auto Saved |
 |---|---|---:|---:|---|---:|---:|
-| users-csv | csv | 53 | 29 | convert | 29 | 45.3% |
-| events-jsonl | jsonl | 194 | 109 | convert | 109 | 43.8% |
-| catalog-xml | xml | 96 | 50 | convert | 50 | 47.9% |
-| metrics-yaml | yaml | 129 | 61 | convert | 61 | 52.7% |
-| **Average** | — | **118** | **62** | **4/4 convert** | **62** | **47.4%** |
+| users-csv | csv | 51 | 39 | convert | 39 | 23.5% |
+| events-jsonl | jsonl | 216 | 161 | convert | 161 | 25.5% |
+| catalog-xml | xml | 94 | 73 | convert | 73 | 22.3% |
+| metrics-yaml | yaml | 139 | 102 | convert | 102 | 26.6% |
+| **Average** | — | **125** | **94** | **4/4 convert** | **94** | **24.5%** |
 
 *Forced conversion succeeded for 4/4 payloads.*
 
 <!-- FORMAT-BENCHMARK-TABLE-END -->
 
-### Agent skill evaluation
+### Reading accuracy
 
-Artifact-based subagent comparison — identical analysis tasks, two modes:
+Fewer tokens only help if the model still reads the data correctly. [`benchmarks/format_eval/`](benchmarks/format_eval/) gives a Claude model the same query result as JSON objects, a markdown table and TOON, then asks six questions per table with answers computed in Python (row count, cell lookup, filtered count, maximum, difference, NULL count).
 
-- `with_skill`: agent received the `datoon` skill and followed the conversion workflow.
-- `without_skill`: agent used JSON directly, no TOON or `datoon`.
+24 synthetic tables of 100–300 rows and 4–30 columns, one API call per table and format. Input tokens are real API usage.
 
-3 payload sizes × 3 iterations = 18 total agent runs. Both modes: 100% correct answers.
+| Model | Format | Correct answers | 95% interval | Input tokens vs JSON objects |
+|---|---|---:|---|---:|
+| Claude Sonnet 5.5 | JSON objects | 142/144 (98.6%) | 95.1–99.6% | 100% |
+| Claude Sonnet 5.5 | markdown | 142/144 (98.6%) | 95.1–99.6% | 60% |
+| Claude Sonnet 5.5 | TOON | 143/144 (99.3%) | 96.2–99.9% | 50% |
+| Claude Haiku 5.5 | JSON objects | 134/144 (93.1%) | 87.7–96.2% | 100% |
+| Claude Haiku 5.5 | markdown | 136/144 (94.4%) | 89.4–97.2% | 60% |
+| Claude Haiku 5.5 | TOON | 130/138 (94.2%) | 89.0–97.0% | 50% |
 
-| Scenario | Avg JSON Tokens | Avg TOON Tokens | Avg Payload Saved |
-|---|---:|---:|---:|
-| small | 225 | 118 | 47.6% |
-| medium | 2,972 | 1,138 | 61.7% |
-| large | 17,757 | 6,673 | 62.4% |
+The intervals overlap: these runs show no accuracy difference between formats, and TOON halves the input tokens. One Haiku TOON reply was cut off at the output limit, so its six answers are not graded. Sonnet is close to the ceiling on this set, so a 1–2 point gap between formats would go unseen.
 
-Full report and raw outputs: [`benchmarks/agent_skill_eval/`](benchmarks/agent_skill_eval/). Savings are payload-token estimates, not full end-to-end model-token usage.
+An earlier with-skill / without-skill agent comparison is kept in [`benchmarks/agent_skill_eval/`](benchmarks/agent_skill_eval/REPORT.md); its token figures predate the selectable tokenizers.
 
 ______________________________________________________________________
 

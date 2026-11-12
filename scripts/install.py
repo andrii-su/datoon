@@ -14,14 +14,10 @@ from pathlib import Path
 from typing import Any, Literal
 
 Action = Literal["dry-run", "install", "uninstall"]
-Target = Literal["claude", "codex", "mcp"]
+Target = Literal["claude", "codex"]
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_TARGETS: tuple[Target, ...] = ("claude", "codex", "mcp")
-DATOON_MCP_ENTRY = {
-    "command": "uvx",
-    "args": ["datoon[mcp]", "datoon-mcp"],
-}
+DEFAULT_TARGETS: tuple[Target, ...] = ("claude", "codex")
 DATOON_CODEX_ENTRY = {
     "name": "datoon",
     "source": {
@@ -52,11 +48,6 @@ class PlanStep:
     target: Target
     kind: str
     detail: str
-
-
-def default_mcp_config_path() -> Path:
-    """Return a conservative default MCP config path for datoon-owned config."""
-    return Path.home() / ".config" / "datoon" / "mcp.json"
 
 
 def default_codex_marketplace_path(repo_root: Path) -> Path:
@@ -94,30 +85,6 @@ def write_json_with_backup(path: Path, data: dict[str, Any]) -> Path | None:
         json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     return backup_path
-
-
-def merge_mcp_config(config: dict[str, Any]) -> dict[str, Any]:
-    """Return config with datoon MCP server entry installed."""
-    updated = dict(config)
-    mcp_servers = updated.get("mcpServers")
-    if not isinstance(mcp_servers, dict):
-        mcp_servers = {}
-    else:
-        mcp_servers = dict(mcp_servers)
-    mcp_servers["datoon"] = dict(DATOON_MCP_ENTRY)
-    updated["mcpServers"] = mcp_servers
-    return updated
-
-
-def unmerge_mcp_config(config: dict[str, Any]) -> dict[str, Any]:
-    """Return config with only the datoon MCP server entry removed."""
-    updated = dict(config)
-    mcp_servers = updated.get("mcpServers")
-    if isinstance(mcp_servers, dict):
-        mcp_servers = dict(mcp_servers)
-        mcp_servers.pop("datoon", None)
-        updated["mcpServers"] = mcp_servers
-    return updated
 
 
 def merge_codex_marketplace(config: dict[str, Any]) -> dict[str, Any]:
@@ -167,7 +134,7 @@ def render_command(command: list[str]) -> str:
 
 
 def build_detection_rows(
-    targets: list[Target] | None = None, *, mcp_config: Path, codex_marketplace: Path
+    targets: list[Target] | None = None, *, codex_marketplace: Path
 ) -> list[tuple[str, str, str]]:
     """Build installer target detection rows."""
     targets = dedupe_targets(targets)
@@ -187,14 +154,6 @@ def build_detection_rows(
                     "codex",
                     "configured" if codex_marketplace.exists() else "not configured",
                     str(codex_marketplace),
-                )
-            )
-        elif target == "mcp":
-            rows.append(
-                (
-                    "mcp",
-                    "configured" if mcp_config.exists() else "not configured",
-                    str(mcp_config),
                 )
             )
     return rows
@@ -293,35 +252,6 @@ def apply_codex(path: Path, action: Action) -> Path | None:
     return write_json_with_backup(path, updated)
 
 
-def plan_mcp(path: Path, action: Action) -> list[PlanStep]:
-    """Build MCP config plan steps."""
-    exists = path.exists()
-    verb = "merge into" if action in {"dry-run", "install"} else "remove from"
-    return [
-        PlanStep(
-            target="mcp",
-            kind="file",
-            detail=f"{verb} {path} ({'exists' if exists else 'will be created if installing'})",
-        ),
-        PlanStep(
-            target="mcp",
-            kind="entry",
-            detail='MCP server entry: "datoon": {"command":"uvx","args":["datoon[mcp]","datoon-mcp"]}',
-        ),
-    ]
-
-
-def apply_mcp(path: Path, action: Action) -> Path | None:
-    """Apply MCP config action."""
-    current = read_json_object(path)
-    updated = (
-        merge_mcp_config(current)
-        if action == "install"
-        else unmerge_mcp_config(current)
-    )
-    return write_json_with_backup(path, updated)
-
-
 def print_plan(steps: list[PlanStep]) -> None:
     """Print human-readable plan steps."""
     for step in steps:
@@ -362,12 +292,6 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Target to operate on. Repeatable. Defaults to all targets.",
     )
     parser.add_argument(
-        "--mcp-config",
-        type=Path,
-        default=default_mcp_config_path(),
-        help="MCP JSON config path for merge/unmerge.",
-    )
-    parser.add_argument(
         "--codex-marketplace",
         type=Path,
         default=default_codex_marketplace_path(REPO_ROOT),
@@ -393,7 +317,6 @@ def main(argv: list[str] | None = None) -> int:
         print_detection_table(
             build_detection_rows(
                 targets,
-                mcp_config=args.mcp_config,
                 codex_marketplace=args.codex_marketplace,
             )
         )
@@ -407,8 +330,6 @@ def main(argv: list[str] | None = None) -> int:
             steps.extend(plan_claude(action))
         elif target == "codex":
             steps.extend(plan_codex(args.codex_marketplace, action))
-        elif target == "mcp":
-            steps.extend(plan_mcp(args.mcp_config, action))
 
     print_plan(steps)
     if action == "dry-run":
@@ -422,10 +343,6 @@ def main(argv: list[str] | None = None) -> int:
                 backup = apply_codex(args.codex_marketplace, action)
                 if backup is not None:
                     print(f"[codex] backup: {backup}")
-            elif target == "mcp":
-                backup = apply_mcp(args.mcp_config, action)
-                if backup is not None:
-                    print(f"[mcp] backup: {backup}")
     except (OSError, RuntimeError, ValueError, subprocess.CalledProcessError) as exc:
         print(f"install error: {exc}", file=sys.stderr)
         return 1

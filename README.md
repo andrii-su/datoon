@@ -148,16 +148,13 @@ pip install "datoon[tokens]"
 pip install "datoon[claude]"
 pip install "datoon[hf]"
 
-# with MCP server
-pip install "datoon[mcp]"
-
 # everything
 pip install "datoon[all]"
 ```
 
 Requires Python 3.12+. TOON conversion is pure Python (official [`toon-format`](https://pypi.org/project/toon-format/) encoder, installed automatically) — no Node.js needed.
 
-For Claude Code plugin, Codex, and MCP config → [**INSTALL.md**](./INSTALL.md).
+For the Claude Code plugin and Codex → [**INSTALL.md**](./INSTALL.md).
 
 ## What You Get
 
@@ -165,7 +162,6 @@ For Claude Code plugin, Codex, and MCP config → [**INSTALL.md**](./INSTALL.md)
 |---|---|
 | `datoon` **CLI** | Auto-gate any supported format → TOON from terminal or scripts |
 | **Python API** | `convert_json_for_llm()` + `read_tabular()` for any LLM pipeline |
-| **MCP Server** | `convert_json`, `convert_text`, `analyze_json` tools for Claude Desktop, Cursor, Windsurf |
 | **Claude Code Plugin** | `/datoon` in-session trigger, installs from GitHub in one command |
 | **Codex Plugin** | Marketplace plugin — structured-data mode for Codex |
 
@@ -197,7 +193,7 @@ Every path returns a `ConversionReport` with `decision`, `reason`, token estimat
 
 ## Choosing a tokenizer
 
-Token estimates drive the savings gate, so pick the counter that fits the job. Pass one spec with `--tokenizer`, the `tokenizer` MCP argument, `ConversionConfig(tokenizer=...)`, or the `DATOON_TOKENIZER` environment variable; in Python any callable `str -> int` works too. The MCP tools accept only local counters (`auto`, `chars`, `tiktoken`) per call; `claude:` and `hf:` reach the network, so only the server operator can enable them through `DATOON_TOKENIZER`.
+Token estimates drive the savings gate, so pick the counter that fits the job. Pass one spec with `--tokenizer`, `ConversionConfig(tokenizer=...)`, or the `DATOON_TOKENIZER` environment variable; in Python any callable `str -> int` works too.
 
 | Spec | Counts with | Needs |
 |---|---|---|
@@ -305,41 +301,6 @@ from datoon.models import ConversionConfig
 analysis = analyze_payload(parsed_data, ConversionConfig())
 print(analysis.is_candidate, analysis.reason)
 ```
-
-______________________________________________________________________
-
-## MCP Server
-
-<!-- mcp-name: io.github.andrii-su/datoon -->
-
-`datoon` ships an [MCP](https://modelcontextprotocol.io) server with three tools:
-
-| Tool | Description |
-|---|---|
-| `convert_json` | Full JSON conversion with policy gating |
-| `convert_text` | Converts CSV, YAML, XML, or JSONL text with policy gating |
-| `analyze_json` | Structure analysis only — no conversion |
-
-**Claude Desktop / Cursor / Windsurf config:**
-
-```json
-{
-  "mcpServers": {
-    "datoon": {
-      "command": "uvx",
-      "args": ["--from", "datoon[mcp]", "datoon", "mcp"]
-    }
-  }
-}
-```
-
-**Run locally:**
-
-```bash
-datoon mcp     # or the standalone script: datoon-mcp
-```
-
-Listed on the [MCP Registry](https://registry.modelcontextprotocol.io), [Smithery](https://smithery.ai), and [Glama](https://glama.ai). See [MARKETPLACES.md](./MARKETPLACES.md).
 
 ______________________________________________________________________
 

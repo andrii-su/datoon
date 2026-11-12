@@ -161,7 +161,7 @@ For the Claude Code plugin and Codex → [**INSTALL.md**](./INSTALL.md).
 | | What |
 |---|---|
 | `datoon` **CLI** | Auto-gate any supported format → TOON from terminal or scripts |
-| **Python API** | `convert_json_for_llm()` + `read_tabular()` for any LLM pipeline |
+| **Python API** | `convert_json_for_llm()`, `convert_data_for_llm()` + `read_tabular()` for any LLM pipeline |
 | **Claude Code Plugin** | `/datoon` in-session trigger, installs from GitHub in one command |
 | **Codex Plugin** | Marketplace plugin — structured-data mode for Codex |
 
@@ -278,7 +278,7 @@ send_to_model(outcome.payload_text)
 
 ```python
 from pathlib import Path
-from datoon import read_tabular, rows_to_json, convert_json_for_llm, ConversionConfig
+from datoon import read_tabular, convert_data_for_llm
 
 # text formats: csv, jsonl, yaml, xml
 rows = read_tabular("csv", text=csv_string)
@@ -286,8 +286,8 @@ rows = read_tabular("csv", text=csv_string)
 # binary formats: excel, parquet, orc, avro, numbers
 rows = read_tabular("parquet", path=Path("data.parquet"))
 
-# rows_to_json also serialises dates, decimals and bytes from spreadsheets and columnar files
-outcome = convert_json_for_llm(rows_to_json(rows), ConversionConfig())
+# takes Python data directly; dates, decimals and bytes are serialised for you
+outcome = convert_data_for_llm(rows)
 send_to_model(outcome.payload_text)
 ```
 

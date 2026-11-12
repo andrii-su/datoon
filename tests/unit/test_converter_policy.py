@@ -293,3 +293,52 @@ def test_unpaired_surrogate_is_a_datoon_error() -> None:
     payload = '[{"a":"\\ud800"},{"a":"x"},{"a":"y"}]'
     with pytest.raises(DatoonError, match="unpaired surrogate"):
         convert_json_for_llm(payload, ConversionConfig())
+
+
+def test_convert_data_matches_convert_json_for_plain_data() -> None:
+    """Python data and its JSON text must give the same outcome."""
+    import json
+
+    from datoon import convert_data_for_llm
+
+    data = {"rows": [{"id": i, "name": f"user-{i}", "ok": True} for i in range(5)]}
+    config = ConversionConfig(tokenizer="chars")
+
+    from_data = convert_data_for_llm(data, config)
+    from_text = convert_json_for_llm(json.dumps(data), config)
+
+    assert from_data.report.decision == "convert"
+    assert from_data.payload_text == from_text.payload_text
+    assert from_data.report.as_dict() == from_text.report.as_dict()
+
+
+def test_convert_data_accepts_dates_and_decimals_and_defaults_the_config() -> None:
+    """Rows from a database cursor carry dates and decimals; no config is needed."""
+    from datetime import date
+    from decimal import Decimal
+
+    from toon_format import decode
+
+    from datoon import convert_data_for_llm
+
+    rows = [
+        {"day": date(2026, 11, d), "revenue": Decimal("10.5") * d, "n": d}
+        for d in range(1, 6)
+    ]
+    outcome = convert_data_for_llm(rows)
+
+    assert outcome.report.decision == "convert"
+    assert decode(outcome.payload_text)[0] == {
+        "day": "2026-11-01",
+        "revenue": 10.5,
+        "n": 1,
+    }
+
+
+def test_convert_data_rejects_unsupported_types_and_nan() -> None:
+    from datoon import convert_data_for_llm
+
+    with pytest.raises(DatoonError, match="unsupported type set"):
+        convert_data_for_llm([{"x": {1, 2}}])
+    with pytest.raises(DatoonError, match="non-finite"):
+        convert_data_for_llm([{"x": float("nan")}])

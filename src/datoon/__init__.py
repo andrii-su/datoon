@@ -4,7 +4,11 @@ from __future__ import annotations
 
 from importlib.metadata import PackageNotFoundError, version
 
-from datoon.converter import DatoonError, convert_json_for_llm
+from datoon.converter import (
+    DatoonError,
+    convert_data_for_llm,
+    convert_json_for_llm,
+)
 from datoon.models import (
     ConversionConfig,
     ConversionOutcome,
@@ -22,6 +26,7 @@ __all__ = [
     "PayloadAnalysis",
     "TokenCounter",
     "__version__",
+    "convert_data_for_llm",
     "convert_json_for_llm",
     "detect_format",
     "estimate_tokens",

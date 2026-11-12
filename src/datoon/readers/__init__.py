@@ -47,11 +47,13 @@ def _json_default(value: Any) -> Any:
         return value.total_seconds()
     if isinstance(value, bytes | bytearray | memoryview):
         return base64.b64encode(bytes(value)).decode("ascii")
-    raise TypeError(type(value).__name__)
+    raise TypeError(f"unsupported type {type(value).__name__}")
 
 
-def rows_to_json(rows: list[dict[str, Any]]) -> str:
+def rows_to_json(rows: Any) -> str:
     """Serialise reader rows to the compact JSON text ``convert_json_for_llm`` takes.
+
+    ``rows`` is usually a list of row dicts; any JSON-shaped Python value works.
 
     Readers return what the file holds: dates, datetimes, times and timedeltas,
     decimals and bytes are not JSON. Dates and times become ISO 8601 strings, a
@@ -63,7 +65,7 @@ def rows_to_json(rows: list[dict[str, Any]]) -> str:
             rows, ensure_ascii=False, separators=(",", ":"), default=_json_default
         )
     except TypeError as exc:
-        raise DatoonError(f"Cannot serialise a value of type {exc} to JSON.") from exc
+        raise DatoonError(f"Cannot serialise data to JSON: {exc}.") from exc
 
 
 def detect_format(path: str | Path) -> str | None:

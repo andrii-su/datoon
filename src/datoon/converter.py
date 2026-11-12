@@ -15,9 +15,15 @@ from datoon.models import (
     ConversionReport,
     PayloadAnalysis,
 )
+from datoon.readers import rows_to_json
 from datoon.tokenizers import estimate_tokens, resolve_tokenizer
 
-__all__ = ["DatoonError", "convert_json_for_llm", "estimate_tokens"]
+__all__ = [
+    "DatoonError",
+    "convert_data_for_llm",
+    "convert_json_for_llm",
+    "estimate_tokens",
+]
 
 
 def _reject_non_finite(constant: str) -> Any:
@@ -162,3 +168,17 @@ def convert_json_for_llm(raw_text: str, config: ConversionConfig) -> ConversionO
         analysis=analysis,
     )
     return ConversionOutcome(payload_text=toon_text, report=report)
+
+
+def convert_data_for_llm(
+    data: Any, config: ConversionConfig | None = None
+) -> ConversionOutcome:
+    """Convert Python data to TOON under the same policy as ``convert_json_for_llm``.
+
+    For a caller that holds rows or a parsed payload, not JSON text: a list of
+    dicts from a database cursor, ``read_tabular`` or an API client. The data is
+    serialised with ``rows_to_json``, so dates, datetimes, decimals and bytes
+    are accepted; any other non-JSON type raises ``DatoonError``. ``config``
+    defaults to ``ConversionConfig()``.
+    """
+    return convert_json_for_llm(rows_to_json(data), config or ConversionConfig())

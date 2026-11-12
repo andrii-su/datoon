@@ -46,11 +46,17 @@ def read_xml(text: str) -> list[dict[str, Any]]:
 
 def _element_to_dict(element: ET.Element) -> dict[str, Any]:
     result: dict[str, Any] = {k: _coerce(v) for k, v in element.attrib.items()}
+    repeated: set[str] = set()
     for child in element:
-        if list(child):
-            result[child.tag] = _element_to_dict(child)
+        value = _element_to_dict(child) if list(child) else _coerce(child.text or "")
+        if child.tag not in result:
+            result[child.tag] = value
+        elif child.tag in repeated:
+            result[child.tag].append(value)
         else:
-            result[child.tag] = _coerce(child.text or "")
+            # A second child with the same tag: keep both instead of the last.
+            repeated.add(child.tag)
+            result[child.tag] = [result[child.tag], value]
     if not list(element) and element.text and element.text.strip():
         result["_text"] = element.text.strip()
     return result

@@ -1,4 +1,4 @@
-"""Core package for datoon JSON-to-TOON conversion tooling."""
+"""Core package for datoon structured-data-to-TOON conversion tooling."""
 
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ from datoon.models import (
     ConversionReport,
     PayloadAnalysis,
 )
-from datoon.readers import detect_format, read_tabular
+from datoon.readers import detect_format, read_tabular, rows_to_json
 from datoon.tokenizers import TokenCounter, estimate_tokens, resolve_tokenizer
 
 __all__ = [
@@ -27,6 +27,7 @@ __all__ = [
     "estimate_tokens",
     "read_tabular",
     "resolve_tokenizer",
+    "rows_to_json",
 ]
 
 try:

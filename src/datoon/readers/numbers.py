@@ -18,7 +18,12 @@ def read_numbers(path: Path, *, sheet: int = 0, table: int = 0) -> list[dict[str
         ) from exc
 
     doc = Document(str(path))
-    tbl = doc.sheets[sheet].tables[table]
+    try:
+        tbl = doc.sheets[sheet].tables[table]
+    except IndexError as exc:
+        raise ValueError(
+            f"Sheet index {sheet} or table index {table} is out of range."
+        ) from exc
     rows = list(tbl.rows(values_only=True))
 
     return header_rows_to_dicts(rows)

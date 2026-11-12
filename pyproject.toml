@@ -21,11 +21,18 @@ classifiers = [
     "Operating System :: OS Independent"
 ]
 dependencies = [
-    "toon-format>=1.2.0",
+    "toon-format>=1.2.0,<2",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=9.0.3", "pre-commit>=4.6.0", "pyyaml>=6.0"]
+dev = [
+    "pytest>=9.0.3",
+    "pre-commit>=4.6.0",
+    # Readers are tested against the real parsers, not mocks.
+    "pyyaml>=6.0",
+    "openpyxl>=3.1",
+    "pyarrow>=15.0",
+]
 tokens = ["tiktoken>=0.13.0"]
 claude = ["anthropic>=2.0.0"]
 hf = ["tokenizers>=0.23.0"]

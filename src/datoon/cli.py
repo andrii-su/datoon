@@ -1,4 +1,4 @@
-"""Command-line interface for datoon JSON-to-TOON conversion."""
+"""Command-line interface for datoon structured-data-to-TOON conversion."""
 
 from __future__ import annotations
 
@@ -12,7 +12,13 @@ from pathlib import Path
 from datoon import __version__
 from datoon.converter import DatoonError, convert_json_for_llm
 from datoon.models import ConversionConfig
-from datoon.readers import ALL_FORMATS, BINARY_FORMATS, detect_format, read_tabular
+from datoon.readers import (
+    ALL_FORMATS,
+    BINARY_FORMATS,
+    detect_format,
+    read_tabular,
+    rows_to_json,
+)
 from datoon.tokenizers import DEFAULT_TOKENIZER, TOKENIZER_ENV_VAR
 
 
@@ -173,12 +179,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             rows = read_tabular(
                 fmt, path=Path(args.input), sheet=args.sheet, table=args.table
             )
-            json_text = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
+            json_text = rows_to_json(rows)
             outcome = convert_json_for_llm(json_text, config)
         else:
             raw_input = _read_input(args.input)
             rows = read_tabular(fmt, text=raw_input)
-            json_text = json.dumps(rows, ensure_ascii=False, separators=(",", ":"))
+            json_text = rows_to_json(rows)
             outcome = convert_json_for_llm(json_text, config)
 
         _write_text(args.output, outcome.payload_text)

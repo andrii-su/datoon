@@ -20,7 +20,10 @@ def read_yaml(text: str) -> list[dict[str, Any]]:
             "YAML support requires the 'yaml' extra: pip install 'datoon[yaml]'"
         ) from exc
 
-    data = yaml.safe_load(text)
+    try:
+        data = yaml.safe_load(text)
+    except yaml.YAMLError as exc:
+        raise DatoonError(f"Invalid YAML: {exc}") from exc
     return _normalize(data)
 
 

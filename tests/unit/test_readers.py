@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import sys
 from pathlib import Path
-from unittest.mock import MagicMock
 
 import pytest
 
@@ -15,6 +14,7 @@ from datoon.readers import (
     TEXT_FORMATS,
     detect_format,
     read_tabular,
+    rows_to_json,
 )
 from datoon.readers.csv import read_csv
 from datoon.readers.jsonl import read_jsonl
@@ -100,6 +100,17 @@ def test_read_csv_empty_value_is_none() -> None:
     assert rows[0]["note"] is None
 
 
+def test_read_csv_short_row_gets_none_not_the_string_none() -> None:
+    rows = read_csv("a,b,c\n1,2\n")
+    assert rows == [{"a": 1, "b": 2, "c": None}]
+
+
+def test_read_csv_long_row_keeps_extra_cells_under_a_named_key() -> None:
+    rows = read_csv("a,b\n1,2,3,x\n")
+    assert rows == [{"a": 1, "b": 2, "_extra": [3, "x"]}]
+    assert read_csv("a\n1,2\n", coerce_types=False) == [{"a": "1", "_extra": ["2"]}]
+
+
 def test_read_csv_no_coercion() -> None:
     rows = read_csv(_CSV_TEXT, coerce_types=False)
     assert rows[0]["id"] == "1"
@@ -173,37 +184,18 @@ def test_read_jsonl_non_object_raises() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_read_yaml_list(monkeypatch: pytest.MonkeyPatch) -> None:
-    yaml_mock = MagicMock()
-    yaml_mock.safe_load.return_value = [
-        {"id": 1, "name": "Ada"},
-        {"id": 2, "name": "Lin"},
-        {"id": 3, "name": "Grace"},
-    ]
-    monkeypatch.setitem(sys.modules, "yaml", yaml_mock)
-
+def test_read_yaml_list() -> None:
     from datoon.readers.yaml import read_yaml
 
-    rows = read_yaml("- id: 1\n  name: Ada\n")
-    assert len(rows) == 3
-    assert rows[0]["name"] == "Ada"
+    rows = read_yaml("- id: 1\n  name: Ada\n- id: 2\n  name: Lin\n")
+    assert rows == [{"id": 1, "name": "Ada"}, {"id": 2, "name": "Lin"}]
 
 
-def test_read_yaml_dict_with_single_list(monkeypatch: pytest.MonkeyPatch) -> None:
-    yaml_mock = MagicMock()
-    yaml_mock.safe_load.return_value = {
-        "users": [
-            {"id": 1, "name": "Ada"},
-            {"id": 2, "name": "Lin"},
-            {"id": 3, "name": "Grace"},
-        ]
-    }
-    monkeypatch.setitem(sys.modules, "yaml", yaml_mock)
-
+def test_read_yaml_dict_with_single_list() -> None:
     from datoon.readers.yaml import read_yaml
 
-    rows = read_yaml("users:\n  - id: 1\n")
-    assert len(rows) == 3
+    rows = read_yaml("users:\n  - id: 1\n  - id: 2\n  - id: 3\n")
+    assert rows == [{"id": 1}, {"id": 2}, {"id": 3}]
 
 
 def test_read_yaml_missing_dep(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -215,37 +207,51 @@ def test_read_yaml_missing_dep(monkeypatch: pytest.MonkeyPatch) -> None:
         yaml_reader.read_yaml("- id: 1")
 
 
-def test_read_yaml_rejects_list_of_scalars(monkeypatch: pytest.MonkeyPatch) -> None:
-    yaml_mock = MagicMock()
-    yaml_mock.safe_load.return_value = [1, 2, 3]
-    monkeypatch.setitem(sys.modules, "yaml", yaml_mock)
-
+@pytest.mark.parametrize("text", ["- 1\n- 2\n", "- id: 1\n- oops\n", "42\n"])
+def test_read_yaml_rejects_bad_shapes(text: str) -> None:
     from datoon.readers.yaml import read_yaml
 
     with pytest.raises(DatoonError, match="list of objects"):
-        read_yaml("- 1\n- 2\n")
+        read_yaml(text)
 
 
-def test_read_yaml_rejects_mixed_list(monkeypatch: pytest.MonkeyPatch) -> None:
-    yaml_mock = MagicMock()
-    yaml_mock.safe_load.return_value = [{"id": 1}, "oops", {"id": 3}]
-    monkeypatch.setitem(sys.modules, "yaml", yaml_mock)
-
+def test_read_yaml_invalid_syntax_is_a_datoon_error() -> None:
     from datoon.readers.yaml import read_yaml
 
-    with pytest.raises(DatoonError, match="list of objects"):
-        read_yaml("- id: 1\n- oops\n")
+    with pytest.raises(DatoonError, match="Invalid YAML"):
+        read_yaml("a: [1, 2")
 
 
-def test_read_yaml_rejects_bad_shape(monkeypatch: pytest.MonkeyPatch) -> None:
-    yaml_mock = MagicMock()
-    yaml_mock.safe_load.return_value = 42
-    monkeypatch.setitem(sys.modules, "yaml", yaml_mock)
-
+def test_yaml_dates_serialise_through_rows_to_json() -> None:
+    """PyYAML parses a bare date; the rows must still become JSON text."""
     from datoon.readers.yaml import read_yaml
 
-    with pytest.raises(DatoonError, match="list of objects"):
-        read_yaml("42\n")
+    rows = read_yaml("- day: 2026-11-01\n  n: 1\n")
+    assert rows_to_json(rows) == '[{"day":"2026-11-01","n":1}]'
+
+
+def test_rows_to_json_handles_reader_types() -> None:
+    from datetime import datetime, timedelta
+    from decimal import Decimal
+
+    rows = [
+        {
+            "at": datetime(2026, 11, 1, 12, 30),
+            "exact": Decimal("12.5"),
+            "wide": Decimal("0.1234567890123456789"),
+            "took": timedelta(seconds=90),
+            "raw": b"\x00\x01",
+        }
+    ]
+    assert rows_to_json(rows) == (
+        '[{"at":"2026-11-01T12:30:00","exact":12.5,'
+        '"wide":"0.1234567890123456789","took":90.0,"raw":"AAE="}]'
+    )
+
+
+def test_rows_to_json_rejects_unknown_types() -> None:
+    with pytest.raises(DatoonError, match="type set"):
+        rows_to_json([{"x": {1, 2}}])
 
 
 # ---------------------------------------------------------------------------
@@ -263,6 +269,11 @@ def test_read_xml_basic() -> None:
     rows = read_xml(_XML_TEXT)
     assert len(rows) == 3
     assert rows[0] == {"id": 1, "name": "Ada", "role": "admin"}
+
+
+def test_read_xml_keeps_repeated_children_as_a_list() -> None:
+    rows = read_xml("<r><row><id>1</id><t>a</t><t>b</t><t>c</t></row></r>")
+    assert rows == [{"id": 1, "t": ["a", "b", "c"]}]
 
 
 def test_read_xml_type_coercion() -> None:

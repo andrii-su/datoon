@@ -277,9 +277,8 @@ send_to_model(outcome.payload_text)
 **Any format via `read_tabular`:**
 
 ```python
-import json
 from pathlib import Path
-from datoon import read_tabular, convert_json_for_llm, ConversionConfig
+from datoon import read_tabular, rows_to_json, convert_json_for_llm, ConversionConfig
 
 # text formats: csv, jsonl, yaml, xml
 rows = read_tabular("csv", text=csv_string)
@@ -287,8 +286,8 @@ rows = read_tabular("csv", text=csv_string)
 # binary formats: excel, parquet, orc, avro, numbers
 rows = read_tabular("parquet", path=Path("data.parquet"))
 
-json_text = json.dumps(rows, separators=(",", ":"))
-outcome = convert_json_for_llm(json_text, ConversionConfig())
+# rows_to_json also serialises dates, decimals and bytes from spreadsheets and columnar files
+outcome = convert_json_for_llm(rows_to_json(rows), ConversionConfig())
 send_to_model(outcome.payload_text)
 ```
 

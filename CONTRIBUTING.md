@@ -1,6 +1,6 @@
 # Contributing to datoon
 
-Thanks for considering a contribution. `datoon` is a small package with several distribution surfaces: Python API, CLI, MCP server, Claude Code plugin, Codex skill/plugin, benchmark artifacts, and docs.
+Thanks for considering a contribution. `datoon` is a small package with several distribution surfaces: Python API, CLI, Claude Code plugin, Codex skill/plugin, benchmark artifacts, and docs.
 
 Keep changes focused. A parser fix, a benchmark update, and a README rewrite should usually be separate PRs.
 
@@ -25,7 +25,6 @@ Conversion is pure Python (the `toon-format` package); no Node.js is required fo
 | Payload suitability analysis | `src/datoon/analyzer.py` |
 | Public models and reports | `src/datoon/models.py` |
 | CLI flags and input/output behavior | `src/datoon/cli.py` |
-| MCP tools | `src/datoon/mcp_server.py` |
 | LLM-facing skill behavior | `skills/datoon/SKILL.md` |
 | Human-facing skill docs | `skills/datoon/README.md` |
 | Main benchmark payloads | `benchmarks/payloads.json` |
@@ -105,7 +104,7 @@ This repo uses semantic-release on `main`.
 Use Conventional Commit subjects:
 
 ```text
-feat: add MCP analyze_json tool
+feat: add an ORC reader
 fix: preserve JSON fallback on encoder failure
 docs: clarify Claude Code plugin install
 test: cover non-uniform arrays

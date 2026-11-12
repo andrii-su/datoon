@@ -10,7 +10,6 @@ It ships as:
 
 - Python package under `src/datoon/`;
 - CLI command `datoon`;
-- MCP server command `datoon-mcp`;
 - Claude Code plugin metadata under `.claude-plugin/`;
 - Codex plugin under `plugins/datoon/`;
 - standalone skill artifact `datoon.skill`;
@@ -33,8 +32,7 @@ datoon/
 │   ├── converter.py                  # JSON normalization, TOON encoder call, policy gating
 │   ├── models.py                     # Config/report/outcome dataclasses
 │   ├── tokenizers.py                 # Token counter specs and estimates
-│   ├── cli.py                        # CLI entrypoint
-│   └── mcp_server.py                 # MCP server tools
+│   └── cli.py                        # CLI entrypoint
 │
 ├── skills/datoon/                    # Skill source of truth
 │   ├── SKILL.md                      # LLM-facing behavior
@@ -71,7 +69,6 @@ Edit these files directly:
 | Public data contracts | `src/datoon/models.py` |
 | Token counters | `src/datoon/tokenizers.py` |
 | CLI behavior | `src/datoon/cli.py` |
-| MCP behavior | `src/datoon/mcp_server.py` |
 | Skill behavior | `skills/datoon/SKILL.md` |
 | Human skill docs | `skills/datoon/README.md` |
 | Main benchmark inputs | `benchmarks/payloads.json` |
@@ -110,7 +107,7 @@ It runs on pull requests and pushes to `main`. The old auto-sync-on-main flow wa
 - An encoder failure must not break auto mode; fallback to JSON unless `force=True`.
 - `--force` is for controlled experiments and should bypass gating, not hide conversion errors.
 - Auto mode skips before conversion when analysis rejects the payload, and skips after conversion when estimated savings are below `min_savings_ratio`.
-- Keep skip reasons user-facing, specific, and stable enough for CLI/MCP troubleshooting.
+- Keep skip reasons user-facing, specific, and stable enough for CLI troubleshooting.
 - Token counts are estimates, whichever tokenizer produced them (`claude:` counts included). Be precise about whether a number is payload-token estimate, visible output estimate, or real model usage, and name the tokenizer it came from.
 - Only the `auto` tokenizer falls back silently; an explicit spec with a missing package or credentials must raise `DatoonError`, in auto and force mode alike.
 - Benchmarks in README must come from committed scripts/artifacts.
@@ -156,13 +153,12 @@ Use Conventional Commits so semantic-release can classify changes correctly.
 
 ## Installer
 
-`install.sh` wraps `scripts/install.py` and supports `--dry-run`, `--install`, and `--uninstall` for `claude`, `codex`, and `mcp` targets. Keep installer behavior testable in Python helpers; the shell script should stay a thin wrapper.
+`install.sh` wraps `scripts/install.py` and supports `--dry-run`, `--install`, and `--uninstall` for the `claude` and `codex` targets. Keep installer behavior testable in Python helpers; the shell script should stay a thin wrapper.
 
 User-facing installer docs must stay explicit about the write surface:
 
 - `claude` runs Claude Code plugin commands and leaves file ownership to Claude Code;
-- `codex` defaults to `.agents/plugins/marketplace.json` and manages only the `plugins[]` entry named `datoon`;
-- `mcp` defaults to `~/.config/datoon/mcp.json` and manages only `mcpServers.datoon`.
+- `codex` defaults to `.agents/plugins/marketplace.json` and manages only the `plugins[]` entry named `datoon`.
 
 Config writes must:
 

@@ -40,11 +40,9 @@ jobs:
         run: |
           python scripts/install.py \
             --list \
-            --mcp-config "$RUNNER_TEMP/datoon-mcp.json" \
             --codex-marketplace "$RUNNER_TEMP/codex-marketplace.json"
           python scripts/install.py \
             --dry-run \
-            --mcp-config "$RUNNER_TEMP/datoon-mcp.json" \
             --codex-marketplace "$RUNNER_TEMP/codex-marketplace.json"
 
       - name: Run installer unit tests

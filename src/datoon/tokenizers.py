@@ -57,7 +57,7 @@ _SPEC_CACHE_SIZE = 32
 
 # Spec kinds that send the counted text to, or download files from, a remote
 # service chosen by the spec. Callers that take specs from untrusted input
-# (the MCP tools) must not accept these.
+# must not accept these.
 _NETWORK_KINDS = frozenset({"claude", "hf"})
 
 _SPEC_HELP = (

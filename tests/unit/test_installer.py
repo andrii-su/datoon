@@ -27,42 +27,6 @@ def _load_installer() -> ModuleType:
 installer = _load_installer()
 
 
-def test_merge_mcp_config_preserves_existing_servers() -> None:
-    """Installing MCP config should preserve unrelated servers."""
-    config = {
-        "mcpServers": {
-            "other": {
-                "command": "other",
-                "args": ["serve"],
-            }
-        },
-        "theme": "dark",
-    }
-
-    merged = installer.merge_mcp_config(config)
-
-    assert merged["theme"] == "dark"
-    assert merged["mcpServers"]["other"]["command"] == "other"
-    assert merged["mcpServers"]["datoon"] == installer.DATOON_MCP_ENTRY
-
-
-def test_unmerge_mcp_config_removes_only_datoon() -> None:
-    """Uninstalling MCP config should remove only datoon."""
-    config = {
-        "mcpServers": {
-            "datoon": installer.DATOON_MCP_ENTRY,
-            "other": {
-                "command": "other",
-            },
-        }
-    }
-
-    unmerged = installer.unmerge_mcp_config(config)
-
-    assert "datoon" not in unmerged["mcpServers"]
-    assert unmerged["mcpServers"]["other"]["command"] == "other"
-
-
 def test_merge_codex_marketplace_replaces_existing_datoon_entry() -> None:
     """Codex install should be idempotent and avoid duplicate entries."""
     config = {
@@ -104,23 +68,23 @@ def test_unmerge_codex_marketplace_removes_only_datoon() -> None:
 def test_read_json_object_reports_malformed_json(tmp_path: Path) -> None:
     """Malformed config JSON should fail with a clear installer error."""
     path = tmp_path / "config.json"
-    path.write_text('{"mcpServers": ', encoding="utf-8")
+    path.write_text('{"plugins": ', encoding="utf-8")
 
     with pytest.raises(ValueError, match="Malformed JSON"):
         installer.read_json_object(path)
 
 
-def test_apply_mcp_does_not_write_backup_for_malformed_json(tmp_path: Path) -> None:
+def test_apply_codex_does_not_write_backup_for_malformed_json(tmp_path: Path) -> None:
     """Invalid JSON should not be backed up or overwritten."""
-    path = tmp_path / "mcp.json"
-    original = '{"mcpServers": '
+    path = tmp_path / "marketplace.json"
+    original = '{"plugins": '
     path.write_text(original, encoding="utf-8")
 
     with pytest.raises(ValueError, match="Malformed JSON"):
-        installer.apply_mcp(path, "install")
+        installer.apply_codex(path, "install")
 
     assert path.read_text(encoding="utf-8") == original
-    assert list(tmp_path.glob("mcp.json.bak.*")) == []
+    assert list(tmp_path.glob("marketplace.json.bak.*")) == []
 
 
 def test_write_json_with_backup_preserves_existing_file(tmp_path: Path) -> None:
@@ -147,7 +111,7 @@ def test_write_json_with_backup_avoids_timestamp_collision(
             return datetime(2026, 5, 28, 12, 0, tzinfo=tz)
 
     monkeypatch.setattr(installer, "datetime", FixedDateTime)
-    path = tmp_path / "mcp.json"
+    path = tmp_path / "marketplace.json"
     path.write_text('{"version": 1}', encoding="utf-8")
 
     first_backup = installer.write_json_with_backup(path, {"version": 2})
@@ -164,28 +128,25 @@ def test_list_prints_only_selected_deduped_targets(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     """--list should honor selected targets and avoid duplicate rows."""
-    mcp_config = tmp_path / "mcp.json"
-    mcp_config.write_text("{}", encoding="utf-8")
+    codex_marketplace = tmp_path / "marketplace.json"
+    codex_marketplace.write_text("{}", encoding="utf-8")
 
     result = installer.main(
         [
             "--list",
             "--target",
-            "mcp",
+            "codex",
             "--target",
-            "mcp",
-            "--mcp-config",
-            str(mcp_config),
+            "codex",
             "--codex-marketplace",
-            str(tmp_path / "marketplace.json"),
+            str(codex_marketplace),
         ]
     )
     output = capsys.readouterr().out
 
     assert result == 0
-    assert output.count("| mcp | configured |") == 1
+    assert output.count("| codex | configured |") == 1
     assert "| claude |" not in output
-    assert "| codex |" not in output
 
 
 def test_dry_run_dedupes_repeated_targets(
@@ -196,17 +157,17 @@ def test_dry_run_dedupes_repeated_targets(
         [
             "--dry-run",
             "--target",
-            "mcp",
+            "codex",
             "--target",
-            "mcp",
-            "--mcp-config",
-            str(tmp_path / "mcp.json"),
+            "codex",
+            "--codex-marketplace",
+            str(tmp_path / "marketplace.json"),
         ]
     )
     output = capsys.readouterr().out
 
     assert result == 0
-    assert output.count("[mcp] file:") == 1
+    assert output.count("[codex] file:") == 1
 
 
 def test_parse_args_rejects_multiple_actions() -> None:
@@ -243,16 +204,11 @@ def test_apply_claude_uses_argument_lists(monkeypatch: pytest.MonkeyPatch) -> No
 
 def test_detection_rows_report_configured_paths(tmp_path: Path) -> None:
     """Detection table should report configured local config files."""
-    mcp_config = tmp_path / "mcp.json"
     codex_marketplace = tmp_path / "marketplace.json"
-    mcp_config.write_text("{}", encoding="utf-8")
     codex_marketplace.write_text("{}", encoding="utf-8")
 
-    rows = installer.build_detection_rows(
-        mcp_config=mcp_config,
-        codex_marketplace=codex_marketplace,
-    )
+    rows = installer.build_detection_rows(codex_marketplace=codex_marketplace)
     by_target = {target: status for target, status, _ in rows}
 
-    assert by_target["mcp"] == "configured"
     assert by_target["codex"] == "configured"
+    assert "mcp" not in by_target

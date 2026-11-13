@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12"
 resolution-markers = [
     "python_full_version >= '3.14' and sys_platform == 'win32'",
@@ -763,7 +763,7 @@ wheels = [
 
 [[package]]
 name = "numbers-parser"
-version = "4.22.0"
+version = "4.22.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "compact-json" },
@@ -777,9 +777,9 @@ dependencies = [
     { name = "setuptools" },
     { name = "sigfig" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/da/9f/4aca1a6a0b3fc3fca414e682965986873296ee225380dfa16bc2b403fff9/numbers_parser-4.22.0.tar.gz", hash = "sha256:23b83a5497e0866ad0e9e9bac6d7db858aa1c24712b474cd4c4920831fea49dc", size = 358494, upload-time = "2026-10-15T14:55:01.832Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/eb/2a/2947c7ea81f862544d756477913900a054183ee2e3cde3d9ed49615f7a5c/numbers_parser-4.22.2.tar.gz", hash = "sha256:7f3c41bb8da2e4c01956d5ef0d8e96ef6495491a4c4d2aac58b800c48c261195", size = 359399, upload-time = "2026-11-04T08:50:34.013Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/38/0b/b2bc5b0e6294e3fac0ae01cbec205e78893846887376c1557cfa4c7f1356/numbers_parser-4.22.0-py3-none-any.whl", hash = "sha256:0963e1a82237ffd7baa974653b8439afcd3f37a982434a765eca0109d02664e0", size = 338617, upload-time = "2026-10-15T14:55:00.152Z" },
+    { url = "https://files.pythonhosted.org/packages/fe/b2/d753e495bf5b381318a16bbfcb47c0188c9d2533fe991e54bcb4e2474c01/numbers_parser-4.22.2-py3-none-any.whl", hash = "sha256:1ef9d955cbce60bcde71f14c654c1517f7476f5e069a1fdc6ddd082104a71546", size = 338851, upload-time = "2026-11-04T08:50:32.726Z" },
 ]
 
 [[package]]
